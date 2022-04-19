@@ -12,6 +12,8 @@
         "@types/react": "^18.0.5",
         "@types/react-dom": "^18.0.1",
         "axios": "^0.26.1",
+        "immer": "^9.0.12",
+        "madge": "^5.0.1",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-redux": "^7.2.8",
@@ -22,10 +24,11 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "INLINE_RUNTIME_CHUNK=true craco start",
-        "build": "INLINE_RUNTIME_CHUNK=false craco build ",
-        "test": "INLINE_RUNTIME_CHUNK=true craco test",
-        "eject": "INLINE_RUNTIME_CHUNK=true craco eject"
+        "start": "GENERATE_SOURCEMAP=true INLINE_RUNTIME_CHUNK=true craco start",
+        "build": "GENERATE_SOURCEMAP=true INLINE_RUNTIME_CHUNK=false craco build ",
+        "test": "GENERATE_SOURCEMAP=true INLINE_RUNTIME_CHUNK=true craco test",
+        "eject": "GENERATE_SOURCEMAP=true INLINE_RUNTIME_CHUNK=true craco eject",
+        "circularity:check": "madge --circular --extensions ts,tsx src/"
     },
     "eslintConfig": {
         "extends": [
@@ -48,6 +51,7 @@
     "devDependencies": {
         "@types/chrome": "^0.0.181",
         "react-dev-utils": "^12.0.1",
+        "redux-devtools-extension": "^2.13.9",
         "sass": "^1.50.0"
     }
 }

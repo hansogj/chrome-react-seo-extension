@@ -5,7 +5,7 @@ import App from "./App";
 import "./index.css";
 import "./messages/handler";
 import PostsContainer from "./PostsContainer";
-import store from "./store";
+import { store } from "./redux";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

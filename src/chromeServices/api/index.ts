@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const token = "secret-token"; // to be found in https://www.discogs.com/settings/developers
+const token = "KsYMjPUhOsZYVxHGWyNQxIKKtwLLtbRQjWdPbyIu"; // to be found in https://www.discogs.com/settings/developers
 const discogsBaseUrl = "https://api.discogs.com";
 
 const unRest = ({ data }: AxiosResponse) => data;
@@ -23,13 +23,14 @@ export const fetchArtist = async (artist: string) =>
       return e;
     });
 
-export const fetchUser = async (user: string) =>
+export const fetchUser = async (user = "hansogj") =>
   axios
     .get(`${discogsBaseUrl}/oauth/identity?token=${token}`)
     .then((e) => axios.get(`${discogsBaseUrl}/users/${user}?token=${token}`))
     .then(unRest);
 
-export const fetchFolders = async (user: string) =>
-  fetchUser(user)
+export const fetchFolders = async () =>
+  fetchUser()
     .then(({ collection_folders_url }) => collection_folders_url)
-    .then((url) => axios.get(url + "?token=" + token));
+    .then((url) => axios.get(url + "?token=" + token))
+    .then(unRest);

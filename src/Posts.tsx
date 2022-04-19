@@ -1,11 +1,11 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
-import { RootState } from "./store/reducers";
+import { RootState } from "./redux";
 
 export default function Posts() {
-  const { artist, results } = useSelector((state: RootState) => {
-    return state.PostReducer;
+  const { folders, artist, artistResult } = useSelector((state: RootState) => {
+    return state.Discogs;
   });
 
   return (
@@ -16,7 +16,7 @@ export default function Posts() {
         <h1 className="loader">{artist}</h1>
       )}
       <ul>
-        {(results || [])
+        {(artistResult || [])
           .filter((_, i) => i < 10)
           .map(({ id, results, uri, title }: any) => (
             <li key={id}>
@@ -27,6 +27,7 @@ export default function Posts() {
             </li>
           ))}
       </ul>
+      {JSON.stringify(folders)}
     </div>
   );
 }

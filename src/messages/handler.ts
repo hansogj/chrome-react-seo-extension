@@ -1,68 +1,44 @@
-import { getArtist, getTitles } from "../store/posts/actions";
-import { PostMessage, TitleAndHeadlines } from "../types";
-import store from "../store/index";
 import * as api from "../chromeServices/api";
-import { GET_ARTIST, GET_TITLES } from "../store/posts/actionTypes";
-import { getAllByDisplayValue } from "@testing-library/react";
+import { DiscogsActions } from "../redux/discogs";
+import { actions } from "../redux/discogs";
+import { Action } from "../redux";
+import { AxiosResponse } from "axios";
+import { getFoldersSuccess } from "../redux/discogs/discogs.actions";
 
 let queryOptions = { active: true, currentWindow: true };
 
-type Response = any;
+const addListener = (myTabId?: number) =>
+  chrome.runtime.onMessage.addListener(dispatcher);
 
 const getCurrentTab = (): Promise<chrome.tabs.Tab> =>
   chrome && chrome.tabs && chrome.tabs.query
     ? chrome.tabs.query(queryOptions).then(([tab]) => tab)
     : Promise.reject();
 
-const dispatcher = (response: Response) => {
-  console.log(response);
-  if (response && !!response.title)
-    store.dispatch(getTitles(response.title, response.headlines));
-  if (response && !!response.artist)
-    store.dispatch(getArtist(response.artist, response.results));
+const dispatcher = () => {
+  return import("../redux").then(({ action }) => action);
+  /*     debugger;
+    if (response && !!response.artist)
+      action(
+        actions.getArtistSuccess(response.artist, response.results) as any
+      );
+ */
 };
 
-const addListener = (myTabId?: number) =>
-  chrome.runtime.onMessage.addListener(dispatcher);
-
-const sendMessage = (id = 0, body: PostMessage): Promise<Response> =>
+const sendMessage = <T>(id = 0, body: Action<T>): Promise<Response> =>
   new Promise((resolve, reject) =>
     chrome.tabs.sendMessage(id, body, (response: Response) => resolve(response))
   );
 
-export const getFolder = async () => {
-  getCurrentTab()
+export const getFolder = async (): Promise<any> => {
+  return getCurrentTab()
     .then(({ id }) => {
-      sendMessage(id, { type: "GET_FOLDERS" } as any).then((e) =>
-        console.log(e)
-      );
+      sendMessage(id, { type: DiscogsActions.getFolders });
     })
+    .catch(() => api.fetchFolders())
 
-    .catch(() =>
-      api.fetchFolders().then((e) => {
-        console.log(e);
-      })
-    );
-};
-
-export const connect = async () => {
-  getCurrentTab()
-    .then(({ id }) => {
-      addListener(id);
-      setTimeout(() => {
-        sendMessage(id, { type: GET_TITLES }).then(dispatcher);
-      }, 7000);
-
-      setTimeout(() => {
-        sendMessage(id, { type: GET_ARTIST, artist: "Magma" }).then(dispatcher);
-      }, 5000);
-    })
-    .catch(() => {
-      console.log("call api direct");
-      api
-        .fetchArtist("Magma")
-        .then((results) => store.dispatch(getArtist("Magma", results)));
-
-      store.dispatch(getTitles("Some Page Title", ["many ", "headlines"]));
+    .then((folders) => {
+      console.log(folders);
+      return dispatcher().then((action) => action(getFoldersSuccess(folders)));
     });
 };

@@ -1,17 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import "./App.scss";
-import { connect } from "./messages/handler";
-import { RootState } from "./store/reducers";
+import { store } from "./redux/store";
+import { getFolders } from "./redux/discogs/discogs.actions";
+import { RootState } from "./redux";
 
 function App() {
-  const { title, headlines } = useSelector(
-    (state: RootState) => state.PostReducer
-  );
+  const { artist } = useSelector((state: RootState) => state.Discogs);
 
   React.useEffect(() => {
-    connect();
-  }, []);
+    if (!artist)
+      setTimeout(() => {
+        console.log("dispatch");
+        return store.dispatch(getFolders() as any);
+      }, 2000);
+  }, [artist]);
 
   return (
     <div className="App">
@@ -29,7 +32,7 @@ function App() {
               {title?.length} Characters
             </span> */}
           </div>
-          <div className="SEOVAlidationFieldValue">{title}</div>
+          <div className="SEOVAlidationFieldValue">{artist}</div>
         </li>
 
         <li className="SEOValidation">
