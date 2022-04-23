@@ -8,10 +8,14 @@ const messagesFromReactAppListener = (
   sender: chrome.runtime.MessageSender,
   sendResponse: (response: unknown) => void
 ) => {
-  if (action.type === DiscogsActions.getArtist)
-    fetchArtist(action as DiscogsActionTypes, sendResponse);
+  console.log("message received_ ", action);
+  const resolve = (prom: Promise<any>) => prom.then(sendResponse);
 
-  if (action.type === DiscogsActions.getFolders) fetchFolders(sendResponse);
+  if (action.type === DiscogsActions.getArtist)
+    resolve(api.fetchArtist(action.artist));
+  if (action.type === DiscogsActions.getFolders) resolve(api.fetchFolders());
+
+  if (action.type === DiscogsActions.getUser) resolve(api.fetchUser());
   return true;
 };
 
@@ -28,7 +32,7 @@ const fetchArtist = (
     .then((artistResult) => sendResponse({ artist, artistResult }));
 
 const fetchFolders = (sendResponse: (response: User) => void) =>
-  api.fetchFolders().then((user: User) => sendResponse({ user }));
+  api.fetchFolders().then(sendResponse);
 
 chrome &&
   chrome.runtime &&

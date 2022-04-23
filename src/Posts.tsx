@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux";
 
 export default function Posts() {
-  const { folders, artist, artistResult } = useSelector((state: RootState) => {
-    return state.Discogs;
-  });
+  const { folders, artist, artistResult, user } = useSelector(
+    (state: RootState) => {
+      return state.Discogs;
+    }
+  );
 
   return (
     <div>
@@ -15,6 +17,13 @@ export default function Posts() {
       ) : (
         <h1 className="loader">{artist}</h1>
       )}
+      <hr />
+      <h1>USER</h1>
+      <pre>
+        <code>{JSON.stringify(user, null, 4)}</code>
+      </pre>
+      <hr />
+
       <ul>
         {(artistResult || [])
           .filter((_, i) => i < 10)

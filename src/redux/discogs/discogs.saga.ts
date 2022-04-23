@@ -1,21 +1,32 @@
-import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
+import { Folder, User } from "../../api/domain";
 import * as messageHandler from "../../messages/handler";
-import { getFoldersSuccess } from "./discogs.actions";
+import { getFoldersSuccess, getUserSuccess } from "./discogs.actions";
 import { DiscogsActions } from "./types";
 
-function* onGetFolders() {
+function* onGetUser(): Generator<any> {
   try {
-    // @ts-ignore
-    const response: any = yield call(messageHandler.getFolder);
-    put(getFoldersSuccess(response));
+    const user = yield call(messageHandler.getUser);
+    console.log(user);
+    yield put(getUserSuccess(user as User));
   } catch (error) {
-    debugger;
+    console.log(error);
+  }
+}
+
+function* onGetFolders(): Generator<any> {
+  try {
+    const folders = yield call(messageHandler.getFolders);
+    console.log(folders);
+    yield put(getFoldersSuccess(folders as Folder[]));
+  } catch (error) {
     console.log(error);
   }
 }
 
 function* DiscogsSaga() {
   yield all([takeLatest(DiscogsActions.getFolders, onGetFolders)]);
+  yield all([takeLatest(DiscogsActions.getUser, onGetUser)]);
 }
 
 export default DiscogsSaga;

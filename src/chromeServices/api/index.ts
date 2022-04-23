@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
+import { get } from "../local.storage";
 
-const token = "KsYMjPUhOsZYVxHGWyNQxIKKtwLLtbRQjWdPbyIu"; // to be found in https://www.discogs.com/settings/developers
+const token = get("token", ""); // to be found in https://www.discogs.com/settings/developers
 const discogsBaseUrl = "https://api.discogs.com";
 
 const unRest = ({ data }: AxiosResponse) => data;

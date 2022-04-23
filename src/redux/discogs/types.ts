@@ -8,7 +8,7 @@ export interface DiscogsState {
   readonly artistResult: ArtistResult[];
   readonly error?: Error;
   readonly folders: Array<Folder>;
-  readonly user: User;
+  readonly user?: User;
 }
 
 export interface DiscogsActionData {

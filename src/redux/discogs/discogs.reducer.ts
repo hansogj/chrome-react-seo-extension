@@ -15,7 +15,7 @@ const discogsReducer = reducerForProducers<
   DiscogsActions
 >(initialState, {
   GET_ARTIST: writeToDraft("artist"),
-  GET_USER: writeToDraft("user"),
+  GET_USER_SUCCESS: writeToDraft("user"),
   GET_FOLDERS_SUCCESS: writeToDraft("folders"),
 });
 

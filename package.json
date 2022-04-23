@@ -14,6 +14,7 @@
         "axios": "^0.26.1",
         "immer": "^9.0.12",
         "madge": "^5.0.1",
+        "maybe-for-sure": "^1.4.2",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-redux": "^7.2.8",

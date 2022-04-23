@@ -27,18 +27,37 @@ const dispatcher = () => {
 
 const sendMessage = <T>(id = 0, body: Action<T>): Promise<Response> =>
   new Promise((resolve, reject) =>
-    chrome.tabs.sendMessage(id, body, (response: Response) => resolve(response))
+    chrome.tabs.sendMessage(id, body, (response: Response) => {
+      console.log("SM", response);
+      return resolve(response);
+    })
   );
 
-export const getFolder = async (): Promise<any> => {
+export const getFolders = async (): Promise<any> => {
   return getCurrentTab()
     .then(({ id }) => {
-      sendMessage(id, { type: DiscogsActions.getFolders });
+      return sendMessage(id, { type: DiscogsActions.getFolders }).then((e) => {
+        console.log("GF", e);
+        return e;
+      });
     })
-    .catch(() => api.fetchFolders())
+    .catch(() => api.fetchFolders());
 
-    .then((folders) => {
+  /*     .then(({ folders }) => {
       console.log(folders);
       return dispatcher().then((action) => action(getFoldersSuccess(folders)));
-    });
+    }); */
 };
+
+export const getUser = async (): Promise<any> =>
+  getCurrentTab()
+    .then(({ id }) => {
+      return sendMessage(id, {
+        type: DiscogsActions.getUser,
+        user: "hansogj",
+      } as any).then((e) => {
+        console.log("GF", e);
+        return e;
+      });
+    })
+    .catch(() => api.fetchUser());

@@ -2,23 +2,21 @@ import React from "react";
 import { useSelector } from "react-redux";
 import "./App.scss";
 import { store } from "./redux/store";
-import { getFolders } from "./redux/discogs/discogs.actions";
-import { RootState } from "./redux";
+import { getFolders, getUser } from "./redux/discogs/discogs.actions";
+import { action, RootState } from "./redux";
 
 function App() {
   const { artist } = useSelector((state: RootState) => state.Discogs);
 
-  React.useEffect(() => {
-    if (!artist)
-      setTimeout(() => {
-        console.log("dispatch");
-        return store.dispatch(getFolders() as any);
-      }, 2000);
-  }, [artist]);
+  const fetchFolders = () => {
+    action(getFolders());
+    action(getUser());
+  };
 
   return (
     <div className="App">
       <h1>SEO Extension built with React!</h1>
+      <button onClick={fetchFolders}>Fetch folders</button>
 
       <ul className="SEOForm">
         <li className="SEOValidation">

@@ -10,7 +10,7 @@ export const getArtistSuccess = (
   artist: Artist,
   artistResult: ArtistResult[]
 ): DiscogsActionTypes => ({
-  type: DiscogsActions.getArtist,
+  type: DiscogsActions.getArtistSuccess,
   artist,
   artistResult,
 });
@@ -20,7 +20,7 @@ export const getUser = (): DiscogsActionTypes => ({
 });
 
 export const getUserSuccess = (user: User): DiscogsActionTypes => ({
-  type: DiscogsActions.getUser,
+  type: DiscogsActions.getUserSuccess,
   user,
 });
 
