@@ -1,4 +1,5 @@
 import produce, { Draft } from "immer";
+import maybe from "maybe-for-sure";
 
 type Producer<State, Action> = (draft: Draft<State>, action: Action) => void;
 type SharedKeys<Type, OtherType> = keyof Type & keyof OtherType;
@@ -45,3 +46,11 @@ export const writeToDraft =
   (draft: Draft<State>, action: Action) =>
     // eslint-disable-next-line
     keys.forEach((key) => (draft[key] = action[key] as any));
+
+export const selectFromRoot = <T, Key extends keyof T>(
+  state: T,
+  select: Key
+): T[Key] =>
+  maybe(state)
+    .mapTo(select)
+    .valueOr(undefined as unknown as T[Key]);

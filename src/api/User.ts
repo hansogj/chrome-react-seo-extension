@@ -1,5 +1,12 @@
 export type ResourceUrl = string;
 
+export interface OauthIdentity {
+  id: number;
+  username: string;
+  resource_url: ResourceUrl;
+  consumer_name: string;
+}
+
 export interface User {
   id: number;
   resource_url: ResourceUrl;

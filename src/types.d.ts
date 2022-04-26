@@ -10,3 +10,5 @@ interface Hash<T> {
 type TypedRecord<K, T> = {
   [P in keyof K]: T;
 };
+
+type SearchParams = Record<string, string | number>;

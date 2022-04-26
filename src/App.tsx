@@ -9,7 +9,6 @@ function App() {
   const { artist } = useSelector((state: RootState) => state.Discogs);
 
   const fetchFolders = () => {
-    action(getFolders());
     action(getUser());
   };
 

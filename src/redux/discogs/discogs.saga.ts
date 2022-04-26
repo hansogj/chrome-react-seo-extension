@@ -1,14 +1,30 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
-import { Folder, User } from "../../api/domain";
+import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { Folder, OauthIdentity, User } from "../../api/domain";
 import * as messageHandler from "../../messages/handler";
-import { getFoldersSuccess, getUserSuccess } from "./discogs.actions";
+import { getFoldersResource } from "../selectors/resource.selectors";
+import {
+  getFolders,
+  getFoldersSuccess,
+  getUserSuccess,
+} from "./discogs.actions";
 import { DiscogsActions } from "./types";
+const discogsBaseUrl = "https://api.discogs.com";
 
 function* onGetUser(): Generator<any> {
   try {
-    const user = yield call(messageHandler.getUser);
-    console.log(user);
+    const identity = yield call(
+      messageHandler.fetch,
+      `${discogsBaseUrl}/oauth/identity`
+    );
+
+    const user = yield call(
+      messageHandler.fetch,
+      (identity as OauthIdentity).resource_url
+    );
+    console.log(identity, user);
+
     yield put(getUserSuccess(user as User));
+    yield put(getFolders());
   } catch (error) {
     console.log(error);
   }
@@ -16,7 +32,9 @@ function* onGetUser(): Generator<any> {
 
 function* onGetFolders(): Generator<any> {
   try {
-    const folders = yield call(messageHandler.getFolders);
+    const foldersResource = yield select(getFoldersResource);
+    console.log(foldersResource);
+    const folders = yield call(messageHandler.fetch, foldersResource as string);
     console.log(folders);
     yield put(getFoldersSuccess(folders as Folder[]));
   } catch (error) {

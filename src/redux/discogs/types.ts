@@ -19,25 +19,6 @@ export interface DiscogsActionData {
   user: Optional<User>;
 }
 
-/* 
-export type DiscogsUserActionType = Action<DiscogsAction> &
-  Pick<DiscogsState, "user">;
-export type DiscogsArtistActionType = Action<DiscogsAction> &
-  Pick<DiscogsState, "artist" | "artistResult">;
-export type DiscogsFolderActionType = Action<DiscogsAction> &
-  Pick<DiscogsState, "folders">;
-
-export type DiscogsActionType =
-  | Action<DiscogsAction>
-  | DiscogsUserActionType
-  | DiscogsFolderActionType
-  | DiscogsArtistActionType;
-
-export type DiscogsActionProducer = Action<DiscogsAction> &
-  DiscogsUserActionType &
-  DiscogsFolderActionType &
-  DiscogsArtistActionType; */
-
 export enum DiscogsActions {
   getArtist = "GET_ARTIST",
   getArtistSuccess = "GET_ARTIST_SUCCESS",
