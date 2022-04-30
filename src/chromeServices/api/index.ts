@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
-import { get } from "../local.storage";
+import maybe from "maybe-for-sure";
+import { get, set } from "../local.storage";
 
-const token = get("token", ""); // to be found in https://www.discogs.com/settings/developers
-
+const unRest = ({ data }: AxiosResponse) => data;
 const serialize = (obj: Record<string, string | number>): string =>
   Object.keys(obj)
     .reduce(
@@ -11,6 +11,19 @@ const serialize = (obj: Record<string, string | number>): string =>
     )
     .join("&");
 
-const unRest = ({ data }: AxiosResponse) => data;
 export const fetch = async (resource: string, body?: SearchParams) =>
-  axios.get(`${resource}?${serialize({ token, ...body })}`).then(unRest);
+  axios
+    .get(
+      maybe(body)
+        .orJust({} as SearchParams)
+        .map((it) => ({ ...it, token: get("token", "") })) // token to be found in https://www.discogs.com/settings/developers
+        .map((it) => serialize(it))
+        .map((it) => resource + "?" + it)
+        .valueOr(resource)
+    )
+    .then(unRest);
+
+export function setUserToken(userToken: string): Promise<boolean> {
+  set("token", userToken);
+  return Promise.resolve(true);
+}

@@ -17,6 +17,7 @@ export interface DiscogsActionData {
   error: Optional<Error>;
   folders: Optional<Array<Folder>>;
   user: Optional<User>;
+  userToken: Optional<string>;
 }
 
 export enum DiscogsActions {
@@ -27,6 +28,7 @@ export enum DiscogsActions {
   getUser = "GET_USER",
   getUserSuccess = "GET_USER_SUCCESS",
   getUserFailed = "GET_USER_FAILED",
+  setUserToken = "SET_USER_TOKEN",
 
   getFolders = "GET_FOLDERS",
   getFoldersSuccess = "GET_FOLDERS_SUCCESS",

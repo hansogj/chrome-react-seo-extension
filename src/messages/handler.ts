@@ -1,7 +1,7 @@
 import { ResourceUrl } from "../api/domain";
 import * as api from "../chromeServices/api";
 import { MessageActions } from "../chromeServices/types";
-import { Action } from "../redux";
+import { ActionTypes } from "../redux";
 
 let queryOptions = { active: true, currentWindow: true };
 
@@ -15,7 +15,7 @@ const getCurrentTab = (): Promise<chrome.tabs.Tab> =>
 
 const dispatcher = () => import("../redux").then(({ action }) => action);
 
-const sendMessage = <T>(id = 0, body: Action<T>): Promise<Response> =>
+const sendMessage = <T>(id = 0, body: ActionTypes): Promise<Response> =>
   new Promise((resolve, reject) =>
     chrome.tabs.sendMessage(id, body, (response: Response) => resolve(response))
   );
@@ -30,6 +30,17 @@ export const fetch = async <T>(
         type: MessageActions.fetch,
         resource,
         body,
-      } as any)
+      })
     )
     .catch(() => api.fetch(resource, body));
+
+export const setUserToken = async (userToken: string): Promise<boolean> =>
+  getCurrentTab()
+    .then(({ id }) =>
+      sendMessage(id, {
+        type: MessageActions.setUserToken,
+        body: { userToken },
+      })
+    )
+    .catch(() => api.setUserToken(userToken))
+    .then(() => true);

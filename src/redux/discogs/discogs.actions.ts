@@ -19,6 +19,11 @@ export const getUser = (): DiscogsActionTypes => ({
   type: DiscogsActions.getUser,
 });
 
+export const setUserToken = (userToken: string): DiscogsActionTypes => ({
+  type: DiscogsActions.setUserToken,
+  userToken,
+});
+
 export const getUserSuccess = (user: User): DiscogsActionTypes => ({
   type: DiscogsActions.getUserSuccess,
   user,

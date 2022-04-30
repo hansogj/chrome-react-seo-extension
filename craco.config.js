@@ -12,8 +12,8 @@ module.exports = {
                 filename: 'static/js/[name].js',
             },
             optimization: {
-                /*   ...webpackConfig.optimization,
-                  runtimeChunk: false, */
+                ...webpackConfig.optimization,
+                runtimeChunk: false,
             }
         }),
     }

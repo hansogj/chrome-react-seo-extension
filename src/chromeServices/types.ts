@@ -9,6 +9,7 @@ export interface MessageActionData {
 export enum MessageActions {
   fetch = "FETCH",
   post = "POST",
+  setUserToken = "SET_USER_TOKEN",
 }
 
 export type MessageActionTypes = ActionTypes<MessageActions, MessageActionData>;
