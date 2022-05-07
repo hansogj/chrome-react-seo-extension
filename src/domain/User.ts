@@ -1,4 +1,4 @@
-export type ResourceUrl = string;
+import { ResourceUrl } from "./";
 
 export interface OauthIdentity {
   id: number;

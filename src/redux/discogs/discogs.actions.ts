@@ -1,4 +1,5 @@
-import { Artist, ArtistResult, Folder, User } from "../../api/domain";
+import { Artist, ArtistResult, Folder, Want, WantList } from "../../domain";
+import { InventoryFields } from "../../domain/InventoryFields";
 import { DiscogsActions, DiscogsActionTypes } from "./types";
 
 export const getArtist = (artist: Artist): DiscogsActionTypes => ({
@@ -15,20 +16,6 @@ export const getArtistSuccess = (
   artistResult,
 });
 
-export const getUser = (): DiscogsActionTypes => ({
-  type: DiscogsActions.getUser,
-});
-
-export const setUserToken = (userToken: string): DiscogsActionTypes => ({
-  type: DiscogsActions.setUserToken,
-  userToken,
-});
-
-export const getUserSuccess = (user: User): DiscogsActionTypes => ({
-  type: DiscogsActions.getUserSuccess,
-  user,
-});
-
 export const getFolders = (): DiscogsActionTypes => ({
   type: DiscogsActions.getFolders,
 });
@@ -38,4 +25,27 @@ export const getFoldersSuccess = (
 ): DiscogsActionTypes => ({
   type: DiscogsActions.getFoldersSuccess,
   folders,
+});
+
+export const getInventoryFieldsSuccess = (fields: InventoryFields) => ({
+  type: DiscogsActions.getInventoryFieldsSuccess,
+  fields,
+});
+
+export const filterReleases = (): DiscogsActionTypes => ({
+  type: DiscogsActions.filterReleases,
+});
+
+export const filterSellers = (): DiscogsActionTypes => ({
+  type: DiscogsActions.filterSellers,
+});
+
+export const getWantList = (page: number): DiscogsActionTypes => ({
+  type: DiscogsActions.getWantList,
+  page,
+});
+
+export const getWantListSuccess = (wantList: WantList): DiscogsActionTypes => ({
+  type: DiscogsActions.getWantListSuccess,
+  wantList,
 });

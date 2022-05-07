@@ -4,9 +4,9 @@ import { DiscogsActions, DiscogsActionTypes, DiscogsState } from "./types";
 export const initialState: DiscogsState = {
   artist: undefined,
   artistResult: [],
-  error: undefined,
   folders: [],
-  user: undefined,
+  wantList: [],
+  fields: [],
 };
 
 const discogsReducer = reducerForProducers<
@@ -15,8 +15,9 @@ const discogsReducer = reducerForProducers<
   DiscogsActions
 >(initialState, {
   GET_ARTIST: writeToDraft("artist"),
-  GET_USER_SUCCESS: writeToDraft("user"),
   GET_FOLDERS_SUCCESS: writeToDraft("folders"),
+  GET_WANT_LIST_SUCCESS: writeToDraft("wantList"),
+  GET_INVENTORY_FIELDS_SUCCESS: writeToDraft("fields"),
 });
 
 export default discogsReducer;

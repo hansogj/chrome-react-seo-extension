@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { base, colors, contentKidStyle, spacings } from "../styled";
 import record from "../../assets/round-record.png";
-import { User } from "../../api/domain";
+import { User } from "../../domain";
 import maybe from "maybe-for-sure";
 
 const rpm33 = 60 / 33.3333;
@@ -105,6 +105,7 @@ const Stage = styled.div`
 type Props = { user: Optional<User> };
 const AppHeader: FC<Props> = ({ user }: Props) => (
   <ContentHeader>
+    <AppLogo src={record} alt="logo" />
     <h1>
       {maybe(user)
         .mapTo("name")
@@ -115,7 +116,6 @@ const AppHeader: FC<Props> = ({ user }: Props) => (
           </Stage>
         )}
     </h1>
-    <AppLogo src={record} alt="logo" />
   </ContentHeader>
 );
 export default AppHeader;

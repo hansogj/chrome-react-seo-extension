@@ -1,26 +1,86 @@
-import maybe from "maybe-for-sure";
-import React, { FC, useEffect } from "react";
-import { bindActionCreators, Dispatch } from "redux";
+import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { User } from "../../api/domain";
+import { bindActionCreators, Dispatch } from "redux";
+import { User, WantList } from "../../domain";
 import { RootState } from "../../redux";
-import { getUser } from "../../redux/selectors/resource.selectors";
-import { DispatchProps, StateProps } from "../../redux/selectors/utils";
-import { Column, Container, Content, ContentBody, Row } from "../styled";
-
+import { DispatchAction } from "../../redux/discogs";
 import * as actions from "../../redux/discogs/discogs.actions";
-import { DiscogsActionTypes } from "../../redux/discogs";
+import {
+  DispatchProps,
+  getFields,
+  getFolders,
+  getUser,
+  getWantList,
+  StateProps,
+} from "../../redux/selectors";
+import { colors, Column, ContentBody, Row } from "../styled";
+import ActionButton from "./ActionButton";
+import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
+import { Button } from "./Inputs";
+import WantListComponent, { Props as WantListProps } from "./WantList";
 
-interface DiscProps {
+interface DiscProps extends AddToFolderProps, WantListProps {
   user: Optional<User>;
+  //  folders: Optional<Folder[]>;
+  // wantList: Optional<WantList>;
+  filterReleases: DispatchAction<void>;
+  filterSellers: DispatchAction<void>;
 }
-const DiscogsContainer: FC<DiscProps> = ({ user }: DiscProps) => {
+
+const DiscogsContainer: FC<DiscProps> = ({
+  user,
+  folders,
+  filterReleases,
+  filterSellers,
+  fields,
+  wantList,
+}: DiscProps) => {
+  const Views = ["Actions", "Add item", "Want list"] as const;
+
+  const [activeView, setView] = useState<typeof Views[number]>("Add item");
+
   return (
     <ContentBody>
       <Row>
-        <Column>{JSON.stringify(user, null, 4)}</Column>
-        <Column></Column>
+        {Views.map((view) => (
+          <Column key={view}>
+            <Button active={view === activeView} onClick={() => setView(view)}>
+              {view}
+            </Button>
+          </Column>
+        ))}
       </Row>
+      {activeView === "Actions" && (
+        <>
+          <Row>
+            <Column>
+              <ActionButton
+                {...{
+                  style: { backgroundColor: colors.dread },
+                  onClick: () => filterSellers(),
+                }}
+              >
+                Filter seller
+              </ActionButton>
+            </Column>
+            <Column>
+              <ActionButton {...{ onClick: () => filterReleases() }}>
+                Filter Releases
+              </ActionButton>
+            </Column>
+          </Row>
+          <Row>
+            <Column>{JSON.stringify(user, null, 4)}</Column>
+          </Row>
+        </>
+      )}
+
+      {activeView === "Want list" && wantList && (
+        <WantListComponent {...{ wantList }} />
+      )}
+      {activeView === "Add item" && (
+        <AddToFolder folders={folders} fields={fields} />
+      )}
     </ContentBody>
   );
 };
@@ -29,96 +89,18 @@ export const mapStateToProps = (
   state: RootState
 ): StateProps<Partial<DiscProps>> => ({
   user: getUser(state),
+  folders: getFolders(state),
+  wantList: getWantList(state),
+  fields: getFields(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
   ({
-    setUserToken: bindActionCreators(actions.setUserToken, dispatch),
-  } as any);
+    filterReleases: bindActionCreators(actions.filterReleases, dispatch),
+    filterSellers: bindActionCreators(actions.filterSellers, dispatch),
+  } as DiscProps);
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(DiscogsContainer as FC<Partial<DiscProps>>);
-
-/*
-import {
-    Action,
-    addToWantlistAction,
-    filterAndAddToWantlistAction,
-    removeFromWantlistAction,
-    uniqueReleaseAction,
-    uniqueSellerAction,
-} from '../../constants'
-import { sendChromeMessage } from '../../service/messages'
-import { colors, Column, ContentBody, Row } from '../styled'
-import AddToFolder from './AddToFolder'
-import { ChangeOrigin, ChangePlacement } from './CustomFieldsSelectors'
-import { Button } from './inputs'
-
-interface ActionButtonProps extends Action {
-    style?: React.CSSProperties
-}
-
-const ActionButton = ({ action, title, options, style }: ActionButtonProps) => (
-    <Button style={style} onClick={() => sendChromeMessage(action, options)}>
-        {title}
-    </Button>
-)
-
-const DiscogsActions = () => (
-    <ContentBody>
-        <Row>
-            <Column>
-                <ActionButton {...uniqueSellerAction} />
-            </Column>
-            <Column>
-                <ActionButton {...uniqueReleaseAction} />
-            </Column>
-        </Row>
-
-        <Row>
-            <Column>
-                <ActionButton {...addToWantlistAction} />
-            </Column>
-            <Column>
-                <ActionButton
-                    {...{
-                        ...removeFromWantlistAction,
-                        ...{ style: { backgroundColor: colors.dread } },
-                    }}
-                />
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                <ActionButton
-                    {...{
-                        ...filterAndAddToWantlistAction,
-                        ...{ style: { backgroundColor: colors.kindOfBlue } },
-                    }}
-                />
-            </Column>
-
-            <AddToFolder />
-        </Row>
-        <Row>
-            <Column>
-                <h3 style={{ color: '#333' }}>
-                    Change Custom Fields for all selection
-                </h3>
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                <ChangeOrigin />
-            </Column>
-            <Column>
-                <ChangePlacement />
-            </Column>
-        </Row>
-    </ContentBody>
-)
-
-export default DiscogsActions
- */

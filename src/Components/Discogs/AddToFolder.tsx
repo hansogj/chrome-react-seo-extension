@@ -1,28 +1,28 @@
-const A = 1;
-export default A;
+import React, { FC } from "react";
+import { InventoryFields } from "../../domain/InventoryFields";
+import { Column, ContentBody, Row } from "../styled";
+import ActionButton from "./ActionButton";
+import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
+import ListFields, { Props as ListFieldsProps } from "./ListFields";
 
-/* import React, { ChangeEvent } from 'react'
-import { addReleaseAction, Folder, folders } from '../../constants'
-import { sendChromeMessage } from '../../service/messages'
-import { Select } from './inputs'
+export interface Props extends ListFoldersProps, ListFieldsProps {}
 
-const sendSelectedFolderMessage = (e: ChangeEvent) =>
-    folders
-        .filter(
-            ({ folder_id: id }) =>
-                id === parseInt((e.target as HTMLSelectElement).value)
-        )
-        .map((folder) => sendChromeMessage(addReleaseAction.action, folder))
+const AddToFolderComponent: FC<Props> = ({ folders, fields }: Props) => {
+  return (
+    <ContentBody filled>
+      <Row>
+        <Column>
+          <ListFolders folders={folders} />
+        </Column>
+      </Row>
+      <ListFields fields={fields} />
+      <Row>
+        <Column>
+          <ActionButton>Add</ActionButton>
+        </Column>
+      </Row>
+    </ContentBody>
+  );
+};
 
-const AddToFolder = () => (
-    <Select onChange={sendSelectedFolderMessage}>
-        {folders.map(({ folder_id: id, name }: Folder) => (
-            <option key={`folderId-${id}`} value={id}>
-                {name}
-            </option>
-        ))}
-    </Select>
-)
-
-export default AddToFolder
- */
+export default AddToFolderComponent;

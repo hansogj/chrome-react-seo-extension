@@ -1,16 +1,18 @@
 import React, { FC, useState } from "react";
+import { AppActionTypes } from "../../redux/app";
 import { DiscogsActionTypes } from "../../redux/discogs";
 import { Button, Input } from "../Discogs/Inputs";
-import { Card, Column, ContentBody, Row } from "../styled";
+import { base, Card, Column, ContentBody, Row } from "../styled";
 
 export interface TokenInputProps {
-  setUserToken: Fn<[string], DiscogsActionTypes>;
+  setUserToken: Fn<[string], AppActionTypes>;
 }
 
 const TokenInput: FC<TokenInputProps> = ({
   setUserToken: onClick,
 }: TokenInputProps) => {
   const [token, setToken] = useState<string>("");
+
   return (
     <ContentBody>
       <Row>
@@ -32,6 +34,7 @@ const TokenInput: FC<TokenInputProps> = ({
           <Card>
             <Input
               type="text"
+              width={18}
               placeholder="token: ###"
               value={token}
               onChange={(e) => setToken(e.target.value)}

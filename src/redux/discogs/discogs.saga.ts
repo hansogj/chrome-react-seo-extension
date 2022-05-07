@@ -1,64 +1,124 @@
-import { debug } from "console";
-import { all, call, put, select, takeLatest } from "redux-saga/effects";
-import { Folder, OauthIdentity, User } from "../../api/domain";
-import * as messageHandler from "../../messages/handler";
-import { getFoldersResource } from "../selectors/resource.selectors";
+import {
+  all,
+  call,
+  CallEffect,
+  put,
+  PutEffect,
+  select,
+  SelectEffect,
+  takeLatest,
+} from "redux-saga/effects";
+import { Folder, WantList } from "../../domain";
+import { InventoryFields } from "../../domain/InventoryFields";
+import * as messageHandler from "../../services/popup/message.handler";
+import { AppActions } from "../app/";
+import * as appActions from "../app/app.actions";
+import {
+  getCollectionResource,
+  getFieldsResource,
+  getFoldersResource,
+  getInventoryResource,
+  getWantListResource,
+  ResourceSelectors,
+} from "../selectors/resource.selectors";
+import { DiscogsActions } from "./";
 import * as actions from "./discogs.actions";
-import { DiscogsActions, DiscogsActionTypes } from "./types";
-const discogsBaseUrl = "https://api.discogs.com";
-
-function* getUser(): Generator<any> {
-  try {
-    const identity = yield call(
-      messageHandler.fetch,
-      `${discogsBaseUrl}/oauth/identity`
-    );
-
-    const user = yield call(
-      messageHandler.fetch,
-      (identity as OauthIdentity).resource_url
-    );
-    console.log(identity, user);
-
-    yield put(actions.getUserSuccess(user as User));
-    // yield put(getFolders());
-  } catch (error) {
-    console.log(error);
-  }
-}
+import { DiscogsActionTypes } from "./types";
 
 function* getFolders(): Generator<any> {
-  try {
-    const foldersResource = yield select(getFoldersResource);
-    if (foldersResource) {
-      console.log(foldersResource);
-      const folders = yield call(
-        messageHandler.fetch,
-        foldersResource as string
-      );
-      console.log(folders);
-      yield put(actions.getFoldersSuccess(folders as Folder[]));
-    } else {
-      yield put(actions.getUser());
-    }
-  } catch (error) {
-    console.log(error);
+  const result = yield fetchResource(getFoldersResource);
+  if (result) {
+    yield put(
+      actions.getFoldersSuccess((result as { folders: Folder[] }).folders)
+    );
   }
 }
 
-function* setUserToken({ userToken }: DiscogsActionTypes): Generator<any> {
-  debugger;
-  try {
-    yield call(messageHandler.setUserToken, userToken!);
-    yield put(actions.getFolders());
-  } catch (error) {}
+function* getFields(): Generator<any> {
+  const result = yield fetchResource(getFieldsResource);
+  console.log(result);
+  if (result)
+    yield put(
+      actions.getInventoryFieldsSuccess(
+        (result as { fields: InventoryFields }).fields
+      )
+    );
 }
+
+function* getWantList(): Generator<any> {
+  const wantList = yield select(getWantListResource);
+  console.log(wantList);
+  let result = yield call(messageHandler.getWantList);
+  console.log(result);
+
+  if (Object.keys(result as any).length === 0) {
+    result = yield call(messageHandler.syncWantList as any, wantList);
+  }
+
+  yield put(actions.getWantListSuccess(result as WantList));
+}
+
+/*   const result = yield fetchResource(getWantlistResource, {
+    per_page: 500,
+    page,
+  });
+  if (result) {
+    const { pagination, wants } = result as PaginatedWantList;
+    yield put(actions.getWantListSuccess(wants));
+    console.log(page + 1, pagination.page + 1);
+    if (pagination.page < pagination.pages) {
+      yield put(actions.getWantList(pagination.page + 1));
+    }
+  } */
+
+function* fetchResource<T>(
+  selector: ResourceSelectors,
+  body?: SearchParams
+): Generator<SelectEffect | CallEffect | PutEffect, T, T> {
+  let result: T = undefined as unknown as T;
+  try {
+    const resource = yield select(selector);
+    if (resource) {
+      result = yield call(messageHandler.fetch as any, resource, body);
+    } else {
+      yield put(appActions.getUser());
+    }
+  } catch (error) {
+    yield put(appActions.error(error));
+  }
+  return result;
+}
+
+function* getDiscogsInventory(): Generator<any> {
+  yield fetchResource(getInventoryResource);
+  yield fetchResource(getFoldersResource);
+  yield fetchResource(getFieldsResource);
+}
+
+function* getCollection(): Generator<any> {
+  yield fetchResource(getCollectionResource);
+}
+
+function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
+  yield call(messageHandler.manipulateDom, type);
+}
+
+function* onUserSuccess() {
+  yield getFolders();
+  yield getWantList();
+  yield getFields();
+  // takeLatest(DiscogsActions.getWantList, getWantList),
+}
+
 function* DiscogsSaga() {
   yield all([
     takeLatest(DiscogsActions.getFolders, getFolders),
-    takeLatest(DiscogsActions.getUser, getUser),
-    takeLatest(DiscogsActions.getUserSuccess, getFolders),
-    takeLatest(DiscogsActions.setUserToken, setUserToken),
+    takeLatest(AppActions.getUserSuccess, onUserSuccess),
+    // takeLatest(DiscogsActions.getWantList, getWantList),
+    //    takeLatest(AppActions.getUserSuccess, getDiscogsInventory),
+    takeLatest(DiscogsActions.getFoldersSuccess, getCollection),
+    takeLatest(DiscogsActions.filterReleases, manipulateDom),
+    takeLatest(DiscogsActions.filterSellers, manipulateDom),
   ]);
 }
 

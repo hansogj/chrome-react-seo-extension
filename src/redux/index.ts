@@ -6,3 +6,4 @@ import type { ActionTypes } from "./store";
 export { store, action };
 export * from "./types";
 export type { ActionTypes, RootState };
+export type Error = { message: string };

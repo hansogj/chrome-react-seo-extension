@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import packageJson from "../../package.json";
+import packageJson from "../../../package.json";
 import maybe from "maybe-for-sure";
 
-type StorageKeys = "token";
+type StorageKeys = "token" | "want-list" | "cache";
 
 const { name } = packageJson;
 

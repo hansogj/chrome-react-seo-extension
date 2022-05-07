@@ -5,15 +5,21 @@ module.exports = {
             entry: {
                 main: [env === 'development' &&
                     require.resolve('webpack/hot/dev-server'), paths.appIndexJs].filter(Boolean),
-                content: './src/chromeServices',
+                content: './src/services/chrome',
             },
             output: {
                 ...webpackConfig.output,
                 filename: 'static/js/[name].js',
             },
             optimization: {
-                ...webpackConfig.optimization,
+                /*    ...webpackConfig.optimization,
+                   runtimeChunk: false, */
                 runtimeChunk: false,
+                splitChunks: {
+                    chunks(chunk) {
+                        return false
+                    },
+                },
             }
         }),
     }

@@ -1,23 +1,24 @@
-import { Artist, ArtistResult, Folder, User } from "../../api/domain";
+import { Artist, ArtistResult, Folder, WantList } from "../../domain";
+import { InventoryFields } from "../../domain/InventoryFields";
 import { ActionTypes } from "../types";
-
-export type Error = { message: string };
 
 export interface DiscogsState {
   readonly artist: Artist;
   readonly artistResult: ArtistResult[];
-  readonly error?: Error;
+
   readonly folders: Array<Folder>;
-  readonly user?: User;
+  readonly wantList: WantList;
+  readonly fields: InventoryFields;
 }
 
 export interface DiscogsActionData {
   artist: Optional<Artist>;
   artistResult: Optional<ArtistResult[]>;
-  error: Optional<Error>;
+
   folders: Optional<Array<Folder>>;
-  user: Optional<User>;
-  userToken: Optional<string>;
+  wantList: Optional<WantList>;
+  fields: Optional<InventoryFields>;
+  page: Optional<number>;
 }
 
 export enum DiscogsActions {
@@ -25,14 +26,19 @@ export enum DiscogsActions {
   getArtistSuccess = "GET_ARTIST_SUCCESS",
   getArtistFailed = "GET_ARTIST_FAILED",
 
-  getUser = "GET_USER",
-  getUserSuccess = "GET_USER_SUCCESS",
-  getUserFailed = "GET_USER_FAILED",
-  setUserToken = "SET_USER_TOKEN",
-
   getFolders = "GET_FOLDERS",
   getFoldersSuccess = "GET_FOLDERS_SUCCESS",
   getFoldersFailed = "GET_FOLDERS_FAILED",
+
+  getWantList = "GET_WANT_LIST",
+  getWantListSuccess = "GET_WANT_LIST_SUCCESS",
+  getWantListFailed = "GET_WANT_LIST_FAILED",
+
+  getInventoryFieldsSuccess = "GET_INVENTORY_FIELDS_SUCCESS",
+
+  filterReleases = "FILTER_RELEASES",
+  filterSellers = "FILTER_SELLERS",
 }
 
 export type DiscogsActionTypes = ActionTypes<DiscogsActions, DiscogsActionData>;
+export type DispatchAction<T> = Fn<[T], DiscogsActionTypes>;

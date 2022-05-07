@@ -27,6 +27,7 @@ export const borderRadius = {
   large: base,
 };
 
+export type Size = { width?: number; height?: number };
 export const spacings = {
   ...borderRadius,
 };
@@ -42,6 +43,18 @@ const link = css`
       text-decoration: none;
     }
   }
+`;
+
+export const shade = css`
+  box-shadow: ${borderRadius.medium} ${borderRadius.small} ${borderRadius.small}
+    ${colors.darkShade};
+`;
+
+export const size = css<Size>`
+  max-width: ${(props) =>
+    props.width ? `calc(${base} * ${props.width})` : "100%"};
+  max-height: ${(props) =>
+    props.height ? `calc(${base} * ${props.height})` : "100%"};
 `;
 
 export const contentKidStyle = css`
@@ -67,20 +80,29 @@ export const Content = styled.div`
   background-size: auto;
 `;
 
-export const ContentBody = styled.div`
+export const ContentBody = styled.div<{ filled?: boolean }>`
   margin-top: ${base};
   padding: 0 ${base};
   align-items: start;
   ${contentKidStyle};
+  ${(props) =>
+    props.filled &&
+    `
+    border-radius: ${borderRadius.medium};
+    background-color: ${colors.kindOfBlue};
+    color: ${colors.bright};
+    `};
 `;
-export const Column = styled.div`
+export const Column = styled.div<Size>`
+  ${size};
   display: flex;
   flex-direction: column;
-  margin: 0 ${micro};
+  margin: 0;
 `;
 
 export const Row = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
   margin: ${micro} 0;
@@ -92,6 +114,7 @@ export const Card = styled.div`
     props.color ? props.color : colors.kindOfBlue};
   color: ${(props) => (props.color ? props.color : colors.bright)};
   padding: ${base};
+  width: calc(${base} * 20);
   border-radius: ${borderRadius.medium};
   padding: ${base};
   height: 100%;
