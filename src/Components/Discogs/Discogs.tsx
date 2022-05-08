@@ -9,20 +9,20 @@ import {
   DispatchProps,
   getFields,
   getFolders,
+  getSelectedFields,
   getUser,
   getWantList,
   StateProps,
 } from "../../redux/selectors";
-import { colors, Column, ContentBody, Row } from "../styled";
+
+import { colors, Column, ContentBody, Row, Button } from "../styled";
 import ActionButton from "./ActionButton";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
-import { Button } from "./Inputs";
+
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
 interface DiscProps extends AddToFolderProps, WantListProps {
   user: Optional<User>;
-  //  folders: Optional<Folder[]>;
-  // wantList: Optional<WantList>;
   filterReleases: DispatchAction<void>;
   filterSellers: DispatchAction<void>;
 }
@@ -30,10 +30,12 @@ interface DiscProps extends AddToFolderProps, WantListProps {
 const DiscogsContainer: FC<DiscProps> = ({
   user,
   folders,
-  filterReleases,
-  filterSellers,
   fields,
   wantList,
+  filterReleases,
+  filterSellers,
+  selectedFields,
+  setSelectedFields,
 }: DiscProps) => {
   const Views = ["Actions", "Add item", "Want list"] as const;
 
@@ -79,7 +81,9 @@ const DiscogsContainer: FC<DiscProps> = ({
         <WantListComponent {...{ wantList }} />
       )}
       {activeView === "Add item" && (
-        <AddToFolder folders={folders} fields={fields} />
+        <AddToFolder
+          {...{ folders, fields, selectedFields, setSelectedFields }}
+        />
       )}
     </ContentBody>
   );
@@ -92,12 +96,14 @@ export const mapStateToProps = (
   folders: getFolders(state),
   wantList: getWantList(state),
   fields: getFields(state),
+  selectedFields: getSelectedFields(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
   ({
     filterReleases: bindActionCreators(actions.filterReleases, dispatch),
     filterSellers: bindActionCreators(actions.filterSellers, dispatch),
+    setSelectedFields: bindActionCreators(actions.setSelectedFields, dispatch),
   } as DiscProps);
 
 export default connect(

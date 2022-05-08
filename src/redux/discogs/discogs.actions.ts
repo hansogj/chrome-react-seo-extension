@@ -1,20 +1,7 @@
-import { Artist, ArtistResult, Folder, Want, WantList } from "../../domain";
+import { Folder, WantList } from "../../domain";
+import { SelectedFields } from "../../domain/Inventory";
 import { InventoryFields } from "../../domain/InventoryFields";
 import { DiscogsActions, DiscogsActionTypes } from "./types";
-
-export const getArtist = (artist: Artist): DiscogsActionTypes => ({
-  type: DiscogsActions.getArtist,
-  artist,
-});
-
-export const getArtistSuccess = (
-  artist: Artist,
-  artistResult: ArtistResult[]
-): DiscogsActionTypes => ({
-  type: DiscogsActions.getArtistSuccess,
-  artist,
-  artistResult,
-});
 
 export const getFolders = (): DiscogsActionTypes => ({
   type: DiscogsActions.getFolders,
@@ -48,4 +35,18 @@ export const getWantList = (page: number): DiscogsActionTypes => ({
 export const getWantListSuccess = (wantList: WantList): DiscogsActionTypes => ({
   type: DiscogsActions.getWantListSuccess,
   wantList,
+});
+
+export const setSelectedFields = (
+  selectedFields: SelectedFields
+): DiscogsActionTypes => ({
+  type: DiscogsActions.setSelectedFields,
+  selectedFields,
+});
+
+export const setSelectedFieldsSuccess = (
+  selectedFields: SelectedFields
+): DiscogsActionTypes => ({
+  type: DiscogsActions.setSelectedFieldsSuccess,
+  selectedFields,
 });

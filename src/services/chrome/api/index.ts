@@ -34,4 +34,4 @@ export const fetch = async (resource: string, body?: SearchParams) => {
 };
 
 export const setUserToken = (userToken: string): Promise<boolean> =>
-  Promise.resolve(set("token", userToken));
+  Promise.resolve(!!set("token", userToken));

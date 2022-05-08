@@ -1,49 +1,15 @@
 import styled, { css } from "styled-components";
-import turntable from "../assets/tt-close.3.jpg";
-
-export const base = "12px";
-export const micro = "2px";
-
-export const colors = {
-  bright: "#6793a7",
-  dark: "#282c34",
-  darkShade: "#030405",
-  black: "#111",
-  white: "#ddd",
-  shade: "#aaa",
-  dread: "#880000",
-  kindOfBlue: "#123654",
-};
-
-export const fontSizes = {
-  small: base,
-  medium: `calc(${base} + ${micro})`,
-  large: `calc(${base} * 1.5)`,
-};
-
-export const borderRadius = {
-  small: `calc(${base} / 2)`,
-  medium: `calc(${base} / 1.5)`,
-  large: base,
-};
-
-export type Size = { width?: number; height?: number };
-export const spacings = {
-  ...borderRadius,
-};
-
-const link = css`
-  a {
-    color: ${colors.bright};
-    &:active,
-    &:hover {
-      color: ${colors.darkShade};
-    }
-    &:active {
-      text-decoration: none;
-    }
-  }
-`;
+import turntable from "../../assets/tt-close.3.jpg";
+import { h, link } from "./fonts";
+import {
+  base,
+  borderRadius,
+  colors,
+  fontSizes,
+  micro,
+  Padded,
+  Size,
+} from "./variables";
 
 export const shade = css`
   box-shadow: ${borderRadius.medium} ${borderRadius.small} ${borderRadius.small}
@@ -51,10 +17,15 @@ export const shade = css`
 `;
 
 export const size = css<Size>`
-  max-width: ${(props) =>
-    props.width ? `calc(${base} * ${props.width})` : "100%"};
-  max-height: ${(props) =>
-    props.height ? `calc(${base} * ${props.height})` : "100%"};
+  width: ${(props) =>
+    props.width ? `calc(${base} * ${props.width})` : "auto"};
+  height: ${(props) =>
+    props.height ? `calc(${base} * ${props.height})` : "auto"};
+`;
+
+export const padded = css<Padded>`
+  padding: ${({ padding = [] }: Padded) =>
+    padding.map((p) => `${p}px`).join(" ")}};
 `;
 
 export const contentKidStyle = css`
@@ -66,6 +37,7 @@ export const contentKidStyle = css`
 `;
 
 export const Container = styled.div`
+  ${h};
   font-size: ${fontSizes.medium};
   background-color: ${colors.dark};
   padding: ${base};
@@ -84,6 +56,7 @@ export const ContentBody = styled.div<{ filled?: boolean }>`
   margin-top: ${base};
   padding: 0 ${base};
   align-items: start;
+  width: auto;
   ${contentKidStyle};
   ${(props) =>
     props.filled &&
@@ -93,20 +66,23 @@ export const ContentBody = styled.div<{ filled?: boolean }>`
     color: ${colors.bright};
     `};
 `;
-export const Column = styled.div<Size>`
+export const Column = styled.div<Size & Padded>`
   ${size};
+  ${padded};
   display: flex;
   flex-direction: column;
   margin: 0;
+  justify-content: space-between;
 `;
 
-export const Row = styled.div`
+export const Row = styled.div<Size & Padded>`
+  ${size};
+  ${padded};
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
   margin: ${micro} 0;
-  width: 100%;
 `;
 
 export const Card = styled.div`

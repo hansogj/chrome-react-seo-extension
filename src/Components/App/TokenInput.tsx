@@ -1,8 +1,6 @@
 import React, { FC, useState } from "react";
 import { AppActionTypes } from "../../redux/app";
-import { DiscogsActionTypes } from "../../redux/discogs";
-import { Button, Input } from "../Discogs/Inputs";
-import { base, Card, Column, ContentBody, Row } from "../styled";
+import { Button, Card, Column, ContentBody, Input, Row } from "../styled";
 
 export interface TokenInputProps {
   setUserToken: Fn<[string], AppActionTypes>;
@@ -18,7 +16,7 @@ const TokenInput: FC<TokenInputProps> = ({
       <Row>
         <Column>
           <Card>
-            <h1>Mangler tilgangsnøkkel</h1>
+            <h3>Missing access TOKEN</h3>
             Fyll inn din personlige <b>Discogs</b>-api nøkkel. Den finnes på
             &nbsp;
             <a

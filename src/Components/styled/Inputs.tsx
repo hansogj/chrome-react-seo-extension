@@ -1,15 +1,14 @@
 import styled, { css } from "styled-components";
+import { shade, size } from "./styled";
 import {
-  base,
   borderRadius,
   colors,
   fontSizes,
   micro,
-  shade,
   Size,
-  size,
   spacings,
-} from "../styled";
+} from "./variables";
+
 const inputStyle = css`
   ${shade}
   background: ${colors.bright};
@@ -22,9 +21,9 @@ const inputStyle = css`
   font-size: ${fontSizes.medium};
   letter-spacing: 0.01em;
   line-height: normal;
-  margin: ${base};
+  margin: 0;
   overflow: visible;
-  padding: ${spacings.small} ${spacings.medium};
+  padding: ${spacings.small} ${spacings.small};
   text-align: center;
   text-decoration: none;
 
@@ -61,8 +60,9 @@ export const Button = styled.button<{
   cursor: pointer;
 `;
 
-export const Select = styled.select`
+export const Select = styled.select<Size>`
   ${inputStyle}
+  ${size}
   text-align: right;
 `;
 

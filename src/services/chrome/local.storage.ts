@@ -3,7 +3,7 @@
 import packageJson from "../../../package.json";
 import maybe from "maybe-for-sure";
 
-type StorageKeys = "token" | "want-list" | "cache";
+type StorageKeys = "token" | "want-list" | "cache" | "selected-fields";
 
 const { name } = packageJson;
 
@@ -14,7 +14,7 @@ const parse = (val: unknown) => {
     return val;
   }
 };
-export const set = (key: StorageKeys, val: any): typeof val => {
+export const set = <T>(key: StorageKeys, val: T): T => {
   window?.localStorage?.setItem(`${name}-${key}`, JSON.stringify(val, null, 2));
   return val;
 };

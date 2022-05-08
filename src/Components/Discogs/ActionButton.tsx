@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from "react";
-import { Button } from "./Inputs";
+import { Button } from "../styled";
 
 interface ActionButtonProps
   extends Pick<

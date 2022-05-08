@@ -30,8 +30,8 @@ const App: FC<AppProps> = ({
     maybe(user as unknown).valueOrExecute(() => getFolders());
   }, [user, getFolders]);
   return (
-    <Container>
-      <Content>
+    <Container id="container">
+      <Content id="content">
         <>
           <AppHeader user={user} />
           {maybe(user)

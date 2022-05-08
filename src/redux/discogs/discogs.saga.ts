@@ -36,7 +36,6 @@ function* getFolders(): Generator<any> {
 
 function* getFields(): Generator<any> {
   const result = yield fetchResource(getFieldsResource);
-  console.log(result);
   if (result)
     yield put(
       actions.getInventoryFieldsSuccess(
@@ -47,29 +46,13 @@ function* getFields(): Generator<any> {
 
 function* getWantList(): Generator<any> {
   const wantList = yield select(getWantListResource);
-  console.log(wantList);
   let result = yield call(messageHandler.getWantList);
-  console.log(result);
-
   if (Object.keys(result as any).length === 0) {
     result = yield call(messageHandler.syncWantList as any, wantList);
   }
 
   yield put(actions.getWantListSuccess(result as WantList));
 }
-
-/*   const result = yield fetchResource(getWantlistResource, {
-    per_page: 500,
-    page,
-  });
-  if (result) {
-    const { pagination, wants } = result as PaginatedWantList;
-    yield put(actions.getWantListSuccess(wants));
-    console.log(page + 1, pagination.page + 1);
-    if (pagination.page < pagination.pages) {
-      yield put(actions.getWantList(pagination.page + 1));
-    }
-  } */
 
 function* fetchResource<T>(
   selector: ResourceSelectors,
@@ -103,10 +86,31 @@ function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
   yield call(messageHandler.manipulateDom, type);
 }
 
+function* setSelectedFields({
+  selectedFields,
+}: DiscogsActionTypes): Generator<any> {
+  const allFields = yield call(
+    messageHandler.setSelectedFields,
+    selectedFields!
+  );
+  yield put(
+    actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
+  );
+}
+
+function* getSelectedFields(): Generator<any> {
+  const allFields = yield call(messageHandler.getSelectedFields);
+  yield put(
+    actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
+  );
+}
+
 function* onUserSuccess() {
   yield getFolders();
   yield getWantList();
   yield getFields();
+  yield getSelectedFields();
+
   // takeLatest(DiscogsActions.getWantList, getWantList),
 }
 
@@ -119,6 +123,7 @@ function* DiscogsSaga() {
     takeLatest(DiscogsActions.getFoldersSuccess, getCollection),
     takeLatest(DiscogsActions.filterReleases, manipulateDom),
     takeLatest(DiscogsActions.filterSellers, manipulateDom),
+    takeLatest(DiscogsActions.setSelectedFields, setSelectedFields),
   ]);
 }
 

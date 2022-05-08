@@ -4,9 +4,14 @@ import { MessageActions } from "../../services/chrome/types";
 import { ActionTypes } from "../../redux";
 import { DiscogsActions } from "../../redux/discogs";
 import wantListService, { Cache } from "../chrome/wantlist.service";
+import fieldsService from "../chrome/selectedFields.service";
 import maybe from "maybe-for-sure";
+import { SelectedFields } from "../../domain/Inventory";
 
-const service = wantListService();
+const services = {
+  wantList: wantListService(),
+  fields: fieldsService(),
+};
 
 let queryOptions = { active: true, currentWindow: true };
 
@@ -54,7 +59,7 @@ export const manipulateDom = async (body: DiscogsActions): Promise<boolean> =>
 export const getWantList = async (): Promise<Cache> =>
   getCurrentTab()
     .then(({ id }) => sendMessage(id, { type: MessageActions.GET_WANT_LIST }))
-    .catch(service.get)
+    .catch(services.wantList.get)
     .then((cache) => maybe(cache).valueOr({}) as Cache);
 
 export const syncWantList = async (url: string): Promise<Cache> =>
@@ -62,5 +67,28 @@ export const syncWantList = async (url: string): Promise<Cache> =>
     .then(({ id }) =>
       sendMessage(id, { type: MessageActions.SYNC_WANT_LIST, body: url })
     )
-    .catch(() => service.sync(url))
+    .catch(() => services.wantList.sync(url))
     .then((cache) => maybe(cache).valueOr({}) as Cache);
+
+export const setSelectedFields = async (
+  selectedFields: SelectedFields
+): Promise<SelectedFields> =>
+  getCurrentTab()
+    .then(({ id }) =>
+      sendMessage(id, {
+        type: MessageActions.SYNC_WANT_LIST,
+        body: selectedFields as any,
+      })
+    )
+    .catch(() => services.fields.set(selectedFields))
+    .then((it) => maybe(it).valueOr(selectedFields) as SelectedFields);
+
+export const getSelectedFields = async (): Promise<SelectedFields> =>
+  getCurrentTab()
+    .then(({ id }) =>
+      sendMessage(id, {
+        type: MessageActions.SYNC_WANT_LIST,
+      })
+    )
+    .catch(() => services.fields.get())
+    .then((it) => maybe(it).valueOr({}));
