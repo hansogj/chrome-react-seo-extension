@@ -4,11 +4,13 @@ import { h, link } from "./fonts";
 import {
   base,
   borderRadius,
+  Colors,
   colors,
   fontSizes,
   micro,
   Padded,
   Size,
+  spacings,
 } from "./variables";
 
 export const shade = css`
@@ -26,6 +28,11 @@ export const size = css<Size>`
 export const padded = css<Padded>`
   padding: ${({ padding = [] }: Padded) =>
     padding.map((p) => `${p}px`).join(" ")}};
+`;
+
+export const colored = css<Colors>`
+  ${(props) => props.background && "background-color: " + props.background};
+  ${(props) => props.color && "color: " + props.color};
 `;
 
 export const contentKidStyle = css`
@@ -66,10 +73,11 @@ export const ContentBody = styled.div<{ filled?: boolean }>`
     color: ${colors.bright};
     `};
 `;
-export const Column = styled.div<Size & Padded>`
+export const Column = styled.div<Size & Padded & { center?: boolean }>`
   ${size};
   ${padded};
   display: flex;
+  ${(props) => props.center && "align-items: center"};
   flex-direction: column;
   margin: 0;
   justify-content: space-between;
@@ -94,4 +102,15 @@ export const Card = styled.div`
   border-radius: ${borderRadius.medium};
   padding: ${base};
   height: 100%;
+`;
+
+export const Line = styled.hr`
+  border-top: 1px solid ${colors.bright};
+  border-bottom: 1px solid ${colors.bright};
+  font-weight: 800;
+  width: 100%;
+  margin: ${spacings.small} 0;
+  border-radius: ${borderRadius.medium};
+  heigh: 1px;
+  ${shade}
 `;

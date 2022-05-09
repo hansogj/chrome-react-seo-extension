@@ -1,6 +1,10 @@
 import { User } from "../../domain";
 import { ActionTypes } from "../types";
 export const DISCOGS_BASE_URL = "https://api.discogs.com";
+
+export const MOCKED_RELEASE_URL =
+  "https://www.discogs.com/release/11874869-Genesis-Selling-England-By-The-Pound";
+
 export interface AppState {
   readonly user?: User;
   readonly error?: ERROR | Error | string;

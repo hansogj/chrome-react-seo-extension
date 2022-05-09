@@ -1,4 +1,4 @@
-import { ResourceUrl } from "../../domain";
+import { MasterRelease, ResourceUrl } from "../../domain";
 import * as api from "../../services/chrome/api";
 import { MessageActions } from "../../services/chrome/types";
 import { ActionTypes } from "../../redux";
@@ -7,6 +7,8 @@ import wantListService, { Cache } from "../chrome/wantlist.service";
 import fieldsService from "../chrome/selectedFields.service";
 import maybe from "maybe-for-sure";
 import { SelectedFields } from "../../domain/Inventory";
+import { masterRelease } from "../chrome/master.release";
+import { MOCKED_RELEASE_URL } from "../../redux/app";
 
 const services = {
   wantList: wantListService(),
@@ -76,7 +78,7 @@ export const setSelectedFields = async (
   getCurrentTab()
     .then(({ id }) =>
       sendMessage(id, {
-        type: MessageActions.SYNC_WANT_LIST,
+        type: MessageActions.SET_SELECTED_FIELDS,
         body: selectedFields as any,
       })
     )
@@ -87,8 +89,18 @@ export const getSelectedFields = async (): Promise<SelectedFields> =>
   getCurrentTab()
     .then(({ id }) =>
       sendMessage(id, {
-        type: MessageActions.SYNC_WANT_LIST,
+        type: MessageActions.GET_SELECTED_FIELDS,
       })
     )
     .catch(() => services.fields.get())
     .then((it) => maybe(it).valueOr({}));
+
+export const getCurrentMaster = async (): Promise<Optional<MasterRelease>> =>
+  getCurrentTab()
+    .then(({ id }) =>
+      sendMessage(id, {
+        type: MessageActions.GET_CURRENT_MASTER_ID,
+      })
+    )
+    .catch(() => masterRelease(MOCKED_RELEASE_URL))
+    .then((it) => maybe(it).valueOr(undefined) as Optional<MasterRelease>);

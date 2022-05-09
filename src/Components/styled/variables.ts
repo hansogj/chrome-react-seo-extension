@@ -11,6 +11,7 @@ export const colors = {
   dread: "#880000",
   kindOfBlue: "#123654",
   blueInTheGreen: "#057b1a",
+  uglyYellow: "#f3ba15",
 };
 
 export const fontSizes = {
@@ -29,6 +30,7 @@ export const borderRadius = {
 
 export type Size = { width?: number; height?: number };
 export type Padded = { padding?: number[] };
+export type Colors = { color?: string; background?: string };
 export const spacings = {
   ...borderRadius,
 };

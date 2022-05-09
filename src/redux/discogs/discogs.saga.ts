@@ -8,7 +8,7 @@ import {
   SelectEffect,
   takeLatest,
 } from "redux-saga/effects";
-import { Folder, WantList } from "../../domain";
+import { Folder, MasterRelease, WantList } from "../../domain";
 import { InventoryFields } from "../../domain/InventoryFields";
 import * as messageHandler from "../../services/popup/message.handler";
 import { AppActions } from "../app/";
@@ -105,25 +105,26 @@ function* getSelectedFields(): Generator<any> {
   );
 }
 
-function* onUserSuccess() {
-  yield getFolders();
-  yield getWantList();
-  yield getFields();
-  yield getSelectedFields();
+function* getCurrentMaster(): Generator<any> {
+  const master = yield call(messageHandler.getCurrentMaster);
+  if (master) {
+    yield put(actions.getCurrentMasterSuccess(master as MasterRelease));
+  }
+}
 
-  // takeLatest(DiscogsActions.getWantList, getWantList),
+function* onUserSuccess() {
+  yield all([getFolders(), getFields(), getWantList(), getSelectedFields()]);
 }
 
 function* DiscogsSaga() {
   yield all([
     takeLatest(DiscogsActions.getFolders, getFolders),
     takeLatest(AppActions.getUserSuccess, onUserSuccess),
-    // takeLatest(DiscogsActions.getWantList, getWantList),
-    //    takeLatest(AppActions.getUserSuccess, getDiscogsInventory),
     takeLatest(DiscogsActions.getFoldersSuccess, getCollection),
     takeLatest(DiscogsActions.filterReleases, manipulateDom),
     takeLatest(DiscogsActions.filterSellers, manipulateDom),
     takeLatest(DiscogsActions.setSelectedFields, setSelectedFields),
+    takeLatest(DiscogsActions.getCurrentMaster, getCurrentMaster),
   ]);
 }
 

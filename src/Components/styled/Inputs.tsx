@@ -1,10 +1,12 @@
 import styled, { css } from "styled-components";
-import { shade, size } from "./styled";
+import { shade, size, padded, colored } from "./styled";
 import {
   borderRadius,
   colors,
   fontSizes,
   micro,
+  Padded,
+  Colors,
   Size,
   spacings,
 } from "./variables";
@@ -49,20 +51,23 @@ const activeButton = css`
   color: ${colors.bright};
 `;
 
-export const Button = styled.button<{
-  color?: string;
-  background?: string;
-  active?: boolean;
-}>`
+export const Button = styled.button<
+  Colors & {
+    active?: boolean;
+  }
+>`
+  ${colored}
   ${inputStyle};
   ${(props) => props.active && activeButton}
   text-shadow: 0 1px 1px ${colors.darkShade};
   cursor: pointer;
 `;
 
-export const Select = styled.select<Size>`
+export const Select = styled.select<Size & Padded & Colors>`
   ${inputStyle}
   ${size}
+  ${padded}
+  ${colored}
   text-align: right;
 `;
 

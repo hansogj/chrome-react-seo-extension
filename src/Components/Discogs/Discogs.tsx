@@ -1,12 +1,13 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { User, WantList } from "../../domain";
+import { MasterRelease, User, WantList } from "../../domain";
 import { RootState } from "../../redux";
 import { DispatchAction } from "../../redux/discogs";
 import * as actions from "../../redux/discogs/discogs.actions";
 import {
   DispatchProps,
+  getCurrentMaster,
   getFields,
   getFolders,
   getSelectedFields,
@@ -25,6 +26,7 @@ interface DiscProps extends AddToFolderProps, WantListProps {
   user: Optional<User>;
   filterReleases: DispatchAction<void>;
   filterSellers: DispatchAction<void>;
+  getCurrentMaster: DispatchAction<void>;
 }
 
 const DiscogsContainer: FC<DiscProps> = ({
@@ -35,18 +37,31 @@ const DiscogsContainer: FC<DiscProps> = ({
   filterReleases,
   filterSellers,
   selectedFields,
+  currentMaster,
+  getCurrentMaster,
   setSelectedFields,
 }: DiscProps) => {
   const Views = ["Actions", "Add item", "Want list"] as const;
 
   const [activeView, setView] = useState<typeof Views[number]>("Add item");
 
+  useEffect(() => {
+    if (activeView === "Add item") {
+      getCurrentMaster();
+    }
+  }, [activeView, getCurrentMaster]);
+
   return (
     <ContentBody>
       <Row>
         {Views.map((view) => (
           <Column key={view}>
-            <Button active={view === activeView} onClick={() => setView(view)}>
+            <Button
+              active={view === activeView}
+              onClick={() => {
+                setView(view);
+              }}
+            >
               {view}
             </Button>
           </Column>
@@ -82,7 +97,13 @@ const DiscogsContainer: FC<DiscProps> = ({
       )}
       {activeView === "Add item" && (
         <AddToFolder
-          {...{ folders, fields, selectedFields, setSelectedFields }}
+          {...{
+            folders,
+            fields,
+            selectedFields,
+            setSelectedFields,
+            currentMaster,
+          }}
         />
       )}
     </ContentBody>
@@ -97,6 +118,7 @@ export const mapStateToProps = (
   wantList: getWantList(state),
   fields: getFields(state),
   selectedFields: getSelectedFields(state),
+  currentMaster: getCurrentMaster(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
@@ -104,6 +126,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
     filterReleases: bindActionCreators(actions.filterReleases, dispatch),
     filterSellers: bindActionCreators(actions.filterSellers, dispatch),
     setSelectedFields: bindActionCreators(actions.setSelectedFields, dispatch),
+    getCurrentMaster: bindActionCreators(actions.getCurrentMaster, dispatch),
   } as DiscProps);
 
 export default connect(

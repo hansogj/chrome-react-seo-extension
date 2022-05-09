@@ -3,8 +3,7 @@ import { FC } from "react";
 import { DropdownInventoryField, InventoryFields } from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
 import { DispatchAction } from "../../../redux/discogs";
-import { setSelectedFields } from "../../../redux/discogs/discogs.actions";
-import { Select, Column, Row } from "../../styled";
+import { colors, Column, Row, Select } from "../../styled";
 
 export type Props = {
   fields: InventoryFields;
@@ -25,7 +24,7 @@ const ListFields: FC<Props> = ({
           width={11}
           height={4}
           key={`fieldId-${id}-col`}
-          padding={[6, 0]}
+          padding={[2, 0]}
         >
           <label>{name}</label>
           {type === "dropdown" && (
@@ -33,6 +32,9 @@ const ListFields: FC<Props> = ({
               value={maybe(selectedFields).mapTo(`${id}`).valueOr(undefined)}
               onChange={(e) => setSelectedFields({ [id]: e.target.value })}
               width={10}
+              padding={[2]}
+              background={colors.kindOfBlue}
+              color={colors.bright}
             >
               {maybe((field as DropdownInventoryField).options)
                 .map((it) =>

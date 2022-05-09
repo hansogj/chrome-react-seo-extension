@@ -1,3 +1,5 @@
+import { Artist, Format } from "./div";
+
 export type WantList = Record<BasicInformation["master_id"], WantListItem>;
 
 export interface WantListItem
@@ -54,22 +56,6 @@ export interface BasicInformation {
   cover_image: string;
   genres: string[];
   styles: string[];
-}
-
-export interface Artist {
-  name: string;
-  anv: string;
-  join: string;
-  role: string;
-  tracks: string;
-  id: number;
-  resource_url: string;
-}
-
-export interface Format {
-  name: string;
-  qty: string;
-  descriptions: string[];
 }
 
 export interface Label {
