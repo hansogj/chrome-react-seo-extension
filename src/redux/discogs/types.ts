@@ -1,16 +1,9 @@
-import {
-  Folder,
-  Instance,
-  Release,
-  ReleaseInView,
-  WantList,
-} from "../../domain";
+import { Folder, Instance, Release, ReleaseInView } from "../../domain";
 import { InventoryFields } from "../../domain/InventoryFields";
 import { ActionTypes } from "../types";
 
 export interface DiscogsState {
   readonly folders: Array<Folder>;
-  readonly wantList: WantList;
   readonly fields: InventoryFields;
   readonly selectedFields: Record<string, string>;
   readonly releaseInView: ReleaseInView;
@@ -18,10 +11,8 @@ export interface DiscogsState {
 
 export interface DiscogsActionData {
   folders: Optional<Array<Folder>>;
-  wantList: Optional<WantList>;
   fields: Optional<InventoryFields>;
   selectedFields: Optional<Record<string, string>>;
-  page: Optional<number>;
   releaseInView: Optional<ReleaseInView>;
   releaseId: Optional<Release["id"]>;
   instance: Optional<Instance>;
@@ -31,10 +22,6 @@ export enum DiscogsActions {
   getFolders = "GET_FOLDERS",
   getFoldersSuccess = "GET_FOLDERS_SUCCESS",
   getFoldersFailed = "GET_FOLDERS_FAILED",
-
-  getWantList = "GET_WANT_LIST",
-  getWantListSuccess = "GET_WANT_LIST_SUCCESS",
-  getWantListFailed = "GET_WANT_LIST_FAILED",
 
   getCurrentMaster = "GET_CURRENT_MASTER",
   getCurrentMasterSuccess = "GET_CURRENT_MASTER_SUCCESS",

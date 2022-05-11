@@ -34,16 +34,6 @@ export const filterSellers = (): DiscogsActionTypes => ({
   type: DiscogsActions.filterSellers,
 });
 
-export const getWantList = (page: number): DiscogsActionTypes => ({
-  type: DiscogsActions.getWantList,
-  page,
-});
-
-export const getWantListSuccess = (wantList: WantList): DiscogsActionTypes => ({
-  type: DiscogsActions.getWantListSuccess,
-  wantList,
-});
-
 export const getCurrentMaster = (): DiscogsActionTypes => ({
   type: DiscogsActions.getCurrentMaster,
 });

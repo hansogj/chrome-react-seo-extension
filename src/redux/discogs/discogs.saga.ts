@@ -1,25 +1,17 @@
 import "@hansogj/array.utils";
 import maybe from "maybe-for-sure";
-import { release } from "process";
 import {
   all,
   call,
   CallEffect,
-  put,
   delay,
+  put,
   PutEffect,
   select,
   SelectEffect,
   takeLatest,
 } from "redux-saga/effects";
-import {
-  Artist,
-  Folder,
-  Instance,
-  MasterRelease,
-  ReleaseInView,
-  WantList,
-} from "../../domain";
+import { Artist, Folder, Instance, ReleaseInView } from "../../domain";
 import { InventoryFields } from "../../domain/InventoryFields";
 import * as messageHandler from "../../services/popup/message.handler";
 import { AppActions } from "../app/";
@@ -32,10 +24,8 @@ import {
   getAddReleaseToFolderResource,
   getCollectionResource,
   getFieldsResource,
-  getFolderResource,
   getFoldersResource,
   getInventoryResource,
-  getWantListResource,
   ResourceSelectors,
 } from "../selectors/resource.selectors";
 import { DiscogsActions } from "./";
@@ -59,16 +49,6 @@ function* getFields(): Generator<any> {
         (result as { fields: InventoryFields }).fields
       )
     );
-}
-
-function* getWantList(): Generator<any> {
-  const wantList = yield select(getWantListResource);
-  let result = yield call(messageHandler.getWantList);
-  if (Object.keys(result as any).length === 0) {
-    result = yield call(messageHandler.syncWantList as any, wantList);
-  }
-
-  yield put(actions.getWantListSuccess(result as WantList));
 }
 
 function* fetchResource<T>(
@@ -130,7 +110,7 @@ function* getCurrentMaster(): Generator<any> {
 }
 
 function* onUserSuccess() {
-  yield all([getFolders(), getFields(), getWantList(), getSelectedFields()]);
+  yield all([getFolders(), getFields(), getSelectedFields()]);
 }
 
 function* addToFolder({ releaseId }: DiscogsActionTypes): Generator<any> {

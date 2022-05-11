@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import createSagaMiddleware from "redux-saga";
 import { MessageActionTypes } from "../services/chrome/types";
 import { DiscogsActionTypes } from "./discogs";
+import { WantListActionTypes } from "./wantlist";
 import { AppActionTypes } from "./app";
 import rootReducer from "./root.reducers";
 import rootSaga from "./root.sagas";
@@ -21,6 +22,7 @@ sagaMiddleware.run(rootSaga);
 export type ActionTypes =
   | DiscogsActionTypes
   | AppActionTypes
-  | MessageActionTypes;
+  | MessageActionTypes
+  | WantListActionTypes;
 
 export const action = (type: ActionTypes): ActionTypes => store.dispatch(type);

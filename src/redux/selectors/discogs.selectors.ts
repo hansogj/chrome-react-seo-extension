@@ -11,12 +11,6 @@ export const getFolders = createSelector(getDiscogsState, (discogs) =>
   maybe(discogs).mapTo("folders").valueOr([])
 );
 
-export const getWantList = createSelector(getDiscogsState, (discogs) =>
-  maybe(discogs)
-    .mapTo("wantList")
-    .valueOr({} as DiscogsState["wantList"])
-);
-
 export const getFields = createSelector(getDiscogsState, (discogs) =>
   maybe(discogs)
     .mapTo("fields")
