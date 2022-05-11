@@ -42,6 +42,16 @@ export const fetch = async <T>(
     )
     .catch(() => api.fetch(resource, body));
 
+export const post = async <T>(
+  resource: ResourceUrl,
+  body?: SearchParams & PayLoad
+): Promise<T> =>
+  getCurrentTab()
+    .then(({ id }) =>
+      sendMessage(id, { type: MessageActions.post, resource, body })
+    )
+    .catch(() => api.post(resource, body));
+
 export const setUserToken = async (userToken: string): Promise<string> =>
   getCurrentTab()
     .then(({ id }) =>

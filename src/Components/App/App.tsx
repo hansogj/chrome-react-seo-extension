@@ -4,7 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { User } from "../../domain";
 import { RootState } from "../../redux";
-import { getUser } from "../../redux/selectors/app.selectors";
+import { getNotification, getUser } from "../../redux/selectors/app.selectors";
 import { DispatchProps, StateProps } from "../../redux/selectors/utils";
 import { Container, Content } from "../styled";
 import AppHeader from "./App.header";
@@ -17,11 +17,13 @@ import DiscogsContainer from "../Discogs";
 interface AppProps extends TokenInputProps {
   user: Optional<User>;
   isAuthorized: boolean;
+  notification: string;
   getFolders: Fn<[], DiscogsActionTypes>;
 }
 
 const App: FC<AppProps> = ({
   user,
+  notification,
   setUserToken,
   getFolders,
   isAuthorized,
@@ -34,6 +36,17 @@ const App: FC<AppProps> = ({
       <Content id="content">
         <>
           <AppHeader user={user} />
+          {notification && (
+            <div
+              style={{
+                width: "100 %",
+                padding: "20px",
+                backgroundColor: "pink",
+              }}
+            >
+              {notification}
+            </div>
+          )}
           {maybe(user)
             .map(() => <DiscogsContainer />)
             .nothingIf(() => !isAuthorized)
@@ -49,6 +62,7 @@ export const mapStateToProps = (
 ): StateProps<Partial<AppProps>> => ({
   user: getUser(state),
   isAuthorized: true,
+  notification: getNotification(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<AppProps> =>

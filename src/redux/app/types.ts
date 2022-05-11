@@ -6,8 +6,9 @@ export const MOCKED_RELEASE_URL =
   "https://www.discogs.com/release/11874869-Genesis-Selling-England-By-The-Pound";
 
 export interface AppState {
-  readonly user?: User;
-  readonly error?: ERROR | Error | string;
+  readonly user: Optional<User>;
+  readonly error: Optional<ERROR | Error | string>;
+  readonly notification: Optional<string>;
 }
 
 export enum ERROR {
@@ -19,9 +20,11 @@ export interface AppActionData {
   user: Optional<User>;
   userToken: Optional<string>;
   error: any;
+  notification: string;
 }
 
 export enum AppActions {
+  success = "APP_SUCCESS",
   error = "APP_ERROR",
   getIdentity = "GET_IDENTITY",
   getIdentitySuccess = "GET_IDENTITY_SUCCESS",

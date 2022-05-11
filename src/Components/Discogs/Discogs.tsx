@@ -1,25 +1,25 @@
 import React, { FC, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { MasterRelease, User, WantList } from "../../domain";
+import { Collection, Eye, List } from "../../assets/icons";
+import { User } from "../../domain";
 import { RootState } from "../../redux";
 import { DispatchAction } from "../../redux/discogs";
 import * as actions from "../../redux/discogs/discogs.actions";
 import {
   DispatchProps,
-  getCurrentMaster,
   getFields,
   getFolders,
+  getReleaseInView,
   getSelectedFields,
   getUser,
   getWantList,
   StateProps,
 } from "../../redux/selectors";
-
-import { colors, Column, ContentBody, Row, Button } from "../styled";
+import { colors, Column, ContentBody, Row } from "../styled";
 import ActionButton from "./ActionButton";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
-
+import ViewSelector, { View } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
 interface DiscProps extends AddToFolderProps, WantListProps {
@@ -37,13 +37,12 @@ const DiscogsContainer: FC<DiscProps> = ({
   filterReleases,
   filterSellers,
   selectedFields,
-  currentMaster,
+  releaseInView,
   getCurrentMaster,
   setSelectedFields,
+  addToFolder,
 }: DiscProps) => {
-  const Views = ["Actions", "Add item", "Want list"] as const;
-
-  const [activeView, setView] = useState<typeof Views[number]>("Add item");
+  const [activeView, setView] = useState<View>("Add item");
 
   useEffect(() => {
     if (activeView === "Add item") {
@@ -53,20 +52,7 @@ const DiscogsContainer: FC<DiscProps> = ({
 
   return (
     <ContentBody>
-      <Row>
-        {Views.map((view) => (
-          <Column key={view}>
-            <Button
-              active={view === activeView}
-              onClick={() => {
-                setView(view);
-              }}
-            >
-              {view}
-            </Button>
-          </Column>
-        ))}
-      </Row>
+      <ViewSelector {...{ activeView, setView }} />
       {activeView === "Actions" && (
         <>
           <Row>
@@ -102,7 +88,8 @@ const DiscogsContainer: FC<DiscProps> = ({
             fields,
             selectedFields,
             setSelectedFields,
-            currentMaster,
+            releaseInView,
+            addToFolder,
           }}
         />
       )}
@@ -118,7 +105,7 @@ export const mapStateToProps = (
   wantList: getWantList(state),
   fields: getFields(state),
   selectedFields: getSelectedFields(state),
-  currentMaster: getCurrentMaster(state),
+  releaseInView: getReleaseInView(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
@@ -127,6 +114,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
     filterSellers: bindActionCreators(actions.filterSellers, dispatch),
     setSelectedFields: bindActionCreators(actions.setSelectedFields, dispatch),
     getCurrentMaster: bindActionCreators(actions.getCurrentMaster, dispatch),
+    addToFolder: bindActionCreators(actions.addToFolder, dispatch),
   } as DiscProps);
 
 export default connect(

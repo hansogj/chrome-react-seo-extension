@@ -1,4 +1,11 @@
-import { Folder, MasterRelease, WantList } from "../../domain";
+import {
+  Folder,
+  Instance,
+  MasterRelease,
+  Release,
+  ReleaseInView,
+  WantList,
+} from "../../domain";
 import { SelectedFields } from "../../domain/Inventory";
 import { InventoryFields } from "../../domain/InventoryFields";
 import { DiscogsActions, DiscogsActionTypes } from "./types";
@@ -42,10 +49,10 @@ export const getCurrentMaster = (): DiscogsActionTypes => ({
 });
 
 export const getCurrentMasterSuccess = (
-  currentMaster: MasterRelease
+  releaseInView: ReleaseInView
 ): DiscogsActionTypes => ({
   type: DiscogsActions.getCurrentMasterSuccess,
-  currentMaster,
+  releaseInView,
 });
 
 export const setSelectedFields = (
@@ -60,4 +67,14 @@ export const setSelectedFieldsSuccess = (
 ): DiscogsActionTypes => ({
   type: DiscogsActions.setSelectedFieldsSuccess,
   selectedFields,
+});
+
+export const addToFolder = (releaseId: Release["id"]): DiscogsActionTypes => ({
+  type: DiscogsActions.addToFolder,
+  releaseId,
+});
+
+export const addToFolderSuccess = (instance: Instance): DiscogsActionTypes => ({
+  type: DiscogsActions.getCurrentMaster,
+  instance,
 });

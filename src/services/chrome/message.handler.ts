@@ -23,6 +23,10 @@ const messagesFromReactAppListener = (
   if (action.type === MessageActions.fetch)
     resolve(api.fetch(action.resource!, action.body as SearchParams));
 
+  if (action.type === MessageActions.post) {
+    resolve(api.post(action.resource!, action.body as SearchParams & PayLoad));
+  }
+
   if (action.type === MessageActions.setUserToken)
     resolve(api.setUserToken(action.body as string));
 

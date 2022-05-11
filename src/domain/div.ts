@@ -1,3 +1,15 @@
+import { MasterRelease, Release } from ".";
+
+export interface ReleaseInView {
+  releaseId: Release["id"];
+  master: MasterRelease;
+}
+
+export interface Instance {
+  instance_id: number;
+  resource_url: string;
+}
+
 export interface Artist {
   anv: string;
   id: number;

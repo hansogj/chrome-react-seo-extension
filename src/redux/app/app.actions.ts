@@ -6,6 +6,11 @@ export const error = (error: any): AppActionTypes => ({
   error,
 });
 
+export const success = (notification?: string): AppActionTypes => ({
+  type: AppActions.success,
+  notification,
+});
+
 export const getUser = (): AppActionTypes => ({
   type: AppActions.getUser,
 });

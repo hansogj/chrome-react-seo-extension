@@ -15,22 +15,31 @@ const serialize = (obj: Record<string, string | number>): string =>
     )
     .join("&");
 
-export const fetch = async (resource: string, body?: SearchParams) => {
-  const cache = get("cache", {});
-  const url = maybe(body)
-    .orJust({} as SearchParams)
+const mergeWithToken = (it: SearchParams) => {
+  const token = get("token", {}); // token to be found in https://www.discogs.com/settings/developers
+  return { ...it, ...(empty(token) && { token }) };
+};
 
-    .map((it) => {
-      const token = get("token", {});
-      return { ...it, ...(empty(token) && { token }) };
-    }) // token to be found in https://www.discogs.com/settings/developers
+const url = (resource: string, params?: SearchParams) => {
+  return maybe(params)
+    .orJust({} as SearchParams)
+    .map(mergeWithToken)
     .map((it) => serialize(it))
     .map((it) => (it ? `${resource}?${it}` : resource))
     .valueOr(resource);
-  return (
-    cache[url] || axios.get(url).then(unRest)
-    //      .then((result) => set("cache", { ...cache, [url]: result })[url])
-  );
+};
+
+export const fetch = async (resource: string, params?: SearchParams) =>
+  axios.get(url(resource, params)).then(unRest);
+
+export const post = async (
+  resource: string,
+  paramsAndPayload?: SearchParams & PayLoad
+) => {
+  const { payLoad, ...body } = maybe(
+    paramsAndPayload as SearchParams & PayLoad
+  ).valueOr({ payLoad: undefined });
+  return axios.post(url(resource, body as SearchParams), payLoad).then(unRest);
 };
 
 export const setUserToken = (userToken: string): Promise<boolean> =>

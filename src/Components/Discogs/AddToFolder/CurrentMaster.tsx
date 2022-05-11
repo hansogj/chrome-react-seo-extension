@@ -1,7 +1,7 @@
 import maybe from "maybe-for-sure";
 import { FC } from "react";
 import { MasterRelease } from "../../../domain";
-import { Image, Artist } from "../../../domain/div";
+import { Image, Artist } from "../../../domain";
 import { Column, Row } from "../../styled";
 import { Thumb } from "../WantList/style";
 

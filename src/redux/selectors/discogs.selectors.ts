@@ -29,8 +29,8 @@ export const getSelectedFields = createSelector(getDiscogsState, (discogs) =>
     .valueOr({} as DiscogsState["selectedFields"])
 );
 
-export const getCurrentMaster = createSelector(getDiscogsState, (discogs) =>
+export const getReleaseInView = createSelector(getDiscogsState, (discogs) =>
   maybe(discogs)
-    .mapTo("currentMaster")
-    .valueOr({} as DiscogsState["currentMaster"])
+    .mapTo("releaseInView")
+    .valueOr({} as DiscogsState["releaseInView"])
 );

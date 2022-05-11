@@ -12,3 +12,4 @@ type TypedRecord<K, T> = {
 };
 
 type SearchParams = Record<string, string | number>;
+type PayLoad = { payLoad?: Record<string, any> };
