@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Folder } from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
 import { DispatchAction } from "../../../redux/folders";
-import { Select } from "../../styled";
+import { Select, colors } from "../../styled";
 
 export type Props = {
   folders: Folder[];
@@ -16,20 +16,25 @@ const ListFolders: FC<Props> = ({
   selectedFields,
   setSelectedFields,
 }: Props) => (
-  <Select
-    onChange={(e) => setSelectedFields({ folders: e.target.value })}
-    value={maybe(selectedFields).mapTo(`folders`).valueOr(undefined)}
-  >
-    {maybe(folders)
-      .map((it) =>
-        it.map(({ id, name }: Folder) => (
-          <option key={`folderId-${id}`} value={id}>
-            {name}
-          </option>
-        ))
-      )
-      .valueOr(undefined)}
-  </Select>
+  <>
+    <label>Folder</label>
+    <Select
+      onChange={(e) => setSelectedFields({ folders: e.target.value })}
+      value={maybe(selectedFields).mapTo(`folders`).valueOr(undefined)}
+      background={colors.kindOfBlue}
+      color={colors.bright}
+    >
+      {maybe(folders)
+        .map((it) =>
+          it.map(({ id, name }: Folder) => (
+            <option key={`folderId-${id}`} value={id}>
+              {name}
+            </option>
+          ))
+        )
+        .valueOr(undefined)}
+    </Select>
+  </>
 );
 
 export default ListFolders;

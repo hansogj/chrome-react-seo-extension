@@ -1,8 +1,16 @@
 import maybe from "maybe-for-sure";
 import React, { FC } from "react";
+import styled from "styled-components";
 import { ReleaseInView } from "../../../domain";
 import { DispatchAction } from "../../../redux/folders";
-import { Column, ContentBody, Line, Row } from "../../styled";
+import {
+  BrightCard,
+  Column,
+  ContentBody,
+  Row,
+  base,
+  colors,
+} from "../../styled";
 import ActionButton from "../ActionButton";
 import CurrentMaster from "./CurrentMaster";
 import ListFields, { Props as ListFieldsProps } from "./ListFields";
@@ -13,6 +21,11 @@ export interface Props extends ListFoldersProps, ListFieldsProps {
   addToFolder: DispatchAction<number>;
 }
 
+const AddButton = styled(ActionButton)`
+  background-color: ${colors.blueInTheGreen};
+  color: ${colors.kindOfBlue};
+`;
+
 const AddToFolderComponent: FC<Props> = ({
   folders,
   fields,
@@ -21,17 +34,14 @@ const AddToFolderComponent: FC<Props> = ({
   ...props
 }: Props) => (
   <ContentBody filled>
-    <>
+    <BrightCard>
       {maybe(releaseInView)
         .mapTo("master")
-        .map((currentMaster) => (
-          <>
-            <CurrentMaster {...{ currentMaster }} />
-            <Line />
-          </>
-        ))
+        .map((currentMaster) => <CurrentMaster {...{ currentMaster }} />)
         .valueOr(<></>)}
-      <Row padding={[12, 0]}>
+    </BrightCard>
+    <BrightCard style={{ marginTop: base }}>
+      <Row padding={[1, 0]} width={42}>
         <Column width={21}>
           <ListFolders {...{ folders, ...props }} />
         </Column>
@@ -39,15 +49,14 @@ const AddToFolderComponent: FC<Props> = ({
         {maybe(releaseInView)
           .mapTo("releaseId")
           .map((it) => (
-            <Column>
-              <ActionButton onClick={() => addToFolder(it)}>(+)</ActionButton>
+            <Column padding={[1, 0, 0, 0]}>
+              <AddButton onClick={() => addToFolder(it)}>(+)</AddButton>
             </Column>
           ))
           .valueOr(<></>)}
       </Row>
       <ListFields {...{ fields, ...props }} />
-      <Row width={44}></Row>
-    </>
+    </BrightCard>
   </ContentBody>
 );
 

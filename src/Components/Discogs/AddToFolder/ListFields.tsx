@@ -21,10 +21,10 @@ const ListFields: FC<Props> = ({
       .filter((field) => field.type === "dropdown")
       .map(({ type, name, id, ...field }) => (
         <Column
-          width={11}
+          width={10}
           height={4}
           key={`fieldId-${id}-col`}
-          padding={[2, 0]}
+          padding={[0.2, 0]}
         >
           <label>{name}</label>
           {type === "dropdown" && (
@@ -32,9 +32,7 @@ const ListFields: FC<Props> = ({
               value={maybe(selectedFields).mapTo(`${id}`).valueOr(undefined)}
               onChange={(e) => setSelectedFields({ [id]: e.target.value })}
               width={10}
-              padding={[2]}
-              background={colors.kindOfBlue}
-              color={colors.bright}
+              padding={[0.2]}
             >
               {maybe((field as DropdownInventoryField).options)
                 .map((it) =>

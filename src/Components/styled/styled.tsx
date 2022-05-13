@@ -27,7 +27,7 @@ export const size = css<Size>`
 
 export const padded = css<Padded>`
   padding: ${({ padding = [] }: Padded) =>
-    padding.map((p) => `${p}px`).join(" ")}};
+    padding.map((p) => `calc(${base} * ${p})`).join(" ")}};
 `;
 
 export const colored = css<Colors>`
@@ -60,8 +60,8 @@ export const Content = styled.div`
 `;
 
 export const ContentBody = styled.div<{ filled?: boolean }>`
-  margin: ${base} 0;
-  padding: 0 ${base};
+  margin: 0;
+  padding: ${base};
   align-items: start;
   width: auto;
   ${contentKidStyle};
@@ -93,25 +93,34 @@ export const Row = styled.div<Size & Padded>`
   margin: ${micro} 0;
 `;
 
-export const Card = styled.div`
-  background-color: ${(props) =>
-    props.color ? props.color : colors.kindOfBlue};
-  color: ${(props) => (props.color ? props.color : colors.bright)};
-  padding: ${base};
-  width: calc(${base} * 20);
+export const Card = styled.div<Size & Padded>`
+  ${size};
+  ${padded};
+  background-color: ${colors.kindOfBlue};
+  color: ${colors.bright};
   border-radius: ${borderRadius.medium};
   padding: ${base};
   height: 100%;
 `;
 
+export const AlertCard = styled(Card)`
+  background-color: ${colors.dread};
+  color: ${colors.bright};
+`;
+
+export const BrightCard = styled(Card)`
+  background-color: ${colors.bright};
+  color: ${colors.kindOfBlue};
+`;
+
 export const Line = styled.hr`
-  border-top: 1px solid ${colors.bright};
-  border-bottom: 1px solid ${colors.bright};
+  border-top: 1px solid ${colors.kindOfBlue};
+  border-bottom: 1px solid ${colors.kindOfBlue};
   font-weight: 800;
   width: 100%;
   margin: ${spacings.small} 0;
   border-radius: ${borderRadius.medium};
-  heigh: 1px;
+  height: 1px;
   ${shade}
 `;
 

@@ -24,14 +24,14 @@ import {
 } from "../../redux/selectors";
 import { colors, Column, ContentBody, Row } from "../styled";
 import ActionButton from "./ActionButton";
+import AddWantList, { Props as AddWantListProps } from "./AddWantList";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
 import ViewSelector, { View } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
-interface DiscProps extends AddToFolderProps, WantListProps {
+interface DiscProps extends AddToFolderProps, WantListProps, AddWantListProps {
   user: Optional<User>;
-  filterReleases: DiscogsDispatch<void>;
-  filterSellers: DiscogsDispatch<void>;
+
   getCurrentMaster: DiscogsDispatch<void>;
 }
 
@@ -59,29 +59,8 @@ const DiscogsContainer: FC<DiscProps> = ({
   return (
     <ContentBody>
       <ViewSelector {...{ activeView, setView }} />
-      {activeView === "Actions" && (
-        <>
-          <Row>
-            <Column>
-              <ActionButton
-                {...{
-                  style: { backgroundColor: colors.dread },
-                  onClick: () => filterSellers(),
-                }}
-              >
-                Filter seller
-              </ActionButton>
-            </Column>
-            <Column>
-              <ActionButton {...{ onClick: () => filterReleases() }}>
-                Filter Releases
-              </ActionButton>
-            </Column>
-          </Row>
-          <Row>
-            <Column>{JSON.stringify(user, null, 4)}</Column>
-          </Row>
-        </>
+      {activeView === "Watch" && (
+        <AddWantList {...{ filterReleases, filterSellers }} />
       )}
 
       {activeView === "Want list" && wantList && (

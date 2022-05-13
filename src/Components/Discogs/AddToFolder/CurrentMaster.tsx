@@ -16,11 +16,12 @@ const CurrentMaster: FC<Props> = ({ currentMaster }: Props) =>
           .nothingIf((it) => !it.length)
           .map((it) => it[0] as Image)
           .map(({ uri }: Image) => (
-            <Row height={6} padding={[12, 0]}>
-              <Column width={14} center>
+            <Row height={6} padding={[1, 0]} width={42}>
+              <Column width={8}>
                 <Thumb src={uri} alt="Thumb" />
               </Column>
-              <Column width={24}>
+
+              <Column width={30}>
                 {maybe(it.artists)
                   .map((it) => it[0] as Artist)
                   .map(({ name }) => name)
