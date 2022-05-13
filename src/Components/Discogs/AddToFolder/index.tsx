@@ -1,7 +1,7 @@
 import maybe from "maybe-for-sure";
 import React, { FC } from "react";
 import { ReleaseInView } from "../../../domain";
-import { DispatchAction } from "../../../redux/discogs";
+import { DispatchAction } from "../../../redux/folders";
 import { Column, ContentBody, Line, Row } from "../../styled";
 import ActionButton from "../ActionButton";
 import CurrentMaster from "./CurrentMaster";

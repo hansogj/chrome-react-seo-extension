@@ -37,3 +37,4 @@ export enum AppActions {
 }
 
 export type AppActionTypes = ActionTypes<AppActions, AppActionData>;
+export type DispatchAction<T> = Fn<[T], AppActionTypes>;

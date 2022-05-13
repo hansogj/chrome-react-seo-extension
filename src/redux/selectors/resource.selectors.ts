@@ -2,7 +2,7 @@ import maybe from "maybe-for-sure";
 import { createSelector } from "reselect";
 import { User } from "../../domain";
 import { getUser } from "./app.selectors";
-import { getFolders, getSelectedFields } from "./discogs.selectors";
+import { getFolders, getSelectedFields } from "./folders.selectors";
 
 const fromUser = (prop: keyof User) =>
   createSelector(getUser, (user) => maybe(user).mapTo(prop).valueOr(undefined));

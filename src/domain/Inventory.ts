@@ -1,15 +1,7 @@
+import { Pagination } from "./div";
+
 export type SelectedFields = Record<string, string>;
 export interface Inventory {
   pagination: Pagination;
   listings: any[];
 }
-
-export interface Pagination {
-  page: number;
-  pages: number;
-  per_page: number;
-  items: number;
-  urls: Urls;
-}
-
-export interface Urls {}

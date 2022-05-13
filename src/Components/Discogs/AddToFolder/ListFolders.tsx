@@ -2,7 +2,7 @@ import maybe from "maybe-for-sure";
 import { FC } from "react";
 import { Folder } from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
-import { DispatchAction } from "../../../redux/discogs";
+import { DispatchAction } from "../../../redux/folders";
 import { Select } from "../../styled";
 
 export type Props = {

@@ -1,5 +1,20 @@
 import { MasterRelease, Release } from ".";
 
+export type Urls = {} & {
+  first: string;
+  last: string;
+  prev: string;
+  next: string;
+};
+
+export interface Pagination {
+  page: number;
+  pages: number;
+  per_page: number;
+  items: number;
+  urls: Urls;
+}
+
 export interface ReleaseInView {
   releaseId: Release["id"];
   master: MasterRelease;

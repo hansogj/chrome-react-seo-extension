@@ -5,6 +5,7 @@ import { MessageActionTypes } from "../services/chrome/types";
 import { DiscogsActionTypes } from "./discogs";
 import { WantListActionTypes } from "./wantlist";
 import { AppActionTypes } from "./app";
+import { FoldersActionTypes } from "./folders";
 import rootReducer from "./root.reducers";
 import rootSaga from "./root.sagas";
 
@@ -23,6 +24,7 @@ export type ActionTypes =
   | DiscogsActionTypes
   | AppActionTypes
   | MessageActionTypes
-  | WantListActionTypes;
+  | WantListActionTypes
+  | FoldersActionTypes;
 
 export const action = (type: ActionTypes): ActionTypes => store.dispatch(type);

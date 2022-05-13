@@ -1,4 +1,4 @@
-import { Artist, Format } from "./div";
+import { Artist, Format, Pagination } from "./div";
 
 export type WantList = Record<BasicInformation["master_id"], WantListItem>;
 
@@ -17,21 +17,6 @@ export interface WantListItem
 export interface PaginatedWantList {
   pagination: Pagination;
   wants: Want[];
-}
-
-export interface Pagination {
-  page: number;
-  pages: number;
-  per_page: number;
-  items: number;
-  urls: Urls;
-}
-
-export interface Urls {
-  first: string;
-  last: string;
-  prev: string;
-  next: string;
 }
 
 export interface Want {

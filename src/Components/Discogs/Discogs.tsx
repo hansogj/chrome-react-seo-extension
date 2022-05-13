@@ -1,11 +1,17 @@
 import React, { FC, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { Collection, Eye, List } from "../../assets/icons";
 import { User } from "../../domain";
 import { RootState } from "../../redux";
-import { DispatchAction } from "../../redux/discogs";
-import * as actions from "../../redux/discogs/discogs.actions";
+import {
+  actions as discogsActions,
+  DispatchAction as DiscogsDispatch,
+} from "../../redux/discogs";
+import {
+  actions as foldersActions,
+  FoldersActionTypes,
+} from "../../redux/folders";
+
 import {
   DispatchProps,
   getFields,
@@ -24,9 +30,9 @@ import WantListComponent, { Props as WantListProps } from "./WantList";
 
 interface DiscProps extends AddToFolderProps, WantListProps {
   user: Optional<User>;
-  filterReleases: DispatchAction<void>;
-  filterSellers: DispatchAction<void>;
-  getCurrentMaster: DispatchAction<void>;
+  filterReleases: DiscogsDispatch<void>;
+  filterSellers: DiscogsDispatch<void>;
+  getCurrentMaster: DiscogsDispatch<void>;
 }
 
 const DiscogsContainer: FC<DiscProps> = ({
@@ -110,11 +116,19 @@ export const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
   ({
-    filterReleases: bindActionCreators(actions.filterReleases, dispatch),
-    filterSellers: bindActionCreators(actions.filterSellers, dispatch),
-    setSelectedFields: bindActionCreators(actions.setSelectedFields, dispatch),
-    getCurrentMaster: bindActionCreators(actions.getCurrentMaster, dispatch),
-    addToFolder: bindActionCreators(actions.addToFolder, dispatch),
+    filterReleases: bindActionCreators(discogsActions.filterReleases, dispatch),
+
+    filterSellers: bindActionCreators(discogsActions.filterSellers, dispatch),
+    setSelectedFields: bindActionCreators(
+      foldersActions.setSelectedFields,
+      dispatch
+    ),
+    getCurrentMaster: bindActionCreators(
+      discogsActions.getCurrentMaster,
+      dispatch
+    ),
+
+    addToFolder: bindActionCreators(foldersActions.addToFolder, dispatch),
   } as DiscProps);
 
 export default connect(
