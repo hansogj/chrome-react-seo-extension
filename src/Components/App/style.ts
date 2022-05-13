@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { base, colors, contentKidStyle, spacings } from "../styled";
+import { base, colors, contentKidStyle, shade, spacings } from "../styled";
 
 const rpm33 = 60 / 33.3333;
 export const ContentHeader = styled.header`

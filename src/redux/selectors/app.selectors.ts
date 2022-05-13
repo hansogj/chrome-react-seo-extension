@@ -12,3 +12,8 @@ export const getUser = createSelector(getAppState, ({ user }) => user);
 export const getNotification = createSelector(getAppState, (appState) =>
   maybe(appState).mapTo("notification").valueOr(undefined)
 );
+
+export const isLoading = createSelector(
+  getAppState,
+  ({ isLoading }) => isLoading
+);

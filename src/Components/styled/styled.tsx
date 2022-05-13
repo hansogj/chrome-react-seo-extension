@@ -60,7 +60,7 @@ export const Content = styled.div`
 `;
 
 export const ContentBody = styled.div<{ filled?: boolean }>`
-  margin-top: ${base};
+  margin: ${base} 0;
   padding: 0 ${base};
   align-items: start;
   width: auto;
@@ -113,4 +113,10 @@ export const Line = styled.hr`
   border-radius: ${borderRadius.medium};
   heigh: 1px;
   ${shade}
+`;
+
+export const Thumb = styled.img`
+  height: calc(${base} * 6);
+  width: calc(${base} * 6);
+  ${shade};
 `;

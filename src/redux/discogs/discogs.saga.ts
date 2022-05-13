@@ -14,7 +14,7 @@ import {
 import { Artist, Folder, Instance, ReleaseInView } from "../../domain";
 import { InventoryFields } from "../../domain/InventoryFields";
 import * as messageHandler from "../../services/popup/message.handler";
-import { AppActions } from "../app/";
+import { AppActions, sagas as appSagas } from "../app/";
 import * as appActions from "../app/app.actions";
 import {
   getReleaseInView,
@@ -156,11 +156,10 @@ function* updateSelectedFieldsValues(instance: Instance): Generator<any> {
         call(messageHandler.post as any, resource, { payLoad })
       )
   );
-  yield notify(instance);
+  yield notifyInstance(instance);
 }
 
-function* notify(instance: Instance): Generator<any> {
-  console.log(instance);
+function* notifyInstance(instance: Instance): Generator<any> {
   const { master } = (yield select(getReleaseInView)) as ReleaseInView;
 
   const artist = maybe(master)
@@ -168,12 +167,7 @@ function* notify(instance: Instance): Generator<any> {
     .map((it) => it[0] as Artist)
     .map(({ name }) => name)
     .valueOr("");
-
-  yield put(
-    appActions.success(`${artist} ${master?.title} added to your folder`)
-  );
-  yield delay(5000);
-  yield put(appActions.success());
+  appSagas.notify(`${artist} ${master?.title} added to your folder`);
 }
 
 function* DiscogsSaga() {

@@ -9,6 +9,7 @@ export interface AppState {
   readonly user: Optional<User>;
   readonly error: Optional<ERROR | Error | string>;
   readonly notification: Optional<string>;
+  readonly isLoading: boolean;
 }
 
 export enum ERROR {

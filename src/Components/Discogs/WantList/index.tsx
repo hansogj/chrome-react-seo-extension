@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { WantList, WantListItem } from "../../../domain";
-import { Column, ContentBody, Row } from "../../styled";
-import { ReleaseCol, Thumb } from "./style";
+import { Column, ContentBody, Row, Thumb } from "../../styled";
+import { ReleaseCol } from "./style";
 
 export interface Props {
   wantList: WantList;

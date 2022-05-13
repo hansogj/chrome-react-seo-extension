@@ -13,12 +13,6 @@ export interface Props {
   wantList: WantList;
 }
 
-export const Thumb = styled.img`
-  height: calc(${base} * 6);
-  width: calc(${base} * 6);
-  ${shade};
-`;
-
 export const ReleaseCol = styled(Column)`
   padding: ${base};
   margin-top: calc(${base} / 2);

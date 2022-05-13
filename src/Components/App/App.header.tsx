@@ -1,23 +1,13 @@
-import maybe from "maybe-for-sure";
 import React, { FC } from "react";
-import record from "../../assets/round-record.png";
+import styled from "styled-components";
 import { User } from "../../domain";
-import { AppLogo, ContentHeader, Stage } from "./style";
+import { Thumb as StyledThumb } from "../styled";
+import { ContentHeader } from "./style";
+
+const Thumb = styled(StyledThumb)``;
 
 type Props = { user: Optional<User> };
-const AppHeader: FC<Props> = ({ user }: Props) => (
-  <ContentHeader>
-    <AppLogo src={record} alt="logo" />
-    <h1>
-      {maybe(user)
-        .mapTo("name")
-        .map((it) => `Hi ${it}!`)
-        .valueOr(
-          <Stage>
-            <span className="dots" />
-          </Stage>
-        )}
-    </h1>
-  </ContentHeader>
-);
+const AppHeader: FC<Props> = ({ user }: Props) => {
+  return <ContentHeader></ContentHeader>;
+};
 export default AppHeader;

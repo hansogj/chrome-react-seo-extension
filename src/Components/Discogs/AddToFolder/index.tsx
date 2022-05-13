@@ -40,7 +40,7 @@ const AddToFolderComponent: FC<Props> = ({
           .mapTo("releaseId")
           .map((it) => (
             <Column>
-              <ActionButton onClick={() => addToFolder(it)}>+</ActionButton>
+              <ActionButton onClick={() => addToFolder(it)}>(+)</ActionButton>
             </Column>
           ))
           .valueOr(<></>)}

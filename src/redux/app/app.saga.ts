@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { all, call, delay, put, takeLatest } from "redux-saga/effects";
 import { OauthIdentity, User } from "../../domain";
 import * as messageHandler from "../../services/popup/message.handler";
 import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR } from "./";
@@ -28,6 +28,12 @@ function* getUser(_: any, count = 0): Generator<any> {
   }
 }
 
+export function* notify(message: string) {
+  yield put(actions.success(message));
+  yield delay(150000);
+  yield put(actions.success());
+}
+
 function* setUserToken({ userToken }: AppActionTypes): Generator<any> {
   yield call(messageHandler.setUserToken, userToken!);
   yield put(actions.getUser());
@@ -37,6 +43,7 @@ function* DiscogsSaga() {
   yield all([
     takeLatest(AppActions.getUser, getUser),
     takeLatest(AppActions.setUserToken, setUserToken),
+    // notify("gei sveis"),
   ]);
 }
 
