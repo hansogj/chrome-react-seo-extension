@@ -29,8 +29,10 @@ const url = (resource: string, params?: SearchParams) => {
     .valueOr(resource);
 };
 
-export const fetch = async (resource: string, params?: SearchParams) =>
-  axios.get(url(resource, params)).then(unRest);
+export const fetch = async (resource: string, params?: SearchParams) => {
+  console.log(resource, url(resource, params));
+  return axios.get(url(resource, params)).then(unRest);
+};
 
 export const post = async (
   resource: string,

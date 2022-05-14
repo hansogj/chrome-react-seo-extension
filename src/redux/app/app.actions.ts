@@ -15,6 +15,10 @@ export const getUser = (): AppActionTypes => ({
   type: AppActions.getUser,
 });
 
+export const logOut = (): AppActionTypes => ({
+  type: AppActions.logOut,
+});
+
 export const setUserToken = (userToken: string): AppActionTypes => ({
   type: AppActions.setUserToken,
   userToken,

@@ -63,6 +63,16 @@ export const Button = styled.button<
   cursor: pointer;
 `;
 
+export const Submit = styled(Button)`
+  background-color: ${colors.blueInTheGreen};
+  color: ${colors.bright};
+`;
+
+export const DreadButton = styled(Button)`
+  background-color: ${colors.dread};
+  color: ${colors.bright};
+`;
+
 export const Select = styled.select<Size & Padded & Colors>`
   ${inputStyle}
   ${size}

@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { AppActionTypes } from "../../redux/app";
-import { Button, Card, Column, ContentBody, Input, Row } from "../styled";
+import { Submit, Card, base, Column, ContentBody, Input, Row } from "../styled";
 
 export interface TokenInputProps {
   setUserToken: Fn<[string], AppActionTypes>;
@@ -14,7 +14,7 @@ const TokenInput: FC<TokenInputProps> = ({
   return (
     <ContentBody>
       <Row>
-        <Column>
+        <Column width={20}>
           <Card>
             <h3>Missing access TOKEN</h3>
             Fyll inn din personlige <b>Discogs</b>-api nøkkel. Den finnes på
@@ -28,7 +28,8 @@ const TokenInput: FC<TokenInputProps> = ({
             </a>
           </Card>
         </Column>
-        <Column>
+        <Column width={5} />
+        <Column width={20}>
           <Card>
             <Input
               type="text"
@@ -37,7 +38,9 @@ const TokenInput: FC<TokenInputProps> = ({
               value={token}
               onChange={(e) => setToken(e.target.value)}
             ></Input>
-            <Button onClick={() => onClick(token)}>submit</Button>
+            <Submit style={{ marginTop: base }} onClick={() => onClick(token)}>
+              submit
+            </Submit>
           </Card>
         </Column>
       </Row>

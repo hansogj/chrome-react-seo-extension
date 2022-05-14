@@ -15,22 +15,35 @@ const services = {
   fields: fieldsService(),
 };
 
+type Rejection = { error: unknown };
 let queryOptions = { active: true, currentWindow: true };
 
-const addListener = (myTabId?: number) =>
+/* const addListener = (myTabId?: number) =>
   chrome.runtime.onMessage.addListener(dispatcher);
-
+  const dispatcher = () => import("../../redux").then(({ action }) => action);
+ */
 const getCurrentTab = (): Promise<chrome.tabs.Tab> =>
   chrome && chrome.tabs && chrome.tabs.query
     ? chrome.tabs.query(queryOptions).then(([tab]) => tab)
-    : Promise.reject();
-
-const dispatcher = () => import("../../redux").then(({ action }) => action);
+    : Promise.reject("No tab to capture");
 
 const sendMessage = <T>(id = 0, body: ActionTypes): Promise<Response> =>
-  new Promise((resolve, reject) =>
-    chrome.tabs.sendMessage(id, body, (response: Response) => resolve(response))
-  );
+  new Promise((resolve, reject) => {
+    try {
+      return chrome.tabs.sendMessage(
+        id,
+        body,
+        (response: Response | Rejection) => {
+          response && (response as Rejection).error
+            ? reject(response as Rejection)
+            : resolve(response as Response);
+        }
+      );
+    } catch (error) {
+      console.error("failing in sending message", error);
+      reject(error);
+    }
+  });
 
 export const fetch = async <T>(
   resource: ResourceUrl,
@@ -112,5 +125,9 @@ export const getCurrentMaster = async (): Promise<Optional<MasterRelease>> =>
         type: MessageActions.GET_CURRENT_MASTER_ID,
       })
     )
-    .catch(() => masterRelease(MOCKED_RELEASE_URL))
+    .catch(() =>
+      masterRelease(
+        "https://www.discogs.com/release/10083775-Walter-Smith-III-Live-In-Paris"
+      )
+    ) //MOCKED_RELEASE_URL))
     .then((it) => maybe(it).valueOr(undefined) as Optional<MasterRelease>);

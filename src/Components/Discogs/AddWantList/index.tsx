@@ -1,10 +1,6 @@
 import { FC } from "react";
-import { colors, Column, Row } from "../../styled";
-import ActionButton from "../ActionButton";
-import {
-  actions as discogsActions,
-  DispatchAction as DiscogsDispatch,
-} from "../../../redux/discogs";
+import { DispatchAction as DiscogsDispatch } from "../../../redux/discogs";
+import { Button, Column, DreadButton, Row } from "../../styled";
 
 export interface Props {
   filterReleases: DiscogsDispatch<void>;
@@ -17,19 +13,18 @@ const AddWantListComponent: FC<Props> = ({
   <>
     <Row>
       <Column>
-        <ActionButton
+        <DreadButton
           {...{
-            style: { backgroundColor: colors.dread },
             onClick: () => filterSellers(),
           }}
         >
           Filter seller
-        </ActionButton>
+        </DreadButton>
       </Column>
       <Column>
-        <ActionButton {...{ onClick: () => filterReleases() }}>
+        <Button {...{ onClick: () => filterReleases() }}>
           Filter Releases
-        </ActionButton>
+        </Button>
       </Column>
     </Row>
   </>

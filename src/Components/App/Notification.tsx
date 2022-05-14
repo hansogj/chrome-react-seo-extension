@@ -1,47 +1,58 @@
 import maybe from "maybe-for-sure";
 import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { ContentBody, Row, Column, colors, Size, Card } from "../styled";
+import { Card, colors, Column, ContentBody, Row } from "../styled";
 
 interface Props {
   notification: string;
+  refObject?: React.MutableRefObject<any>;
+  height?: number;
+  width?: number;
 }
 
-const NotificationContentBody = styled(ContentBody)<{
-  error?: boolean;
-  height?: string;
-  width?: string;
-}>`
+const NotificationContentBody = styled(ContentBody)<
+  { error?: boolean } & Pick<Props, "height" | "width">
+>`
   position: fixed;
-  width: 100%;
-  height: 100%;
+  width: ${(props) => props.width + "px" || "100%"};
+  height: ${(props) => props.height + "px" || "100%"};
+  background-color: ${colors.dread}80;
   top: 0;
   left: 0;
-  opacity: 0.2;
-  background-color: ${(props) =>
-    props.error ? `${colors.dread}` : `${colors.blueInTheGreen}`};
 `;
 
-export const Notification: FC<Props> = ({ notification }: Props) => {
-  const defaultSize = { width: "0px", height: "0px" };
-  const [size, setSize] = useState(defaultSize);
+export const Notification: FC<Props> = ({
+  notification,
+
+  refObject,
+}: Props) => {
+  const [size, setSize] = useState({ width: 580, height: 580 });
+
   useEffect(() => {
-    if (!!notification) {
-      maybe(document.querySelector("#container"))
-        .nothingIf((it) => it === null)
-        .map((it) => it!.getBoundingClientRect())
-        .map(({ width, height }) =>
-          setSize({ width: `${width}px`, height: `${height}px` })
-        )
-        .valueOr(defaultSize);
-    }
-  }, [notification]);
+    const interval = setInterval(() => {
+      maybe(refObject)
+        .mapTo("current")
+        .map((it) => (it as unknown as Element).getBoundingClientRect())
+        .map(({ width, height }) => setSize({ width, height }))
+        .valueOr({ width: 580, height: 580 });
+      console.log("is this running");
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [refObject]);
+
+  console.log(size);
 
   return maybe(notification)
     .map((it) => (
-      <NotificationContentBody width={size!.width} height={size!.height}>
-        <Card>{it}</Card>
-      </NotificationContentBody>
+      <>
+        <NotificationContentBody {...{ ...size }}>
+          <Row width={46}>
+            <Column>
+              <Card>{it}</Card>
+            </Column>
+          </Row>
+        </NotificationContentBody>
+      </>
     ))
     .valueOr(<></>);
 };

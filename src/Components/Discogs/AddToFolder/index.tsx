@@ -1,17 +1,15 @@
 import maybe from "maybe-for-sure";
 import React, { FC } from "react";
-import styled from "styled-components";
 import { ReleaseInView } from "../../../domain";
 import { DispatchAction } from "../../../redux/folders";
 import {
+  base,
   BrightCard,
   Column,
   ContentBody,
   Row,
-  base,
-  colors,
+  Submit,
 } from "../../styled";
-import ActionButton from "../ActionButton";
 import CurrentMaster from "./CurrentMaster";
 import ListFields, { Props as ListFieldsProps } from "./ListFields";
 import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
@@ -20,11 +18,6 @@ export interface Props extends ListFoldersProps, ListFieldsProps {
   releaseInView: ReleaseInView;
   addToFolder: DispatchAction<number>;
 }
-
-const AddButton = styled(ActionButton)`
-  background-color: ${colors.blueInTheGreen};
-  color: ${colors.kindOfBlue};
-`;
 
 const AddToFolderComponent: FC<Props> = ({
   folders,
@@ -50,7 +43,7 @@ const AddToFolderComponent: FC<Props> = ({
           .mapTo("releaseId")
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
-              <AddButton onClick={() => addToFolder(it)}>(+)</AddButton>
+              <Submit onClick={() => addToFolder(it)}>(+)</Submit>
             </Column>
           ))
           .valueOr(<></>)}

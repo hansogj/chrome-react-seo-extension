@@ -137,7 +137,7 @@ function* onUserSuccess() {
 function* DiscogsSaga() {
   yield all([
     takeLatest(AppActions.getUserSuccess, onUserSuccess),
-    takeLatest(FoldersActions.getFolders, getFolders),
+    // takeLatest(FoldersActions.getFolders, getFolders),
     takeLatest(FoldersActions.getFoldersSuccess, getCollection),
     takeLatest(FoldersActions.setSelectedFields, setSelectedFields),
 

@@ -16,8 +16,13 @@ const discogsReducer = reducerForProducers<
   GET_USER_SUCCESS: (draft, action) => {
     draft.isLoading = false;
     draft.user = action.user;
+    draft.error = undefined;
   },
-  APP_ERROR: writeToDraft("error"),
+  APP_ERROR: (draft, action) => {
+    draft.isLoading = false;
+    draft.error = action.error;
+  },
+
   APP_SUCCESS: writeToDraft("notification"),
 });
 

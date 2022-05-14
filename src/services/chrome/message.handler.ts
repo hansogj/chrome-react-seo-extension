@@ -19,7 +19,8 @@ const messagesFromReactAppListener = (
   sendResponse: (response: unknown) => void
 ) => {
   console.log("message received_ ", action);
-  const resolve = (prom: Promise<unknown>) => prom.then(sendResponse);
+  const resolve = (prom: Promise<unknown>) =>
+    prom.then(sendResponse).catch((error) => sendResponse({ error }));
   if (action.type === MessageActions.fetch)
     resolve(api.fetch(action.resource!, action.body as SearchParams));
 

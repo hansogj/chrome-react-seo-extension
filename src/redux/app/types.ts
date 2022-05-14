@@ -13,7 +13,7 @@ export interface AppState {
 }
 
 export enum ERROR {
-  NOT_AUTHENTICATED,
+  NOT_AUTHENTICATED = "NOT_AUTHENTICATED",
 }
 
 export interface AppActionData {
@@ -34,6 +34,7 @@ export enum AppActions {
   getUserFailed = "GET_USER_FAILED",
   setUserToken = "SET_USER_TOKEN",
   setUserTokenSuccess = "SET_USER_TOKEN_SUCCESS",
+  logOut = "APP_LOG_OUT",
 }
 
 export type AppActionTypes = ActionTypes<AppActions, AppActionData>;

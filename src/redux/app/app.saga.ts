@@ -20,7 +20,7 @@ function* getUser(_: any, count = 0): Generator<any> {
     } else {
       if (count < 10) {
         yield getUser(_, count + 1);
-      } else throw new Error(`${ERROR.NOT_AUTHENTICATED}`);
+      } else throw new Error(ERROR.NOT_AUTHENTICATED);
     }
   } catch (error) {
     console.log(error);
@@ -30,21 +30,30 @@ function* getUser(_: any, count = 0): Generator<any> {
 
 export function* notify(message: string) {
   yield put(actions.success(message));
-  yield delay(150000);
+  yield delay(5000);
   yield put(actions.success());
 }
 
 function* setUserToken({ userToken }: AppActionTypes): Generator<any> {
   yield call(messageHandler.setUserToken, userToken!);
-  yield put(actions.getUser());
+  yield call(getUser, 0);
 }
 
-function* DiscogsSaga() {
-  yield all([
-    takeLatest(AppActions.getUser, getUser),
-    takeLatest(AppActions.setUserToken, setUserToken),
-    // notify("gei sveis"),
-  ]);
+function* notifucationTest(): Generator<any> {
+  yield call(notify, "gay sveis");
 }
 
-export default DiscogsSaga;
+function* AppSaga() {
+  try {
+    yield all([
+      takeLatest(AppActions.getUser, getUser),
+      takeLatest(AppActions.logOut, setUserToken),
+      takeLatest(AppActions.setUserToken, setUserToken),
+      takeLatest(AppActions.setUserTokenSuccess, getUser),
+    ]);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export default AppSaga;

@@ -10,7 +10,7 @@ export const colors = {
   shade: "#aaa",
   dread: "#880000",
   kindOfBlue: "#123654",
-  blueInTheGreen: "#067b6d",
+  blueInTheGreen: "#064E40",
   uglyYellow: "#f3ba15",
 };
 

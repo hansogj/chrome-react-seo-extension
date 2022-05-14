@@ -16,7 +16,9 @@ export const masterRelease = (
   return releaseId
     ? api
         .fetch([DISCOGS_BASE_URL, "releases", releaseId].join("/"))
-        .then(({ master_url }: Release) => api.fetch(master_url))
+        .then(({ master_url, ...rest }: Release) =>
+          master_url ? api.fetch(master_url) : rest
+        )
         .then((master) => ({ master, releaseId }))
     : Promise.reject(undefined);
 };

@@ -7,11 +7,7 @@ import {
   actions as discogsActions,
   DispatchAction as DiscogsDispatch,
 } from "../../redux/discogs";
-import {
-  actions as foldersActions,
-  FoldersActionTypes,
-} from "../../redux/folders";
-
+import { actions as foldersActions } from "../../redux/folders";
 import {
   DispatchProps,
   getFields,
@@ -22,10 +18,9 @@ import {
   getWantList,
   StateProps,
 } from "../../redux/selectors";
-import { colors, Column, ContentBody, Row } from "../styled";
-import ActionButton from "./ActionButton";
-import AddWantList, { Props as AddWantListProps } from "./AddWantList";
+import { ContentBody } from "../styled";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
+import AddWantList, { Props as AddWantListProps } from "./AddWantList";
 import ViewSelector, { View } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
