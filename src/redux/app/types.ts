@@ -2,8 +2,14 @@ import { User } from "../../domain";
 import { ActionTypes } from "../types";
 export const DISCOGS_BASE_URL = "https://api.discogs.com";
 
-export const MOCKED_RELEASE_URL =
-  "https://www.discogs.com/release/11874869-Genesis-Selling-England-By-The-Pound";
+export const MOCKED_RELEASE_URL = [
+  "https://www.discogs.com/release/11874869-Genesis-Selling-England-By-The-Pound",
+  "https://www.discogs.com/release/10083775-Walter-Smith-III-Live-In-Paris",
+  "https://www.discogs.com/master/298833-Benny-Golson-Groovin-With-Golson",
+];
+
+export const getMockRelease = () =>
+  MOCKED_RELEASE_URL[Math.floor(Math.random() * MOCKED_RELEASE_URL.length)];
 
 export interface AppState {
   readonly user: Optional<User>;
@@ -14,6 +20,7 @@ export interface AppState {
 
 export enum ERROR {
   NOT_AUTHENTICATED = "NOT_AUTHENTICATED",
+  NO_TAB_TO_CAPTURE = "NO_TAB_TO_CAPTURE",
 }
 
 export interface AppActionData {

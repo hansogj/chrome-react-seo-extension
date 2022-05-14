@@ -19,35 +19,41 @@ const messagesFromReactAppListener = (
   sendResponse: (response: unknown) => void
 ) => {
   console.log("message received_ ", action);
-  const resolve = (prom: Promise<unknown>) =>
+  const resolver = (prom: Promise<unknown>) =>
     prom.then(sendResponse).catch((error) => sendResponse({ error }));
+  messageResolver(action, resolver);
+  return true;
+};
+
+export const messageResolver = (
+  action: ActionTypes,
+  resolver: (prom: Promise<unknown>) => Promise<unknown>
+) => {
   if (action.type === MessageActions.fetch)
-    resolve(api.fetch(action.resource!, action.body as SearchParams));
+    resolver(api.fetch(action.resource!, action.body as SearchParams));
 
   if (action.type === MessageActions.post) {
-    resolve(api.post(action.resource!, action.body as SearchParams & PayLoad));
+    resolver(api.post(action.resource!, action.body as SearchParams & PayLoad));
   }
 
   if (action.type === MessageActions.setUserToken)
-    resolve(api.setUserToken(action.body as string));
+    resolver(api.setUserToken(action.body as string));
 
   if (action.type === MessageActions.DOM)
-    resolve(domResolver(action.body as DiscogsActions));
+    resolver(domResolver(action.body as DiscogsActions));
 
   if (action.type === MessageActions.GET_WANT_LIST)
-    resolve(services.wantList.get());
+    resolver(services.wantList.get());
   if (action.type === MessageActions.SYNC_WANT_LIST)
-    resolve(services.wantList.sync(action.body as string));
+    resolver(services.wantList.sync(action.body as string));
 
   if (action.type === MessageActions.GET_SELECTED_FIELDS)
-    resolve(services.fields.get());
+    resolver(services.fields.get());
   if (action.type === MessageActions.SET_SELECTED_FIELDS)
-    resolve(services.fields.set(action.body as SelectedFields));
+    resolver(services.fields.set(action.body as SelectedFields));
 
   if (action.type === MessageActions.GET_CURRENT_MASTER_ID)
-    resolve(masterRelease());
-
-  return true;
+    return resolver(masterRelease(action.resource!));
 };
 
 chrome &&

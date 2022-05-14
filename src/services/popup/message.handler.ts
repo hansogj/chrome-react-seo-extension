@@ -8,7 +8,8 @@ import fieldsService from "../chrome/selectedFields.service";
 import maybe from "maybe-for-sure";
 import { SelectedFields } from "../../domain/Inventory";
 import { masterRelease } from "../chrome/master.release";
-import { MOCKED_RELEASE_URL } from "../../redux/app";
+import { ERROR, getMockRelease, MOCKED_RELEASE_URL } from "../../redux/app";
+import { messageResolver } from "../chrome/message.handler";
 
 const services = {
   wantList: wantListService(),
@@ -25,7 +26,7 @@ let queryOptions = { active: true, currentWindow: true };
 const getCurrentTab = (): Promise<chrome.tabs.Tab> =>
   chrome && chrome.tabs && chrome.tabs.query
     ? chrome.tabs.query(queryOptions).then(([tab]) => tab)
-    : Promise.reject("No tab to capture");
+    : Promise.reject(ERROR.NO_TAB_TO_CAPTURE);
 
 const sendMessage = <T>(id = 0, body: ActionTypes): Promise<Response> =>
   new Promise((resolve, reject) => {
@@ -119,15 +120,42 @@ export const getSelectedFields = async (): Promise<SelectedFields> =>
     .then((it) => maybe(it).valueOr({}));
 
 export const getCurrentMaster = async (): Promise<Optional<MasterRelease>> =>
-  getCurrentTab()
+  messageHandler(
+    { type: MessageActions.GET_CURRENT_MASTER_ID },
+    {
+      resource: getMockRelease(),
+    }
+  ) as any;
+/* getCurrentTab()
     .then(({ id }) =>
       sendMessage(id, {
         type: MessageActions.GET_CURRENT_MASTER_ID,
       })
     )
-    .catch(() =>
-      masterRelease(
+    .catch((e) => {
+      debugger;
+      console.error(e);
+      return masterRelease(
         "https://www.discogs.com/release/10083775-Walter-Smith-III-Live-In-Paris"
-      )
-    ) //MOCKED_RELEASE_URL))
-    .then((it) => maybe(it).valueOr(undefined) as Optional<MasterRelease>);
+      );
+    }) //MOCKED_RELEASE_URL))
+    .then((it) => maybe(it).valueOr(undefined) as Optional<MasterRelease>); */
+
+const resolver = (prom: Promise<unknown>) =>
+  prom
+    .then((e) => Promise.resolve(e))
+    .catch((error) => Promise.reject({ error }));
+
+const messageHandler = (
+  action: ActionTypes,
+  override: Partial<ActionTypes> = {}
+) => {
+  return getCurrentTab()
+    .then(({ id }) => sendMessage(id, action))
+    .catch((e) => {
+      if (ERROR.NO_TAB_TO_CAPTURE) {
+        return messageResolver({ ...action, ...override }, resolver);
+      }
+      throw e;
+    });
+};

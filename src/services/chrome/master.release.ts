@@ -6,19 +6,28 @@ import * as api from "./api";
 export const masterRelease = (
   url = window.location.href
 ): Promise<ReleaseInView> => {
-  const releaseId = maybe(url.split(/(\/release\/)|(\/master\/)/))
-    .map((it) => it.pop())
-    .nothingIf((it) => it === undefined)
-    .map((it) => `${it}`.split("-").shift())
-    .map((it) => parseInt(it!, 10))
+  const getItemUri = (reg: RegExp) =>
+    maybe(url.split(reg))
+      .map((it) => it.pop())
+      .nothingIf((it) => it === undefined)
+      .map((it) => `${it}`.split("-").shift())
+      .map((it) => parseInt(it!, 10))
+      .nothingIf(isNaN)
+      .valueOr(undefined);
+
+  const [releaseId, masterId] = [/\/release\//, /\/master\//].map(getItemUri);
+
+  const itemUri = maybe(releaseId)
+    .map((it) => `/releases/${it}`)
+    .or(maybe(masterId).map((it) => `/masters/${it}`))
     .valueOr(undefined);
 
-  return releaseId
+  return itemUri
     ? api
-        .fetch([DISCOGS_BASE_URL, "releases", releaseId].join("/"))
+        .fetch(`${DISCOGS_BASE_URL}/${itemUri}`)
         .then(({ master_url, ...rest }: Release) =>
           master_url ? api.fetch(master_url) : rest
         )
-        .then((master) => ({ master, releaseId }))
+        .then((master: Release) => ({ master, releaseId } as any))
     : Promise.reject(undefined);
 };

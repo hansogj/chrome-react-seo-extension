@@ -52,6 +52,7 @@ function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
 
 function* getCurrentMaster(): Generator<any> {
   const master = yield call(messageHandler.getCurrentMaster);
+  debugger;
   if (master) {
     yield put(actions.getCurrentMasterSuccess(master as ReleaseInView));
   }
