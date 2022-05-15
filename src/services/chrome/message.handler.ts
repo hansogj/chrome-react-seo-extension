@@ -30,27 +30,29 @@ export const messageResolver = (
   resolver: (prom: Promise<unknown>) => Promise<unknown>
 ) => {
   if (action.type === MessageActions.fetch)
-    resolver(api.fetch(action.resource!, action.body as SearchParams));
+    return resolver(api.fetch(action.resource!, action.body as SearchParams));
 
   if (action.type === MessageActions.post) {
-    resolver(api.post(action.resource!, action.body as SearchParams & PayLoad));
+    return resolver(
+      api.post(action.resource!, action.body as SearchParams & PayLoad)
+    );
   }
 
   if (action.type === MessageActions.setUserToken)
-    resolver(api.setUserToken(action.body as string));
+    return resolver(api.setUserToken(action.body as string));
 
   if (action.type === MessageActions.DOM)
-    resolver(domResolver(action.body as DiscogsActions));
+    return resolver(domResolver(action.body as DiscogsActions));
 
   if (action.type === MessageActions.GET_WANT_LIST)
-    resolver(services.wantList.get());
+    return resolver(services.wantList.get());
   if (action.type === MessageActions.SYNC_WANT_LIST)
-    resolver(services.wantList.sync(action.body as string));
+    return resolver(services.wantList.sync(action.body as string));
 
   if (action.type === MessageActions.GET_SELECTED_FIELDS)
-    resolver(services.fields.get());
+    return resolver(services.fields.get());
   if (action.type === MessageActions.SET_SELECTED_FIELDS)
-    resolver(services.fields.set(action.body as SelectedFields));
+    return resolver(services.fields.set(action.body as SelectedFields));
 
   if (action.type === MessageActions.GET_CURRENT_MASTER_ID)
     return resolver(masterRelease(action.resource!));

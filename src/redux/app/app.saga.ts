@@ -1,18 +1,18 @@
 import { all, call, delay, put, takeLatest } from "redux-saga/effects";
 import { OauthIdentity, User } from "../../domain";
-import * as messageHandler from "../../services/popup/message.handler";
+import * as api from "../../services/popup/api";
 import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR } from "./";
 import * as actions from "./app.actions";
 
 function* getUser(_: any, count = 0): Generator<any> {
   try {
     const identity = yield call(
-      messageHandler.fetch,
+      api.fetch,
       `${DISCOGS_BASE_URL}/oauth/identity`
     );
     if (identity) {
       const user = yield call(
-        messageHandler.fetch,
+        api.fetch,
         (identity as OauthIdentity).resource_url
       );
 
@@ -35,7 +35,7 @@ export function* notify(message: string) {
 }
 
 function* setUserToken({ userToken }: AppActionTypes): Generator<any> {
-  yield call(messageHandler.setUserToken, userToken!);
+  yield call(api.setUserToken, userToken!);
   yield call(getUser, 0);
 }
 

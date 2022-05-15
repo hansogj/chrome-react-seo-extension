@@ -7,7 +7,7 @@ import {
   InventoryFields,
   ReleaseInView,
 } from "../../domain";
-import * as messageHandler from "../../services/popup/message.handler";
+import * as messageHandler from "../../services/popup/api";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
 import { DiscogsActions, DiscogsActionTypes } from "../discogs";
 import { fetchResource } from "../discogs/discogs.saga";
@@ -57,6 +57,7 @@ function* setSelectedFields({
 
 function* getSelectedFields(): Generator<any> {
   const allFields = yield call(messageHandler.getSelectedFields);
+  console.log(allFields);
   yield put(
     actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
   );

@@ -10,7 +10,7 @@ import {
   takeLatest,
 } from "redux-saga/effects";
 import { ReleaseInView } from "../../domain";
-import * as messageHandler from "../../services/popup/message.handler";
+import * as api from "../../services/popup/api";
 import * as appActions from "../app/app.actions";
 import {
   getFieldsResource,
@@ -30,7 +30,7 @@ export function* fetchResource<T>(
   try {
     const resource = yield select(selector);
     if (resource) {
-      result = yield call(messageHandler.fetch as any, resource, body);
+      result = yield call(api.fetch as any, resource, body);
     } else {
       yield put(appActions.getUser());
     }
@@ -47,12 +47,11 @@ function* getDiscogsInventory(): Generator<any> {
 }
 
 function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
-  yield call(messageHandler.manipulateDom, type);
+  yield call(api.manipulateDom, type);
 }
 
 function* getCurrentMaster(): Generator<any> {
-  const master = yield call(messageHandler.getCurrentMaster);
-  debugger;
+  const master = yield call(api.getCurrentMaster);
   if (master) {
     yield put(actions.getCurrentMasterSuccess(master as ReleaseInView));
   }
