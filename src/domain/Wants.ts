@@ -3,16 +3,17 @@ import { Artist, Format, Pagination } from "./div";
 export type WantList = Record<BasicInformation["master_id"], WantListItem>;
 
 export interface WantListItem
-  extends Pick<
-    BasicInformation,
-    | "master_url"
-    | "artists"
-    | "thumb"
-    | "title"
-    | "year"
-    | "cover_image"
-    | "formats"
-  > {}
+  extends Pick<Want, "date_added">,
+    Pick<
+      BasicInformation,
+      | "master_url"
+      | "artists"
+      | "thumb"
+      | "title"
+      | "year"
+      | "cover_image"
+      | "formats"
+    > {}
 
 export interface PaginatedWantList {
   pagination: Pagination;

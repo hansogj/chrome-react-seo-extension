@@ -28,3 +28,5 @@ export type ActionTypes =
   | FoldersActionTypes;
 
 export const action = (type: ActionTypes): ActionTypes => store.dispatch(type);
+
+export type DispatchAction<T> = Fn<[T], ActionTypes>;

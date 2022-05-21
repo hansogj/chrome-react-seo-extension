@@ -1,10 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import maybe from "maybe-for-sure";
+import { empty } from "../../utils/json.utils";
 import { get, set } from "../local.storage";
-
-const equals = (a: Object, b: Object) =>
-  JSON.stringify(a, null, 0) !== JSON.stringify(b, null, 0);
-const empty = (obj: Object) => equals(obj, {});
 
 const unRest = ({ data }: AxiosResponse) => data;
 const serialize = (obj: Record<string, string | number>): string =>
@@ -17,7 +14,7 @@ const serialize = (obj: Record<string, string | number>): string =>
 
 const mergeWithToken = (it: SearchParams) => {
   const token = get("token", {}); // token to be found in https://www.discogs.com/settings/developers
-  return { ...it, ...(empty(token) && { token }) };
+  return { ...it, ...(!empty(token) && { token }) };
 };
 
 const url = (resource: string, params?: SearchParams) => {
@@ -29,10 +26,8 @@ const url = (resource: string, params?: SearchParams) => {
     .valueOr(resource);
 };
 
-export const fetch = async (resource: string, params?: SearchParams) => {
-  console.log(resource, url(resource, params));
-  return axios.get(url(resource, params)).then(unRest);
-};
+export const fetch = async (resource: string, params?: SearchParams) =>
+  axios.get(url(resource, params)).then(unRest);
 
 export const post = async (
   resource: string,

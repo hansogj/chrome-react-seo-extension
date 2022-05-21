@@ -21,7 +21,6 @@ export const h = css`
     font-weight: 800;
     line-height: calc(${base} * 4);
     margin: 0 0 calc(${base} * 2);
-    text-align: center;
   }
 
   h2 {
@@ -30,7 +29,6 @@ export const h = css`
     font-weight: 800;
     line-height: calc(${base} * 0.5);
     margin: 0 0 calc(${base} * 1.5);
-    text-align: center;
   }
 
   h3 {
@@ -39,7 +37,6 @@ export const h = css`
     font-weight: 600;
     line-height: calc(${base} * 2);
     margin: 0 0 calc(${base} * 1);
-    text-align: center;
   }
 
   h4,
@@ -50,7 +47,6 @@ export const h = css`
     font-weight: 600;
     line-height: calc(${base} * 1.5);
     margin: 0;
-    text-align: center;
   }
   label {
     text-align: left;

@@ -1,8 +1,12 @@
-import { all, call, delay, put, takeLatest } from "redux-saga/effects";
+import { all, call, delay, put, select, takeLatest } from "redux-saga/effects";
 import { OauthIdentity, User } from "../../domain";
 import * as api from "../../services/popup/api";
-import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR } from "./";
+import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR, View } from "./";
 import * as actions from "./app.actions";
+
+import * as appSelectors from "../selectors/app.selectors";
+import { ActionTypes } from "../types";
+import { get, set } from "../../services/chrome/local.storage";
 
 function* getUser(_: any, count = 0): Generator<any> {
   try {
@@ -15,7 +19,6 @@ function* getUser(_: any, count = 0): Generator<any> {
         api.fetch,
         (identity as OauthIdentity).resource_url
       );
-
       yield put(actions.getUserSuccess(user as User));
     } else {
       if (count < 10) {
@@ -25,6 +28,16 @@ function* getUser(_: any, count = 0): Generator<any> {
   } catch (error) {
     console.log(error);
     yield put(actions.error(ERROR.NOT_AUTHENTICATED));
+  }
+}
+
+export function* getUserId(): Generator<number> {
+  const userId = yield select(appSelectors.getUserId) as any;
+  if (userId) {
+    yield userId as number;
+    return userId;
+  } else {
+    throw new Error("Cannot find any userId ");
   }
 }
 
@@ -43,6 +56,16 @@ function* notifucationTest(): Generator<any> {
   yield call(notify, "gay sveis");
 }
 
+function* setView({ view }: AppActionTypes): Generator<any> {
+  set("view", view);
+  yield put(actions.setViewSuccess(view as View));
+}
+function* getView(): Generator<any> {
+  const view = get("view", "Want List");
+  console.log(view);
+  yield put(actions.setViewSuccess(view as View));
+}
+
 function* AppSaga() {
   try {
     yield all([
@@ -50,6 +73,8 @@ function* AppSaga() {
       takeLatest(AppActions.logOut, setUserToken),
       takeLatest(AppActions.setUserToken, setUserToken),
       takeLatest(AppActions.setUserTokenSuccess, getUser),
+      takeLatest(AppActions.setView, setView),
+      takeLatest(AppActions.getUserSuccess, getView),
     ]);
   } catch (e) {
     console.error(e);

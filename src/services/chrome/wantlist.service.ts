@@ -1,16 +1,21 @@
+import maybe from "maybe-for-sure";
 import { PaginatedWantList, Want } from "../../domain";
 import { fetch } from "./api";
-import { get, set } from "./local.storage";
+import { get, set, uniqueKey } from "./local.storage";
 
 export type Cache = Record<string, Object>;
 
 const toWantList = (wants: Want[]) =>
   wants
-    .map(({ basic_information }) => basic_information)
+    .map(({ basic_information, date_added }) => ({
+      ...basic_information,
+      date_added,
+    }))
     .map(
       ({
+        id,
         master_id,
-        master_url,
+        date_added,
         artists,
         formats,
         thumb,
@@ -18,32 +23,35 @@ const toWantList = (wants: Want[]) =>
         title,
         year,
       }) => ({
-        master_id,
-        master_url,
+        wantListId: maybe(master_id)
+          .map((it) => `master/${it}`)
+          .valueOr(`release/${id}`),
         artists,
         thumb,
         title,
         year,
         cover_image,
+        date_added,
         formats: formats.filter((_, i) => i === 0),
       })
     );
 
 const wantListService = () => {
-  const cachedValues: Cache = get("want-list", {});
+  const getCachedValues = (userId: number): Cache =>
+    get(uniqueKey("want-list", userId), {});
 
   const call = async (url: string, page = 1, cache: Cache): Promise<Cache> => {
+    console.log("call", url, page);
     const { pagination, wants }: PaginatedWantList = await fetch(url, {
       page,
       per_page: 50,
     });
 
     const build: Cache = toWantList(wants)
-      .filter(({ master_id }) => !!master_id && !cachedValues[master_id])
-
-      .reduce((curr, { master_id, ...rest }) => {
+      .filter(({ wantListId }) => !!wantListId && !cache[wantListId])
+      .reduce((curr, { wantListId, ...rest }) => {
         try {
-          curr[master_id] = rest;
+          curr[wantListId] = rest;
         } catch (error) {
           debugger;
         }
@@ -57,16 +65,17 @@ const wantListService = () => {
       : build;
   };
 
-  const sync = async (url: string, page = 1) => {
+  const sync = async (userId: number, url: string, page = 1) => {
+    console.log(userId, url, page);
     console.time();
     const res = await call(url, page, {});
     console.timeEnd();
-    set("want-list", res);
+    set(uniqueKey(`want-list`, userId), res);
     return Promise.resolve(res);
   };
 
   return {
-    get: () => Promise.resolve(cachedValues),
+    get: (userId: number) => Promise.resolve(getCachedValues(userId)),
     sync,
   };
 };

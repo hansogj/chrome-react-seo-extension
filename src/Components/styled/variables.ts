@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 export const base = "12px";
 export const micro = "2px";
 
@@ -28,8 +29,10 @@ export const borderRadius = {
   large: base,
 };
 
+export type Kids = { children?: ReactNode[] | ReactNode };
 export type Size = { width?: number; height?: number };
 export type Padded = { padding?: number[] };
+export type Center = { center?: boolean };
 export type Colors = { color?: string; background?: string };
 export const spacings = {
   ...borderRadius,

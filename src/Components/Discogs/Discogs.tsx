@@ -1,33 +1,35 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { User } from "../../domain";
 import { RootState } from "../../redux";
-import {
-  actions as discogsActions,
-  DispatchAction as DiscogsDispatch,
-} from "../../redux/discogs";
+import { actions as appActions } from "../../redux/app";
+import { actions as discogsActions } from "../../redux/discogs";
 import { actions as foldersActions } from "../../redux/folders";
 import {
   DispatchProps,
+  getActiveView,
   getFields,
   getFolders,
-  getReleaseInView,
+  getReleasePageItem,
   getSelectedFields,
   getUser,
   getWantList,
   StateProps,
 } from "../../redux/selectors";
+import { actions as wantListActions } from "../../redux/wantlist";
 import { ContentBody } from "../styled";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
 import AddWantList, { Props as AddWantListProps } from "./AddWantList";
-import ViewSelector, { View } from "./ViewSelector";
+import ViewSelector, { Props as ViewSelectorProps } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
-interface DiscProps extends AddToFolderProps, WantListProps, AddWantListProps {
+interface DiscProps
+  extends AddToFolderProps,
+    WantListProps,
+    AddWantListProps,
+    ViewSelectorProps {
   user: Optional<User>;
-
-  getCurrentMaster: DiscogsDispatch<void>;
 }
 
 const DiscogsContainer: FC<DiscProps> = ({
@@ -38,44 +40,38 @@ const DiscogsContainer: FC<DiscProps> = ({
   filterReleases,
   filterSellers,
   selectedFields,
-  releaseInView,
-  getCurrentMaster,
+  releasePageItem,
+  activeView,
+  setView,
   setSelectedFields,
+  syncWantList,
   addToFolder,
-}: DiscProps) => {
-  const [activeView, setView] = useState<View>("Add item");
+}: DiscProps) => (
+  <ContentBody>
+    <ViewSelector
+      {...{ activeView, setView, hasReleasePageItem: !!releasePageItem }}
+    />
+    {activeView === "Watch" && (
+      <AddWantList {...{ filterReleases, filterSellers }} />
+    )}
 
-  useEffect(() => {
-    if (activeView === "Add item") {
-      getCurrentMaster();
-    }
-  }, [activeView, getCurrentMaster]);
-
-  return (
-    <ContentBody>
-      <ViewSelector {...{ activeView, setView }} />
-      {activeView === "Watch" && (
-        <AddWantList {...{ filterReleases, filterSellers }} />
-      )}
-
-      {activeView === "Want list" && wantList && (
-        <WantListComponent {...{ wantList }} />
-      )}
-      {activeView === "Add item" && (
-        <AddToFolder
-          {...{
-            folders,
-            fields,
-            selectedFields,
-            setSelectedFields,
-            releaseInView,
-            addToFolder,
-          }}
-        />
-      )}
-    </ContentBody>
-  );
-};
+    {activeView === "Want List" && wantList && (
+      <WantListComponent {...{ wantList, syncWantList }} />
+    )}
+    {activeView === "Add Item" && (
+      <AddToFolder
+        {...{
+          folders,
+          fields,
+          selectedFields,
+          setSelectedFields,
+          releasePageItem,
+          addToFolder,
+        }}
+      />
+    )}
+  </ContentBody>
+);
 
 export const mapStateToProps = (
   state: RootState
@@ -85,24 +81,21 @@ export const mapStateToProps = (
   wantList: getWantList(state),
   fields: getFields(state),
   selectedFields: getSelectedFields(state),
-  releaseInView: getReleaseInView(state),
+  releasePageItem: getReleasePageItem(state),
+  activeView: getActiveView(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
   ({
     filterReleases: bindActionCreators(discogsActions.filterReleases, dispatch),
-
     filterSellers: bindActionCreators(discogsActions.filterSellers, dispatch),
+    addToFolder: bindActionCreators(foldersActions.addToFolder, dispatch),
+    syncWantList: bindActionCreators(wantListActions.syncWantList, dispatch),
+    setView: bindActionCreators(appActions.setView, dispatch),
     setSelectedFields: bindActionCreators(
       foldersActions.setSelectedFields,
       dispatch
     ),
-    getCurrentMaster: bindActionCreators(
-      discogsActions.getCurrentMaster,
-      dispatch
-    ),
-
-    addToFolder: bindActionCreators(foldersActions.addToFolder, dispatch),
   } as DiscProps);
 
 export default connect(

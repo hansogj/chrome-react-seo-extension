@@ -1,46 +1,32 @@
-import React, { FC } from "react";
-import { WantList, WantListItem } from "../../../domain";
-import { Column, ContentBody, Row, Thumb } from "../../styled";
-import { ReleaseCol } from "./style";
+import maybe from "maybe-for-sure";
+import React, { FC, useState } from "react";
+import { WantList } from "../../../domain";
+import { empty } from "../../../services/utils/json.utils";
+import { Column, ContentBody, Row } from "../../styled";
+import ControlPanel, { Props as ControlPanelProps } from "./ControlPanel";
+import List from "./List";
+import { SortMethod } from "./utils";
 
-export interface Props {
+export interface Props extends Pick<ControlPanelProps, "syncWantList"> {
   wantList: WantList;
 }
-type Item = [string, WantListItem];
 
-const sortByName = ([_, a]: Item, [__, b]: Item) =>
-  a.artists[0].name > b.artists[0].name ? 1 : -1;
+const WantListComponent: FC<Props> = ({ wantList, syncWantList }: Props) => {
+  const [sortMethod, selectSortMethod] = useState<SortMethod>("Name");
 
-const WantListComponent: FC<Props> = ({ wantList }: Props) => {
   return (
     <ContentBody filled>
       <Row>
-        {Object.entries(wantList!)
-          .filter((_, i) => i < 100)
-          .sort(sortByName)
-          .map(([master_id, { title, thumb, artists, year }]: Item) => (
-            <ReleaseCol key={master_id} width={12} height={8}>
-              <a {...{ href: `http://www.discogs.com/master/${master_id}` }}>
-                <Row>
-                  <Column width={6} className="thumbContainer">
-                    <Thumb src={thumb} alt={title} />
-                  </Column>
-                  <Column width={5}>
-                    <Row>
-                      <Column>
-                        {artists.map(({ name }) => name).join("/")}
-                        <br />
-                        <i>{title}</i>
-                        <br />
-                        {year}
-                      </Column>
-                    </Row>
-                  </Column>
-                </Row>
-              </a>
-            </ReleaseCol>
-          ))}
+        <Column width={37}>
+          <h3>Want list filtered on unique entities</h3>
+        </Column>
       </Row>
+      <ControlPanel {...{ syncWantList, selectSortMethod, sortMethod }} />
+      {maybe(wantList)
+        .nothingIf(empty)
+        .map(Object.entries)
+        .map((entries) => <List {...{ entries, sortMethod }} />)
+        .valueOr(<></>)}
     </ContentBody>
   );
 };

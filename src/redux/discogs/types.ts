@@ -1,23 +1,22 @@
-import { Instance, Release, ReleaseInView } from "../../domain";
+import { Instance, Release, ReleasePageItem } from "../../domain";
 import { ActionTypes } from "../types";
 
 export interface DiscogsState {
-  readonly releaseInView: ReleaseInView;
+  readonly releasePageItem: Optional<ReleasePageItem>;
 }
 
 export interface DiscogsActionData {
   instance: Optional<Instance>;
-  releaseInView: Optional<ReleaseInView>;
+  releasePageItem: Optional<ReleasePageItem>;
   releaseId: Optional<Release["id"]>;
 }
 
 export enum DiscogsActions {
-  getCurrentMaster = "GET_CURRENT_MASTER",
-  getCurrentMasterSuccess = "GET_CURRENT_MASTER_SUCCESS",
+  getReleasePageItem = "GET_RELEASE_PAGE_ITEM",
+  getReleasePageItemSuccess = "GET_RELEASE_PAGE_ITEM_SUCCESS",
 
   filterReleases = "FILTER_RELEASES",
   filterSellers = "FILTER_SELLERS",
 }
 
 export type DiscogsActionTypes = ActionTypes<DiscogsActions, DiscogsActionData>;
-export type DispatchAction<T> = Fn<[T], DiscogsActionTypes>;

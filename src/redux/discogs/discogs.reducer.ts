@@ -1,9 +1,9 @@
-import { ReleaseInView } from "../../domain";
+import { ReleasePageItem } from "../../domain";
 import { reducerForProducers, writeToDraft } from "../utils";
 import { DiscogsActions, DiscogsActionTypes, DiscogsState } from "./types";
 
 export const initialState: DiscogsState = {
-  releaseInView: {} as ReleaseInView,
+  releasePageItem: undefined,
 };
 
 const discogsReducer = reducerForProducers<
@@ -11,7 +11,7 @@ const discogsReducer = reducerForProducers<
   DiscogsActionTypes,
   DiscogsActions
 >(initialState, {
-  GET_CURRENT_MASTER_SUCCESS: writeToDraft("releaseInView"),
+  GET_RELEASE_PAGE_ITEM_SUCCESS: writeToDraft("releasePageItem"),
 });
 
 export default discogsReducer;

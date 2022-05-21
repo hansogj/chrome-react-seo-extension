@@ -5,11 +5,11 @@ import { Image, Artist } from "../../../domain";
 import { Thumb, Column, Row } from "../../styled";
 
 export type Props = {
-  currentMaster: MasterRelease;
+  releasePageItem: MasterRelease;
 };
 
-const CurrentMaster: FC<Props> = ({ currentMaster }: Props) =>
-  maybe(currentMaster)
+const ReleasePageItem: FC<Props> = ({ releasePageItem }: Props) =>
+  maybe(releasePageItem)
     .map((it) => (
       <>
         {maybe(it.images)
@@ -37,4 +37,4 @@ const CurrentMaster: FC<Props> = ({ currentMaster }: Props) =>
     ))
     .valueOr(<></>);
 
-export default CurrentMaster;
+export default ReleasePageItem;

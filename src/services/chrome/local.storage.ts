@@ -3,7 +3,10 @@
 import packageJson from "../../../package.json";
 import maybe from "maybe-for-sure";
 
-type StorageKeys = "token" | "want-list" | "cache" | "selected-fields";
+type StorageKeys = "token" | "want-list" | "cache" | "selected-fields" | "view";
+
+export const uniqueKey = (key: StorageKeys, id: string | number) =>
+  `${key}-${id}` as StorageKeys;
 
 const { name } = packageJson;
 
@@ -14,6 +17,7 @@ const parse = (val: unknown) => {
     return val;
   }
 };
+
 export const set = <T>(key: StorageKeys, val: T): T => {
   window?.localStorage?.setItem(`${name}-${key}`, JSON.stringify(val, null, 2));
   return val;

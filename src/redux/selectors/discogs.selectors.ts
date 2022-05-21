@@ -7,8 +7,6 @@ import { selectFromRoot } from "../utils";
 export const getDiscogsState = (state: Partial<RootState>): DiscogsState =>
   selectFromRoot(state, "Discogs")!;
 
-export const getReleaseInView = createSelector(getDiscogsState, (discogs) =>
-  maybe(discogs)
-    .mapTo("releaseInView")
-    .valueOr({} as DiscogsState["releaseInView"])
+export const getReleasePageItem = createSelector(getDiscogsState, (discogs) =>
+  maybe(discogs).mapTo("releasePageItem").valueOr(undefined)
 );

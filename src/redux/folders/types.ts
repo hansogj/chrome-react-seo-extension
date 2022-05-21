@@ -29,4 +29,3 @@ export enum FoldersActions {
 }
 
 export type FoldersActionTypes = ActionTypes<FoldersActions, FoldersActionData>;
-export type DispatchAction<T> = Fn<[T], FoldersActionTypes>;

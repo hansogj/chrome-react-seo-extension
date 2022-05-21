@@ -12,6 +12,7 @@ export interface WantListActionData {
 
 export enum WantListActions {
   getWantList = "GET_WANT_LIST",
+  syncWantList = "SYNC_WANT_LIST",
   getWantListSuccess = "GET_WANT_LIST_SUCCESS",
   getWantListFailed = "GET_WANT_LIST_FAILED",
 }
@@ -20,4 +21,3 @@ export type WantListActionTypes = ActionTypes<
   WantListActions,
   WantListActionData
 >;
-export type DispatchAction<T> = Fn<[T], WantListActionTypes>;

@@ -1,12 +1,12 @@
+import { SelectedFields } from "../../domain/Inventory";
 import { ActionTypes } from "../../redux";
 import { DiscogsActions } from "../../redux/discogs";
 import * as api from "./api";
 import domResolver from "./dom";
+import { releasePage } from "./release.page";
+import fieldsService from "./selectedFields.service";
 import { MessageActions } from "./types";
 import wantListService from "./wantlist.service";
-import fieldsService from "./selectedFields.service";
-import { SelectedFields } from "../../domain/Inventory";
-import { masterRelease } from "./master.release";
 
 const services = {
   wantList: wantListService(),
@@ -45,17 +45,24 @@ export const messageResolver = (
     return resolver(domResolver(action.body as DiscogsActions));
 
   if (action.type === MessageActions.GET_WANT_LIST)
-    return resolver(services.wantList.get());
+    return resolver(services.wantList.get(action.userId as number));
   if (action.type === MessageActions.SYNC_WANT_LIST)
-    return resolver(services.wantList.sync(action.body as string));
+    return resolver(
+      services.wantList.sync(action.userId as number, action.body as string)
+    );
 
   if (action.type === MessageActions.GET_SELECTED_FIELDS)
-    return resolver(services.fields.get());
+    return resolver(services.fields.get(action.userId as number));
   if (action.type === MessageActions.SET_SELECTED_FIELDS)
-    return resolver(services.fields.set(action.body as SelectedFields));
+    return resolver(
+      services.fields.set(
+        action.userId as number,
+        action.body as SelectedFields
+      )
+    );
 
-  if (action.type === MessageActions.GET_CURRENT_MASTER_ID)
-    return resolver(masterRelease(action.resource!));
+  if (action.type === MessageActions.GET_RELEASE_PAGE_ITEM_ID)
+    return resolver(releasePage(action.resource!));
 };
 
 chrome &&

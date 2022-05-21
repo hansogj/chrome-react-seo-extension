@@ -6,6 +6,7 @@ export const initialState: AppState = {
   notification: undefined,
   error: undefined,
   isLoading: true,
+  view: undefined,
 };
 
 const discogsReducer = reducerForProducers<
@@ -24,6 +25,7 @@ const discogsReducer = reducerForProducers<
   },
 
   APP_SUCCESS: writeToDraft("notification"),
+  APP_SET_VIEW_SUCCESS: writeToDraft("view"),
 });
 
 export default discogsReducer;

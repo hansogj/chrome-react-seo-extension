@@ -1,28 +1,27 @@
 import "@hansogj/array.utils";
+import maybe from "maybe-for-sure";
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
 import {
   Artist,
   Folder,
   Instance,
   InventoryFields,
-  ReleaseInView,
+  ReleasePageItem,
 } from "../../domain";
 import * as messageHandler from "../../services/popup/api";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
-import { DiscogsActions, DiscogsActionTypes } from "../discogs";
+import { DiscogsActionTypes } from "../discogs";
 import { fetchResource } from "../discogs/discogs.saga";
+import * as discogsSelectors from "../selectors/discogs.selectors";
+import * as foldersSelectors from "../selectors/folders.selectors";
 import {
   getAddReleaseToFolderResource,
-  getFieldsResource,
   getCollectionResource,
+  getFieldsResource,
   getFoldersResource,
 } from "../selectors/resource.selectors";
-
-import * as foldersSelectors from "../selectors/folders.selectors";
-import * as discogsSelectors from "../selectors/discogs.selectors";
 import * as actions from "./folders.actions";
-import { FoldersActionTypes, FoldersActions } from "./types";
-import maybe from "maybe-for-sure";
+import { FoldersActions, FoldersActionTypes } from "./types";
 
 function* getFolders(): Generator<any> {
   const result = yield fetchResource(getFoldersResource);
@@ -46,8 +45,10 @@ function* getFields(): Generator<any> {
 function* setSelectedFields({
   selectedFields,
 }: FoldersActionTypes): Generator<any> {
+  const userId = yield call(appSagas.getUserId);
   const allFields = yield call(
     messageHandler.setSelectedFields,
+    userId as number,
     selectedFields!
   );
   yield put(
@@ -56,7 +57,11 @@ function* setSelectedFields({
 }
 
 function* getSelectedFields(): Generator<any> {
-  const allFields = yield call(messageHandler.getSelectedFields);
+  const userId = yield call(appSagas.getUserId);
+  const allFields = yield call(
+    messageHandler.getSelectedFields,
+    userId as number
+  );
   console.log(allFields);
   yield put(
     actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
@@ -73,7 +78,7 @@ function* addToFolder({ releaseId }: DiscogsActionTypes): Generator<any> {
       yield updateSelectedFieldsValues(result as Instance);
     } else {
       yield put(
-        appActions.error({ error: "New Item feiler", ...{ releaseId } })
+        appActions.error({ error: "New Item fails", ...{ releaseId } })
       );
     }
   } catch (error) {
@@ -115,8 +120,8 @@ function* getCollection(): Generator<any> {
 
 function* notifyInstance(instance: Instance): Generator<any> {
   const { master } = (yield select(
-    discogsSelectors.getReleaseInView
-  )) as ReleaseInView;
+    discogsSelectors.getReleasePageItem
+  )) as ReleasePageItem;
 
   const artist = maybe(master)
     .mapTo("artists")

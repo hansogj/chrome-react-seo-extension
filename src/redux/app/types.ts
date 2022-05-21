@@ -2,20 +2,15 @@ import { User } from "../../domain";
 import { ActionTypes } from "../types";
 export const DISCOGS_BASE_URL = "https://api.discogs.com";
 
-export const MOCKED_RELEASE_URL = [
-  "https://www.discogs.com/release/11874869-Genesis-Selling-England-By-The-Pound",
-  "https://www.discogs.com/release/10083775-Walter-Smith-III-Live-In-Paris",
-  "https://www.discogs.com/master/298833-Benny-Golson-Groovin-With-Golson",
-];
-
-export const getMockRelease = () =>
-  MOCKED_RELEASE_URL[Math.floor(Math.random() * MOCKED_RELEASE_URL.length)];
+export const Views = ["Watch", "Add Item", "Want List"] as const;
+export type View = typeof Views[number];
 
 export interface AppState {
   readonly user: Optional<User>;
   readonly error: Optional<ERROR | Error | string>;
   readonly notification: Optional<string>;
   readonly isLoading: boolean;
+  readonly view: Optional<View>;
 }
 
 export enum ERROR {
@@ -29,6 +24,7 @@ export interface AppActionData {
   userToken: Optional<string>;
   error: any;
   notification: string;
+  view: Optional<View>;
 }
 
 export enum AppActions {
@@ -42,7 +38,8 @@ export enum AppActions {
   setUserToken = "SET_USER_TOKEN",
   setUserTokenSuccess = "SET_USER_TOKEN_SUCCESS",
   logOut = "APP_LOG_OUT",
+  setView = "APP_SET_VIEW",
+  setViewSuccess = "APP_SET_VIEW_SUCCESS",
 }
 
 export type AppActionTypes = ActionTypes<AppActions, AppActionData>;
-export type DispatchAction<T> = Fn<[T], AppActionTypes>;

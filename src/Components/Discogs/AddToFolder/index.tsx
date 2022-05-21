@@ -1,7 +1,7 @@
 import maybe from "maybe-for-sure";
 import React, { FC } from "react";
-import { ReleaseInView } from "../../../domain";
-import { DispatchAction } from "../../../redux/folders";
+import { ReleasePageItem } from "../../../domain";
+import { DispatchAction } from "../../../redux/store";
 import {
   base,
   BrightCard,
@@ -10,19 +10,19 @@ import {
   Row,
   Submit,
 } from "../../styled";
-import CurrentMaster from "./CurrentMaster";
+import ListReleasePageItem from "./ReleasePageItem";
 import ListFields, { Props as ListFieldsProps } from "./ListFields";
 import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
 
 export interface Props extends ListFoldersProps, ListFieldsProps {
-  releaseInView: ReleaseInView;
+  releasePageItem: ReleasePageItem;
   addToFolder: DispatchAction<number>;
 }
 
 const AddToFolderComponent: FC<Props> = ({
   folders,
   fields,
-  releaseInView,
+  releasePageItem: releaseInView,
   addToFolder,
   ...props
 }: Props) => (
@@ -30,7 +30,9 @@ const AddToFolderComponent: FC<Props> = ({
     <BrightCard>
       {maybe(releaseInView)
         .mapTo("master")
-        .map((currentMaster) => <CurrentMaster {...{ currentMaster }} />)
+        .map((releasePageItem) => (
+          <ListReleasePageItem {...{ releasePageItem }} />
+        ))
         .valueOr(<></>)}
     </BrightCard>
     <BrightCard style={{ marginTop: base }}>
@@ -38,12 +40,12 @@ const AddToFolderComponent: FC<Props> = ({
         <Column width={21}>
           <ListFolders {...{ folders, ...props }} />
         </Column>
-        <Column width={18} />
+
         {maybe(releaseInView)
           .mapTo("releaseId")
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
-              <Submit onClick={() => addToFolder(it)}>(+)</Submit>
+              <Submit onClick={() => addToFolder(it)}>ADD (+)</Submit>
             </Column>
           ))
           .valueOr(<></>)}

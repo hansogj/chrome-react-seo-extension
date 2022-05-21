@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { DispatchAction as DiscogsDispatch } from "../../../redux/discogs";
+import { DispatchAction as DiscogsDispatch } from "../../../redux/store";
 import { Button, Column, DreadButton, Row } from "../../styled";
 
 export interface Props {

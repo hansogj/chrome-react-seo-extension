@@ -1,11 +1,12 @@
 import maybe from "maybe-for-sure";
-import { Release, ReleaseInView } from "../../domain";
+import { Release, ReleasePageItem } from "../../domain";
 import { DISCOGS_BASE_URL } from "../../redux/app";
 import * as api from "./api";
 
-export const masterRelease = (
+export const releasePage = (
   url = window.location.href
-): Promise<ReleaseInView> => {
+): Promise<ReleasePageItem> => {
+  console.log(url);
   const getItemUri = (reg: RegExp) =>
     maybe(url.split(reg))
       .map((it) => it.pop())
@@ -29,5 +30,5 @@ export const masterRelease = (
           master_url ? api.fetch(master_url) : rest
         )
         .then((master: Release) => ({ master, releaseId } as any))
-    : Promise.reject(undefined);
+    : Promise.reject("cannot find a release on this page");
 };

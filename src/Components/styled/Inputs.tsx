@@ -61,6 +61,15 @@ export const Button = styled.button<
   ${(props) => props.active && activeButton}
   text-shadow: 0 1px 1px ${colors.darkShade};
   cursor: pointer;
+
+  &:disabled,
+  &:active {
+    filter: grayscale(1);
+    text-shadow: 0 1px 1px ${colors.darkShade};
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const Submit = styled(Button)`

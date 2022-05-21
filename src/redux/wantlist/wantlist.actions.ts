@@ -6,6 +6,10 @@ export const getWantList = (page: number): WantListActionTypes => ({
   page,
 });
 
+export const syncWantList = (): WantListActionTypes => ({
+  type: WantListActions.syncWantList,
+});
+
 export const getWantListSuccess = (
   wantList: WantList
 ): WantListActionTypes => ({

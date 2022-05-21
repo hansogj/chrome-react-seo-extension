@@ -9,8 +9,9 @@ import {
   SelectEffect,
   takeLatest,
 } from "redux-saga/effects";
-import { ReleaseInView } from "../../domain";
+import { ReleasePageItem } from "../../domain";
 import * as api from "../../services/popup/api";
+import { AppActions } from "../app";
 import * as appActions from "../app/app.actions";
 import {
   getFieldsResource,
@@ -50,10 +51,14 @@ function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
   yield call(api.manipulateDom, type);
 }
 
-function* getCurrentMaster(): Generator<any> {
-  const master = yield call(api.getCurrentMaster);
-  if (master) {
-    yield put(actions.getCurrentMasterSuccess(master as ReleaseInView));
+function* getReleasePageItem(): Generator<any> {
+  try {
+    const master = yield call(api.getReleasePageItem);
+    if (master) {
+      yield put(actions.getReleasePageItemSuccess(master as ReleasePageItem));
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -61,7 +66,8 @@ function* DiscogsSaga() {
   yield all([
     takeLatest(DiscogsActions.filterReleases, manipulateDom),
     takeLatest(DiscogsActions.filterSellers, manipulateDom),
-    takeLatest(DiscogsActions.getCurrentMaster, getCurrentMaster),
+    // takeLatest(DiscogsActions.getCurrentMaster, getCurrentMaster),
+    takeLatest(AppActions.getUserSuccess, getReleasePageItem),
   ]);
 }
 

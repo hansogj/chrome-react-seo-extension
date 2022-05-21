@@ -1,14 +1,19 @@
 import { SelectedFields } from "../../domain/Inventory";
-import { get as getStorage, set as setStorage } from "./local.storage";
+import {
+  get as getStorage,
+  set as setStorage,
+  uniqueKey,
+} from "./local.storage";
 
 const key = "selected-fields";
 
 const fieldsService = () => {
-  const get = () => Promise.resolve(getStorage(key, {}));
+  const get = (userId: number) =>
+    Promise.resolve(getStorage(uniqueKey(key, userId), {}));
   return {
     get,
-    set: (selectedFields: SelectedFields) =>
-      get()
+    set: (userId: number, selectedFields: SelectedFields) =>
+      get(userId)
         .then((fields: SelectedFields) => ({
           ...fields,
           ...selectedFields,

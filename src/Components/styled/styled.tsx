@@ -9,6 +9,8 @@ import {
   fontSizes,
   micro,
   Padded,
+  Kids,
+  Center,
   Size,
   spacings,
 } from "./variables";
@@ -16,6 +18,11 @@ import {
 export const shade = css`
   box-shadow: ${borderRadius.medium} ${borderRadius.small} ${borderRadius.small}
     ${colors.darkShade};
+`;
+
+const centerRow = css<Center>`
+  justify-content: ${(props) =>
+    !!props.center ? "space-evenly" : "space-between"};
 `;
 
 export const size = css<Size>`
@@ -73,7 +80,7 @@ export const ContentBody = styled.div<{ filled?: boolean }>`
     color: ${colors.bright};
     `};
 `;
-export const Column = styled.div<Size & Padded & { center?: boolean }>`
+export const Column = styled.div<Size & Padded & Center>`
   ${size};
   ${padded};
   display: flex;
@@ -83,13 +90,13 @@ export const Column = styled.div<Size & Padded & { center?: boolean }>`
   justify-content: space-between;
 `;
 
-export const Row = styled.div<Size & Padded>`
+export const Row = styled.div<Size & Padded & Center>`
   ${size};
   ${padded};
+  ${centerRow};
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
   margin: ${micro} 0;
 `;
 

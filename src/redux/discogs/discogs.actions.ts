@@ -1,13 +1,4 @@
-import {
-  Folder,
-  Instance,
-  MasterRelease,
-  Release,
-  ReleaseInView,
-  WantList,
-} from "../../domain";
-import { SelectedFields } from "../../domain/Inventory";
-import { InventoryFields } from "../../domain/InventoryFields";
+import { Instance, ReleasePageItem } from "../../domain";
 import { DiscogsActions, DiscogsActionTypes } from "./types";
 
 export const filterReleases = (): DiscogsActionTypes => ({
@@ -18,18 +9,18 @@ export const filterSellers = (): DiscogsActionTypes => ({
   type: DiscogsActions.filterSellers,
 });
 
-export const getCurrentMaster = (): DiscogsActionTypes => ({
-  type: DiscogsActions.getCurrentMaster,
+export const getReleasePageItem = (): DiscogsActionTypes => ({
+  type: DiscogsActions.getReleasePageItem,
 });
 
-export const getCurrentMasterSuccess = (
-  releaseInView: ReleaseInView
+export const getReleasePageItemSuccess = (
+  releasePageItem: ReleasePageItem
 ): DiscogsActionTypes => ({
-  type: DiscogsActions.getCurrentMasterSuccess,
-  releaseInView,
+  type: DiscogsActions.getReleasePageItemSuccess,
+  releasePageItem,
 });
 
 export const addToFolderSuccess = (instance: Instance): DiscogsActionTypes => ({
-  type: DiscogsActions.getCurrentMaster,
+  type: DiscogsActions.getReleasePageItem,
   instance,
 });

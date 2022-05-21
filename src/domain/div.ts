@@ -15,7 +15,7 @@ export interface Pagination {
   urls: Urls;
 }
 
-export interface ReleaseInView {
+export interface ReleasePageItem {
   releaseId: Release["id"];
   master: MasterRelease;
 }

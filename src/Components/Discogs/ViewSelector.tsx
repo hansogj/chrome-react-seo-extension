@@ -1,26 +1,37 @@
 import React, { FC } from "react";
 import { Collection, Eye, List } from "../../assets/icons";
 import { Button, colors, Column, Row } from "../styled";
-
-export const Views = ["Watch", "Add item", "Want list"] as const;
-export type View = typeof Views[number];
+import { View, Views } from "../../redux/app";
+import { DispatchAction } from "../../redux/store";
 
 const IconMap: Record<View, (fill: string) => JSX.Element> = {
   Watch: (fill: string) => <Eye {...{ fill }} />,
-  "Add item": (fill: string) => <Collection {...{ fill }} />,
-  "Want list": (fill: string) => <List {...{ fill }} />,
+  "Add Item": (fill: string) => <Collection {...{ fill }} />,
+  "Want List": (fill: string) => <List {...{ fill }} />,
 };
 
-interface Props {
+export interface Props {
   activeView: View;
-  setView: (view: View) => void;
+  setView: DispatchAction<View>;
+  hasReleasePageItem: boolean;
 }
 
-const ViewSelector: FC<Props> = ({ setView, activeView }: Props) => (
-  <Row>
+const isDisabled = (view: View, hasReleasePageItem: boolean) =>
+  !hasReleasePageItem &&
+  ["Add Item", "Watch"]
+    .map((it) => it.toLowerCase())
+    .includes(view.toLowerCase());
+
+const ViewSelector: FC<Props> = ({
+  setView,
+  activeView,
+  hasReleasePageItem,
+}: Props) => (
+  <Row width={30}>
     {Views.map((view) => (
-      <Column key={view}>
+      <Column key={view} center>
         <Button
+          disabled={isDisabled(view, hasReleasePageItem)}
           active={view === activeView}
           onClick={() => {
             setView(view);

@@ -1,12 +1,6 @@
-import maybe from "maybe-for-sure";
-import { MasterRelease, ResourceUrl } from "../../domain";
-import { SelectedFields } from "../../domain/Inventory";
 import { ActionTypes } from "../../redux";
-import { ERROR, getMockRelease } from "../../redux/app";
-import { DiscogsActions } from "../../redux/discogs";
-import { MessageActions } from "../../services/chrome/types";
+import { ERROR } from "../../redux/app";
 import { messageResolver } from "../chrome/message.handler";
-import { Cache } from "../chrome/wantlist.service";
 
 type Rejection = { error: unknown };
 let queryOptions = { active: true, currentWindow: true };

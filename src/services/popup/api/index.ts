@@ -1,13 +1,11 @@
 import maybe from "maybe-for-sure";
 import { MasterRelease, ResourceUrl } from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
-import { ActionTypes } from "../../../redux";
-import { ERROR, getMockRelease } from "../../../redux/app";
 import { DiscogsActions } from "../../../redux/discogs";
 import { MessageActions } from "../../../services/chrome/types";
-import { messageResolver } from "../../chrome/message.handler";
 import { Cache } from "../../chrome/wantlist.service";
 import messageHandler from "../message.handler";
+import { getMockRelease } from "./__mock__/release.in.view";
 
 export const fetch = async <T>(resource: ResourceUrl, body?: SearchParams) =>
   messageHandler<T>({ type: MessageActions.fetch, resource, body });
@@ -30,30 +28,36 @@ export const manipulateDom = async (body: DiscogsActions) =>
       )
   );
 
-export const getWantList = async () =>
-  messageHandler<Cache>({ type: MessageActions.GET_WANT_LIST }).then(
+export const getWantList = async (userId: number) =>
+  messageHandler<Cache>({ type: MessageActions.GET_WANT_LIST, userId }).then(
     (cache) => maybe(cache).valueOr({}) as Cache
   );
 
-export const syncWantList = async (url: string) =>
+export const syncWantList = async (userId: number, url: string) =>
   messageHandler<Cache>({
     type: MessageActions.SYNC_WANT_LIST,
     body: url,
+    userId,
   }).then((cache) => maybe(cache).valueOr({}) as Cache);
 
-export const setSelectedFields = async (selectedFields: SelectedFields) =>
+export const setSelectedFields = async (
+  userId: number,
+  selectedFields: SelectedFields
+) =>
   messageHandler<SelectedFields>({
     type: MessageActions.SET_SELECTED_FIELDS,
     body: selectedFields as any,
+    userId,
   }).then((it) => maybe(it).valueOr(selectedFields));
 
-export const getSelectedFields = async () =>
+export const getSelectedFields = async (userId: number) =>
   messageHandler<SelectedFields>({
     type: MessageActions.GET_SELECTED_FIELDS,
+    userId,
   }).then((it) => maybe(it).valueOr({}));
 
-export const getCurrentMaster = async () =>
+export const getReleasePageItem = async () =>
   messageHandler<Optional<MasterRelease>>(
-    { type: MessageActions.GET_CURRENT_MASTER_ID },
+    { type: MessageActions.GET_RELEASE_PAGE_ITEM_ID },
     { resource: getMockRelease() }
   );
