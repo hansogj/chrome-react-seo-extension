@@ -61,7 +61,7 @@ function* setView({ view }: AppActionTypes): Generator<any> {
   yield put(actions.setViewSuccess(view as View));
 }
 function* getView(): Generator<any> {
-  const view = get("view", "Want List");
+  const view = get("view", "");
   console.log(view);
   yield put(actions.setViewSuccess(view as View));
 }

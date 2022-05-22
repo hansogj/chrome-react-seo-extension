@@ -12,3 +12,7 @@ export const getWantList = createSelector(getWantListState, (discogs) =>
     .mapTo("wantList")
     .valueOr({} as WantListState["wantList"])
 );
+
+export const isSyncing = createSelector(getWantListState, (discogs) =>
+  maybe(discogs).mapTo("isSyncing").valueOr(false)
+);

@@ -39,5 +39,15 @@ export const post = async (
   return axios.post(url(resource, body as SearchParams), payLoad).then(unRest);
 };
 
+export const put = async (
+  resource: string,
+  paramsAndPayload?: SearchParams & PayLoad
+) => {
+  const { payLoad, ...body } = maybe(
+    paramsAndPayload as SearchParams & PayLoad
+  ).valueOr({ payLoad: undefined });
+  return axios.put(url(resource, body as SearchParams), payLoad).then(unRest);
+};
+
 export const setUserToken = (userToken: string): Promise<boolean> =>
   Promise.resolve(!!set("token", userToken));

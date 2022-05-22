@@ -1,8 +1,9 @@
-import { reducerForProducers, writeToDraft } from "../utils";
+import { reducerForProducers } from "../utils";
 import { WantListActions, WantListActionTypes, WantListState } from "./types";
 
 export const initialState: WantListState = {
   wantList: [],
+  isSyncing: false,
 };
 
 const wantlistReducer = reducerForProducers<
@@ -10,7 +11,13 @@ const wantlistReducer = reducerForProducers<
   WantListActionTypes,
   WantListActions
 >(initialState, {
-  GET_WANT_LIST_SUCCESS: writeToDraft("wantList"),
+  SYNC_WANT_LIST: (draft) => {
+    draft.isSyncing = true;
+  },
+  GET_WANT_LIST_SUCCESS: (draft, action) => {
+    draft.isSyncing = false;
+    draft.wantList = action.wantList!;
+  },
 });
 
 export default wantlistReducer;

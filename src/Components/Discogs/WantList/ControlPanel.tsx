@@ -1,35 +1,39 @@
 import React, { FC } from "react";
-import { DispatchAction } from "../../../redux/store";
-import { Button, Column, Row, Select } from "../../styled";
-import { SortMethod, sortMethods, SortMethods } from "./utils";
-
+import { Button, colors, Column, Row, Select } from "../../styled";
+import { pageSizes, SortMethod, sortMethods, SortMethods } from "./utils";
 export type Props = {
-  syncWantList: DispatchAction<void>;
   sortMethod: keyof SortMethods;
   selectSortMethod: (sortMethod: SortMethod) => void;
+  turnPage: (to: number) => void;
+  pageSize: number;
+  setPageSize: (pageSize: number) => void;
+  pageNr: number;
+  wantListLength: number;
 };
+
 const ControlPanel: FC<Props> = ({
-  syncWantList,
   selectSortMethod,
   sortMethod,
+  pageSize,
+  turnPage,
+  setPageSize,
 }: Props) => (
   <Row>
     <Column width={4}>
-      <Button>&lt;</Button>
+      <Button onClick={() => turnPage(-1)}>&lt;</Button>
     </Column>
-    <Column width={6} center></Column>
-    <Column width={4}>
-      <Button>&gt;</Button>
-    </Column>
-    <Column width={15} center>
+
+    <Column width={17} center>
       <Select
+        background={colors.kindOfBlue}
+        color={colors.bright}
         value={sortMethod}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           selectSortMethod(e.target.value as SortMethod);
         }}
         width={12}
       >
-        {Object.keys(sortMethods).map((sm) => (
+        {sortMethods.map((sm) => (
           <option key={`sort-method-${sm}`} value={sm}>
             {sm === sortMethod && "Sort by "}
             {sm}
@@ -37,9 +41,30 @@ const ControlPanel: FC<Props> = ({
         ))}
       </Select>
     </Column>
-    <Column width={9}></Column>
-    <Column width={5}>
-      <Button onClick={() => syncWantList()}>SYNC</Button>
+
+    <Column width={1}></Column>
+
+    <Column width={17} center>
+      <Select
+        value={pageSize}
+        background={colors.kindOfBlue}
+        color={colors.bright}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          setPageSize(parseInt(e.target.value, 10));
+        }}
+        width={12}
+      >
+        {pageSizes.map((ps) => (
+          <option key={`filter-page-size-${ps}`} value={ps}>
+            {ps}
+            {ps === pageSize && " items / page "}
+          </option>
+        ))}
+      </Select>
+    </Column>
+
+    <Column width={4}>
+      <Button onClick={() => turnPage(+1)}>&gt;</Button>
     </Column>
   </Row>
 );

@@ -10,6 +10,11 @@ import { getMockRelease } from "./__mock__/release.in.view";
 export const fetch = async <T>(resource: ResourceUrl, body?: SearchParams) =>
   messageHandler<T>({ type: MessageActions.fetch, resource, body });
 
+export const put = async <T>(
+  resource: ResourceUrl,
+  body?: SearchParams & PayLoad
+) => messageHandler<T>({ type: MessageActions.put, resource, body });
+
 export const post = async <T>(
   resource: ResourceUrl,
   body?: SearchParams & PayLoad
@@ -61,3 +66,8 @@ export const getReleasePageItem = async () =>
     { type: MessageActions.GET_RELEASE_PAGE_ITEM_ID },
     { resource: getMockRelease() }
   );
+
+export const reload = async () =>
+  messageHandler<Optional<MasterRelease>>({
+    type: MessageActions.WINDOW_RELOAD,
+  });

@@ -10,6 +10,7 @@ export interface MessageActionData {
 export enum MessageActions {
   fetch = "FETCH",
   post = "POST",
+  put = "PUT",
   setUserToken = "SET_USER_TOKEN",
   DOM = "DOM",
 
@@ -23,6 +24,7 @@ export enum MessageActions {
 
   SET_VIEW = "SET_VIEW",
   GET_VIEW = "GET_VIEW",
+  WINDOW_RELOAD = "WINDOW_RELOAD",
 }
 
 export type MessageActionTypes = ActionTypes<MessageActions, MessageActionData>;

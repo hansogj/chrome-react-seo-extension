@@ -5,5 +5,7 @@ export const MOCKED_RELEASE_URL = [
   "https://www.discogs.com/user/murdrejg/collection",
 ];
 
-export const getMockRelease = () =>
-  MOCKED_RELEASE_URL[Math.floor(Math.random() * MOCKED_RELEASE_URL.length)];
+let itemNr = Math.floor(Math.random() * MOCKED_RELEASE_URL.length);
+// itemNr = 1;
+
+export const getMockRelease = () => MOCKED_RELEASE_URL[itemNr];

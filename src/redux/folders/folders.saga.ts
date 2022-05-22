@@ -1,4 +1,5 @@
 import "@hansogj/array.utils";
+import { writeDataTransferToClipboard } from "@testing-library/user-event/dist/types/utils";
 import maybe from "maybe-for-sure";
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
 import {
@@ -8,7 +9,7 @@ import {
   InventoryFields,
   ReleasePageItem,
 } from "../../domain";
-import * as messageHandler from "../../services/popup/api";
+import * as api from "../../services/popup/api";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
 import { DiscogsActionTypes } from "../discogs";
 import { fetchResource } from "../discogs/discogs.saga";
@@ -47,7 +48,7 @@ function* setSelectedFields({
 }: FoldersActionTypes): Generator<any> {
   const userId = yield call(appSagas.getUserId);
   const allFields = yield call(
-    messageHandler.setSelectedFields,
+    api.setSelectedFields,
     userId as number,
     selectedFields!
   );
@@ -58,10 +59,7 @@ function* setSelectedFields({
 
 function* getSelectedFields(): Generator<any> {
   const userId = yield call(appSagas.getUserId);
-  const allFields = yield call(
-    messageHandler.getSelectedFields,
-    userId as number
-  );
+  const allFields = yield call(api.getSelectedFields, userId as number);
   console.log(allFields);
   yield put(
     actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
@@ -71,10 +69,9 @@ function* getSelectedFields(): Generator<any> {
 function* addToFolder({ releaseId }: DiscogsActionTypes): Generator<any> {
   let result: any = undefined as unknown as any;
   try {
-    debugger;
     const resource = yield select(getAddReleaseToFolderResource(releaseId!));
     if (resource) {
-      const result = yield call(messageHandler.post, resource as string);
+      const result = yield call(api.post, resource as string);
       yield updateSelectedFieldsValues(result as Instance);
     } else {
       yield put(
@@ -108,17 +105,17 @@ function* updateSelectedFieldsValues(instance: Instance): Generator<any> {
       }))
 
       .map(({ resource, payLoad }) =>
-        call(messageHandler.post as any, resource, { payLoad })
+        call(api.post as any, resource, { payLoad })
       )
   );
-  yield notifyInstance(instance);
+  yield notifyInstance();
 }
 
 function* getCollection(): Generator<any> {
   yield fetchResource(getCollectionResource);
 }
 
-function* notifyInstance(instance: Instance): Generator<any> {
+function* notifyInstance(): Generator<any> {
   const { master } = (yield select(
     discogsSelectors.getReleasePageItem
   )) as ReleasePageItem;
@@ -128,14 +125,14 @@ function* notifyInstance(instance: Instance): Generator<any> {
     .map((it) => it[0] as Artist)
     .map(({ name }) => name)
     .valueOr("");
-  appSagas.notify(`${artist} ${master?.title} added to your folder`);
+  yield api.reload();
+  yield appSagas.notify(`${artist} ${master?.title} added to your folder`);
 }
 
 function* onUserSuccess() {
   try {
     yield all([getFolders(), getFields(), getSelectedFields()]);
   } catch (e) {
-    debugger;
     console.log(e);
   }
 }

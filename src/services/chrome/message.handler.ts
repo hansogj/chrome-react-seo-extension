@@ -63,6 +63,8 @@ export const messageResolver = (
 
   if (action.type === MessageActions.GET_RELEASE_PAGE_ITEM_ID)
     return resolver(releasePage(action.resource!));
+
+  if (action.type === MessageActions.WINDOW_RELOAD) window.location.reload();
 };
 
 chrome &&

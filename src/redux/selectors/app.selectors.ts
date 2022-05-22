@@ -1,6 +1,6 @@
 import maybe from "maybe-for-sure";
 import { createSelector } from "reselect";
-import { AppState, ERROR, View, Views } from "../app";
+import { AppState, ERROR } from "../app";
 import { RootState } from "../root.reducers";
 import { selectFromRoot } from "../utils";
 import { getReleasePageItem } from "./discogs.selectors";
@@ -35,5 +35,5 @@ export const getActiveView = createSelector(
     maybe(appState)
       .mapTo("view")
       .nothingIf(() => !releasePageItem)
-      .valueOr(Views[2])
+      .valueOr(undefined)
 );

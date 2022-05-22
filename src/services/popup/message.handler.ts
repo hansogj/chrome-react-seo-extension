@@ -44,7 +44,10 @@ const messageHandler = <T>(
   getCurrentTab()
     .then(({ id }) => sendMessage(id, action))
     .catch((e) => {
-      if (ERROR.NO_TAB_TO_CAPTURE) {
+      if (
+        ERROR.NO_TAB_TO_CAPTURE &&
+        window.location.href.includes("localhost")
+      ) {
         return messageResolver({ ...action, ...override }, resolver);
       }
       throw e;

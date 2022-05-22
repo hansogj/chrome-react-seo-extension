@@ -1,4 +1,4 @@
-import maybe from "maybe-for-sure";
+import maybe, { Maybe } from "maybe-for-sure";
 import React, { FC } from "react";
 import { ReleasePageItem } from "../../../domain";
 import { DispatchAction } from "../../../redux/store";
@@ -22,13 +22,13 @@ export interface Props extends ListFoldersProps, ListFieldsProps {
 const AddToFolderComponent: FC<Props> = ({
   folders,
   fields,
-  releasePageItem: releaseInView,
+  releasePageItem,
   addToFolder,
   ...props
 }: Props) => (
   <ContentBody filled>
     <BrightCard>
-      {maybe(releaseInView)
+      {maybe(releasePageItem)
         .mapTo("master")
         .map((releasePageItem) => (
           <ListReleasePageItem {...{ releasePageItem }} />
@@ -41,14 +41,22 @@ const AddToFolderComponent: FC<Props> = ({
           <ListFolders {...{ folders, ...props }} />
         </Column>
 
-        {maybe(releaseInView)
-          .mapTo("releaseId")
+        {maybe(releasePageItem)
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
-              <Submit onClick={() => addToFolder(it)}>ADD (+)</Submit>
+              <Submit
+                disabled={Maybe.isNothing(it.releaseId)}
+                onClick={() =>
+                  maybe(it)
+                    .mapTo("releaseId")
+                    .map((id) => addToFolder(id))
+                }
+              >
+                ADD (+)
+              </Submit>
             </Column>
           ))
-          .valueOr(<></>)}
+          .valueOr(<Column padding={[1, 0, 0, 0]}>:Master:</Column>)}
       </Row>
       <ListFields {...{ fields, ...props }} />
     </BrightCard>

@@ -39,14 +39,7 @@ const Profile: FC<Props> = ({ user, logOut }: Props) => {
         .mapTo("avatar_url")
         .map((src) => <Thumb {...{ src }} />)
         .valueOr(<></>)}
-      <DreadButton
-        onClick={() => {
-          debugger;
-          logOut();
-        }}
-      >
-        Log out
-      </DreadButton>
+      <DreadButton onClick={() => logOut()}>Log out</DreadButton>
     </HeaderContent>
   );
 };

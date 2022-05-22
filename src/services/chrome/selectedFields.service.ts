@@ -18,7 +18,7 @@ const fieldsService = () => {
           ...fields,
           ...selectedFields,
         }))
-        .then((it) => setStorage(key, it)),
+        .then((it) => setStorage(uniqueKey(key, userId), it)),
   };
 };
 

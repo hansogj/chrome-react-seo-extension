@@ -16,6 +16,7 @@ function* syncWantList(): Generator<any> {
     resource as string
   );
   yield put(wantListActions.getWantListSuccess(result as WantList));
+  yield appSagas.notify("Want list has been synchronized");
 }
 
 function* getWantList(): Generator<any> {

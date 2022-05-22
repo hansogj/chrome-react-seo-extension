@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { colors } from "../Components/styled";
 
 const Svg = styled.svg`
   height: 12px;

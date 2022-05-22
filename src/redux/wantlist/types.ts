@@ -3,6 +3,7 @@ import { ActionTypes } from "../types";
 
 export interface WantListState {
   readonly wantList: WantList;
+  readonly isSyncing: boolean;
 }
 
 export interface WantListActionData {

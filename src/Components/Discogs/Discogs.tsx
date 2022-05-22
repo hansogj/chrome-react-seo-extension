@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { User } from "../../domain";
 import { RootState } from "../../redux";
 import { actions as appActions } from "../../redux/app";
 import { actions as discogsActions } from "../../redux/discogs";
@@ -9,11 +8,11 @@ import { actions as foldersActions } from "../../redux/folders";
 import {
   DispatchProps,
   getActiveView,
+  getCollectableFolders,
+  isSyncing,
   getFields,
-  getFolders,
   getReleasePageItem,
   getSelectedFields,
-  getUser,
   getWantList,
   StateProps,
 } from "../../redux/selectors";
@@ -28,12 +27,9 @@ interface DiscProps
   extends AddToFolderProps,
     WantListProps,
     AddWantListProps,
-    ViewSelectorProps {
-  user: Optional<User>;
-}
+    ViewSelectorProps {}
 
 const DiscogsContainer: FC<DiscProps> = ({
-  user,
   folders,
   fields,
   wantList,
@@ -43,6 +39,7 @@ const DiscogsContainer: FC<DiscProps> = ({
   releasePageItem,
   activeView,
   setView,
+  isSyncing,
   setSelectedFields,
   syncWantList,
   addToFolder,
@@ -56,7 +53,7 @@ const DiscogsContainer: FC<DiscProps> = ({
     )}
 
     {activeView === "Want List" && wantList && (
-      <WantListComponent {...{ wantList, syncWantList }} />
+      <WantListComponent {...{ wantList, syncWantList, isSyncing }} />
     )}
     {activeView === "Add Item" && (
       <AddToFolder
@@ -76,9 +73,9 @@ const DiscogsContainer: FC<DiscProps> = ({
 export const mapStateToProps = (
   state: RootState
 ): StateProps<Partial<DiscProps>> => ({
-  user: getUser(state),
-  folders: getFolders(state),
+  folders: getCollectableFolders(state),
   wantList: getWantList(state),
+  isSyncing: isSyncing(state),
   fields: getFields(state),
   selectedFields: getSelectedFields(state),
   releasePageItem: getReleasePageItem(state),

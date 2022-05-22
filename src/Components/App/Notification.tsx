@@ -1,7 +1,7 @@
 import maybe from "maybe-for-sure";
 import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Card, colors, Column, ContentBody, Row } from "../styled";
+import { base, Card, colors, Column, ContentBody, Row } from "../styled";
 
 interface Props {
   notification: string;
@@ -16,9 +16,18 @@ const NotificationContentBody = styled(ContentBody)<
   position: fixed;
   width: ${(props) => props.width + "px" || "100%"};
   height: ${(props) => props.height + "px" || "100%"};
-  background-color: ${colors.dread}80;
+
+  transition: 1s ease-in-out;
+  background-color: ${colors.dark}80;
   top: 0;
   left: 0;
+
+  .card {
+    min-width: calc(${base} * 20);
+    padding: calc(${base} * 2);
+    background-color: ${colors.bright};
+    color: ${colors.kindOfBlue};
+  }
 `;
 
 export const Notification: FC<Props> = ({
@@ -26,7 +35,7 @@ export const Notification: FC<Props> = ({
 
   refObject,
 }: Props) => {
-  const [size, setSize] = useState({ width: 580, height: 580 });
+  const [size, setSize] = useState({ width: 580, height: 50 });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,21 +43,18 @@ export const Notification: FC<Props> = ({
         .mapTo("current")
         .map((it) => (it as unknown as Element).getBoundingClientRect())
         .map(({ width, height }) => setSize({ width, height }))
-        .valueOr({ width: 580, height: 580 });
-      console.log("is this running");
-    }, 1000);
+        .valueOr({ width: 580, height: 50 });
+    }, 200);
     return () => clearInterval(interval);
   }, [refObject]);
-
-  console.log(size);
 
   return maybe(notification)
     .map((it) => (
       <>
         <NotificationContentBody {...{ ...size }}>
-          <Row width={46}>
-            <Column>
-              <Card>{it}</Card>
+          <Row center>
+            <Column center width={46}>
+              <Card className="card">{it}</Card>
             </Column>
           </Row>
         </NotificationContentBody>
