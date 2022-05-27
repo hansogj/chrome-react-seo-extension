@@ -6,6 +6,5 @@ export const MOCKED_RELEASE_URL = [
 ];
 
 let itemNr = Math.floor(Math.random() * MOCKED_RELEASE_URL.length);
-// itemNr = 1;
 
 export const getMockRelease = () => MOCKED_RELEASE_URL[itemNr];

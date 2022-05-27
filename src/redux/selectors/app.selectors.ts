@@ -1,6 +1,6 @@
 import maybe from "maybe-for-sure";
 import { createSelector } from "reselect";
-import { AppState, ERROR } from "../app";
+import { AppState, ERROR, View } from "../app";
 import { RootState } from "../root.reducers";
 import { selectFromRoot } from "../utils";
 import { getReleasePageItem } from "./discogs.selectors";
@@ -14,8 +14,14 @@ export const getUserId = createSelector(getUser, (user) =>
   maybe(user).mapTo("id").valueOr(undefined)
 );
 
-export const getNotification = createSelector(getAppState, (appState) =>
-  maybe(appState).mapTo("notification").valueOr(undefined)
+export const getNotification = createSelector(
+  getAppState,
+  (appState: AppState) =>
+    maybe(appState).mapTo("notification").valueOr(undefined)
+);
+
+export const getError = createSelector(getAppState, (appState: AppState) =>
+  maybe(appState).mapTo("error").valueOr(undefined)
 );
 
 export const isLoading = createSelector(
@@ -31,9 +37,9 @@ export const notAuthenticated = createSelector(
 export const getActiveView = createSelector(
   getAppState,
   getReleasePageItem,
-  (appState, releasePageItem) =>
+  (appState, releasePageItem): Optional<View> =>
     maybe(appState)
       .mapTo("view")
-      .nothingIf(() => !releasePageItem)
+      .map((it) => (!releasePageItem ? "Want List" : it))
       .valueOr(undefined)
 );

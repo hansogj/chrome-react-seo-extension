@@ -24,7 +24,8 @@ const discogsReducer = reducerForProducers<
     draft.error = action.error;
   },
 
-  APP_SUCCESS: writeToDraft("notification"),
+  APP_NOTIFY: writeToDraft("notification"),
+  APP_NOTIFY_RESET: writeToDraft("notification"),
   APP_SET_VIEW_SUCCESS: writeToDraft("view"),
 });
 

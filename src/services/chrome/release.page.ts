@@ -6,7 +6,6 @@ import * as api from "./api";
 export const releasePage = (
   url = window.location.href
 ): Promise<ReleasePageItem> => {
-  console.log(url);
   const getItemUri = (reg: RegExp) =>
     maybe(url.split(reg))
       .map((it) => it.pop())

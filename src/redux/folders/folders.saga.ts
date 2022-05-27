@@ -1,31 +1,38 @@
 import "@hansogj/array.utils";
-import { writeDataTransferToClipboard } from "@testing-library/user-event/dist/types/utils";
 import maybe from "maybe-for-sure";
-import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import {
+  all,
+  call,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeLatest,
+} from "redux-saga/effects";
 import {
   Artist,
   Folder,
   Instance,
   InventoryFields,
-  ReleasePageItem,
+  MasterRelease,
 } from "../../domain";
 import * as api from "../../services/popup/api";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
-import { DiscogsActionTypes } from "../discogs";
-import { fetchResource } from "../discogs/discogs.saga";
-import * as discogsSelectors from "../selectors/discogs.selectors";
-import * as foldersSelectors from "../selectors/folders.selectors";
+import { DiscogsActionTypes, sagas as discogsSaga } from "../discogs";
 import {
   getAddReleaseToFolderResource,
   getCollectionResource,
   getFieldsResource,
   getFoldersResource,
-} from "../selectors/resource.selectors";
+  getSelectedFields as getSelectedFieldsSelector,
+} from "../selectors";
+import { actions as wantListActions, WantListActions } from "../wantlist";
 import * as actions from "./folders.actions";
 import { FoldersActions, FoldersActionTypes } from "./types";
 
 function* getFolders(): Generator<any> {
-  const result = yield fetchResource(getFoldersResource);
+  const result = yield discogsSaga.fetchResource(getFoldersResource);
   if (result) {
     yield put(
       actions.getFoldersSuccess((result as { folders: Folder[] }).folders)
@@ -34,7 +41,7 @@ function* getFolders(): Generator<any> {
 }
 
 function* getFields(): Generator<any> {
-  const result = yield fetchResource(getFieldsResource);
+  const result = yield discogsSaga.fetchResource(getFieldsResource);
   if (result)
     yield put(
       actions.getInventoryFieldsSuccess(
@@ -60,7 +67,7 @@ function* setSelectedFields({
 function* getSelectedFields(): Generator<any> {
   const userId = yield call(appSagas.getUserId);
   const allFields = yield call(api.getSelectedFields, userId as number);
-  console.log(allFields);
+
   yield put(
     actions.setSelectedFieldsSuccess(allFields as Record<string, string>)
   );
@@ -73,19 +80,24 @@ function* addToFolder({ releaseId }: DiscogsActionTypes): Generator<any> {
     if (resource) {
       const result = yield call(api.post, resource as string);
       yield updateSelectedFieldsValues(result as Instance);
+      yield notifyNewInstance(result as Instance);
     } else {
       yield put(
-        appActions.error({ error: "New Item fails", ...{ releaseId } })
+        appActions.warn({
+          message: "Failing to add new item: " + releaseId,
+        })
       );
     }
   } catch (error) {
-    yield put(appActions.error(error));
+    yield appActions.warn({
+      message: "Fail to fetch resource for release " + releaseId,
+    });
   }
   return result;
 }
 
 function* updateSelectedFieldsValues(instance: Instance): Generator<any> {
-  const fields = (yield select(foldersSelectors.getSelectedFields)) as Record<
+  const fields = (yield select(getSelectedFieldsSelector)) as Record<
     string,
     string
   >;
@@ -108,29 +120,47 @@ function* updateSelectedFieldsValues(instance: Instance): Generator<any> {
         call(api.post as any, resource, { payLoad })
       )
   );
-  yield notifyInstance();
 }
 
 function* getCollection(): Generator<any> {
-  yield fetchResource(getCollectionResource);
+  yield discogsSaga.fetchResource(getCollectionResource);
 }
 
-function* notifyInstance(): Generator<any> {
-  const { master } = (yield select(
-    discogsSelectors.getReleasePageItem
-  )) as ReleasePageItem;
+function* notifyNewInstance(this: any, instance: Instance): Generator<any> {
+  const master = yield api.fetch(instance.basic_information.master_url);
+  const { artists, title } = master as MasterRelease;
 
-  const artist = maybe(master)
-    .mapTo("artists")
+  const artist = maybe(artists)
     .map((it) => it[0] as Artist)
     .map(({ name }) => name)
     .valueOr("");
-  yield api.reload();
-  yield appSagas.notify(`${artist} ${master?.title} added to your folder`);
+
+  yield fork(
+    appSagas.notify,
+    `${artist} ${title} added to your folder <br/> Do you also want to remove all of this items from your want list?`,
+    {
+      action: wantListActions.removeAllVersionsFromWantList(
+        master as MasterRelease
+      ),
+      text: "Yes please",
+    }
+  );
+
+  const result = yield race({
+    notify: take(AppActions.notifyReset),
+    remove: take(WantListActions.removeAllVersionsFromWantList),
+  });
+
+  if ((result as any).notify) {
+    yield api.reload();
+  } else {
+    yield put(actions.addToFolderSuccess());
+  }
 }
 
 function* onUserSuccess() {
   try {
+    yield put(appActions.notifyReset());
     yield all([getFolders(), getFields(), getSelectedFields()]);
   } catch (e) {
     console.log(e);
@@ -140,10 +170,8 @@ function* onUserSuccess() {
 function* DiscogsSaga() {
   yield all([
     takeLatest(AppActions.getUserSuccess, onUserSuccess),
-    // takeLatest(FoldersActions.getFolders, getFolders),
     takeLatest(FoldersActions.getFoldersSuccess, getCollection),
     takeLatest(FoldersActions.setSelectedFields, setSelectedFields),
-
     takeLatest(FoldersActions.addToFolder, addToFolder),
   ]);
 }

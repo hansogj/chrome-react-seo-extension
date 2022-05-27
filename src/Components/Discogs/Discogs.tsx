@@ -20,6 +20,7 @@ import { actions as wantListActions } from "../../redux/wantlist";
 import { ContentBody } from "../styled";
 import AddToFolder, { Props as AddToFolderProps } from "./AddToFolder";
 import AddWantList, { Props as AddWantListProps } from "./AddWantList";
+import { disableSubmitBtn } from "./selectors";
 import ViewSelector, { Props as ViewSelectorProps } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
@@ -31,6 +32,7 @@ interface DiscProps
 
 const DiscogsContainer: FC<DiscProps> = ({
   folders,
+  disableSubmitBtn,
   fields,
   wantList,
   filterReleases,
@@ -43,32 +45,36 @@ const DiscogsContainer: FC<DiscProps> = ({
   setSelectedFields,
   syncWantList,
   addToFolder,
-}: DiscProps) => (
-  <ContentBody>
-    <ViewSelector
-      {...{ activeView, setView, hasReleasePageItem: !!releasePageItem }}
-    />
-    {activeView === "Watch" && (
-      <AddWantList {...{ filterReleases, filterSellers }} />
-    )}
-
-    {activeView === "Want List" && wantList && (
-      <WantListComponent {...{ wantList, syncWantList, isSyncing }} />
-    )}
-    {activeView === "Add Item" && (
-      <AddToFolder
-        {...{
-          folders,
-          fields,
-          selectedFields,
-          setSelectedFields,
-          releasePageItem,
-          addToFolder,
-        }}
+}: DiscProps) => {
+  console.log(JSON.stringify({ disableSubmitBtn }));
+  return (
+    <ContentBody>
+      <ViewSelector
+        {...{ activeView, setView, hasReleasePageItem: !!releasePageItem }}
       />
-    )}
-  </ContentBody>
-);
+      {activeView === "Watch" && (
+        <AddWantList {...{ filterReleases, filterSellers }} />
+      )}
+
+      {activeView === "Want List" && wantList && (
+        <WantListComponent {...{ wantList, syncWantList, isSyncing }} />
+      )}
+      {activeView === "Add Item" && (
+        <AddToFolder
+          {...{
+            folders,
+            fields,
+            disableSubmitBtn,
+            selectedFields,
+            setSelectedFields,
+            releasePageItem,
+            addToFolder,
+          }}
+        />
+      )}
+    </ContentBody>
+  );
+};
 
 export const mapStateToProps = (
   state: RootState
@@ -76,6 +82,7 @@ export const mapStateToProps = (
   folders: getCollectableFolders(state),
   wantList: getWantList(state),
   isSyncing: isSyncing(state),
+  disableSubmitBtn: disableSubmitBtn(state),
   fields: getFields(state),
   selectedFields: getSelectedFields(state),
   releasePageItem: getReleasePageItem(state),

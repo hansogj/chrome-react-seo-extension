@@ -8,6 +8,8 @@ export * from "./Inventory";
 
 export * from "./Release";
 export * from "./div";
+export * from "./BasicInformation";
+export * from "./Versions";
 //
 export type Artist = any;
 export type ArtistResult = any;

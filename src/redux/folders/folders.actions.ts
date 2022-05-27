@@ -35,3 +35,6 @@ export const addToFolder = (releaseId: Release["id"]): FoldersActionTypes => ({
   type: FoldersActions.addToFolder,
   releaseId,
 });
+export const addToFolderSuccess = (): FoldersActionTypes => ({
+  type: FoldersActions.addToFolderSuccess,
+});

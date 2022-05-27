@@ -6,7 +6,7 @@ export const initialState: WantListState = {
   isSyncing: false,
 };
 
-const wantlistReducer = reducerForProducers<
+const wantListReducer = reducerForProducers<
   WantListState,
   WantListActionTypes,
   WantListActions
@@ -20,4 +20,4 @@ const wantlistReducer = reducerForProducers<
   },
 });
 
-export default wantlistReducer;
+export default wantListReducer;

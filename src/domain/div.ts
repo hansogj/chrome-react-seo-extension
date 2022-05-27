@@ -1,4 +1,5 @@
 import { MasterRelease, Release } from ".";
+import { BasicInformation } from "./BasicInformation";
 
 export type Urls = {} & {
   first: string;
@@ -6,6 +7,15 @@ export type Urls = {} & {
   prev: string;
   next: string;
 };
+
+export interface Label {
+  name: string;
+  catno: string;
+  entity_type: string;
+  entity_type_name: string;
+  id: number;
+  resource_url: string;
+}
 
 export interface Pagination {
   page: number;
@@ -15,6 +25,8 @@ export interface Pagination {
   urls: Urls;
 }
 
+export type Paginated<T> = { pagination: Pagination } & T;
+
 export interface ReleasePageItem {
   releaseId: Release["id"];
   master: MasterRelease;
@@ -23,6 +35,7 @@ export interface ReleasePageItem {
 export interface Instance {
   instance_id: number;
   resource_url: string;
+  basic_information: BasicInformation;
 }
 
 export interface Artist {

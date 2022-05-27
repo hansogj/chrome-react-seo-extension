@@ -8,8 +8,8 @@ import { selectFromRoot } from "../utils";
 export const getFoldersState = (state: Partial<RootState>): FoldersState =>
   selectFromRoot(state, "Folders")!;
 
-export const getFolders = createSelector(getFoldersState, (discogs) =>
-  maybe(discogs).mapTo("folders").valueOr([])
+export const getFolders = createSelector(getFoldersState, (folderState) =>
+  maybe(folderState).mapTo("folders").valueOr([])
 );
 
 export const getCollectableFolders = createSelector(getFolders, (folders) =>

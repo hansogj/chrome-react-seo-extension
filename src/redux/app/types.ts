@@ -1,14 +1,25 @@
 import { User } from "../../domain";
 import { ActionTypes } from "../types";
+import { ActionTypes as AnyActionTypes } from "../store";
 export const DISCOGS_BASE_URL = "https://api.discogs.com";
 
-export const Views = ["Watch", "Add Item", "Want List"] as const;
+export const Views = ["Add Item", "Watch", "Want List"] as const;
 export type View = typeof Views[number];
+export type ActionButton = { action: AnyActionTypes; text: string };
+
+export type ErrorType = ERROR | Error | string;
+
+export type Notification = {
+  message: string;
+  actionBtn?: ActionButton;
+  isError: boolean;
+  error?: ErrorType;
+};
 
 export interface AppState {
   readonly user: Optional<User>;
-  readonly error: Optional<ERROR | Error | string>;
-  readonly notification: Optional<string>;
+  readonly error: Optional<ErrorType>;
+  readonly notification: Optional<Notification>;
   readonly isLoading: boolean;
   readonly view: Optional<View>;
 }
@@ -20,16 +31,18 @@ export enum ERROR {
 
 export interface AppActionData {
   identity: Optional<string>;
+  error: Optional<ErrorType>;
   user: Optional<User>;
   userToken: Optional<string>;
-  error: any;
-  notification: string;
+
+  notification: Notification;
   view: Optional<View>;
 }
 
 export enum AppActions {
-  success = "APP_SUCCESS",
+  notify = "APP_NOTIFY",
   error = "APP_ERROR",
+  notifyReset = "APP_NOTIFY_RESET",
   getIdentity = "GET_IDENTITY",
   getIdentitySuccess = "GET_IDENTITY_SUCCESS",
   getUser = "GET_USER",

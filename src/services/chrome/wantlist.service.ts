@@ -41,10 +41,9 @@ const wantListService = () => {
     get(uniqueKey("want-list", userId), {});
 
   const call = async (url: string, page = 1, cache: Cache): Promise<Cache> => {
-    console.log("call", url, page);
     const { pagination, wants }: PaginatedWantList = await fetch(url, {
       page,
-      per_page: 50,
+      per_page: 100,
     });
 
     const build: Cache = toWantList(wants)
@@ -57,8 +56,6 @@ const wantListService = () => {
         }
         return curr;
       }, cache);
-
-    console.log(build);
 
     return pagination.page < pagination.pages
       ? call(url, pagination.page + 1, build)

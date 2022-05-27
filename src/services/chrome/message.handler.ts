@@ -6,11 +6,13 @@ import domResolver from "./dom";
 import { releasePage } from "./release.page";
 import fieldsService from "./selectedFields.service";
 import { MessageActions } from "./types";
+import versionsService from "./versions.service";
 import wantListService from "./wantlist.service";
 
 const services = {
   wantList: wantListService(),
   fields: fieldsService(),
+  versions: versionsService(),
 };
 
 const messagesFromReactAppListener = (
@@ -38,6 +40,10 @@ export const messageResolver = (
     );
   }
 
+  if (action.type === MessageActions.deleteResource) {
+    return resolver(api.deleteResource(action.resource!));
+  }
+
   if (action.type === MessageActions.setUserToken)
     return resolver(api.setUserToken(action.body as string));
 
@@ -60,6 +66,12 @@ export const messageResolver = (
         action.body as SelectedFields
       )
     );
+
+  if (action.type === MessageActions.GET_ALL_WANTED_VERSIONS_OF_ITEM) {
+    return resolver(
+      services.versions.getAllWantedVersionsOfItem(action.resource!)
+    );
+  }
 
   if (action.type === MessageActions.GET_RELEASE_PAGE_ITEM_ID)
     return resolver(releasePage(action.resource!));

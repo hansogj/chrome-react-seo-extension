@@ -5,6 +5,7 @@ export interface FoldersState {
   readonly folders: Array<Folder>;
   readonly fields: InventoryFields;
   readonly selectedFields: Record<string, string>;
+  readonly addingToFolder: boolean;
 }
 
 export interface FoldersActionData {

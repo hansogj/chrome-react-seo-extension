@@ -5,7 +5,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import record from "../../assets/round-record.png";
 import { User } from "../../domain";
 import { RootState } from "../../redux";
-import { actions as appActions } from "../../redux/app/";
+import { actions as appActions, Notification } from "../../redux/app/";
 import {
   getNotification,
   getUser,
@@ -15,16 +15,16 @@ import {
 import { DispatchProps, StateProps } from "../../redux/selectors/utils";
 import DiscogsContainer from "../Discogs";
 import { Container, Content } from "../styled";
-import { Notification } from "./Notification";
+import NotificationComponent from "./Notification";
 import Profile, { Props as ProfileProps } from "./Profile";
 import { AppLogo, ContentHeader } from "./style";
 import TokenInput, { TokenInputProps } from "./TokenInput";
 
 interface AppProps extends TokenInputProps, ProfileProps, LoaderProps {
+  notification: Notification;
   user: Optional<User>;
   isLoading: boolean;
   notAuthenticated: boolean;
-  notification: string;
 }
 
 type LoaderProps = { getUser: typeof appActions.getUser };
@@ -42,6 +42,7 @@ const Loader: FC<LoaderProps> = ({ getUser }: LoaderProps) => {
 const App: FC<AppProps> = ({
   user,
   notification,
+
   setUserToken,
   isLoading,
   notAuthenticated,
@@ -82,7 +83,7 @@ const App: FC<AppProps> = ({
                   <>
                     <Profile {...{ user, logOut }} />
                     {notification && (
-                      <Notification
+                      <NotificationComponent
                         {...{
                           refObject: ref,
                           notification,
@@ -95,9 +96,12 @@ const App: FC<AppProps> = ({
             )
 
             .valueOr(
-              <Notification
+              <NotificationComponent
                 {...{
-                  notification: "Something went wrong when loading the app",
+                  notification: {
+                    message: "Something went wrong when loading the app",
+                    isError: true,
+                  },
                 }}
               />
             )}

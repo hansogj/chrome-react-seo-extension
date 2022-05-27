@@ -29,6 +29,9 @@ const url = (resource: string, params?: SearchParams) => {
 export const fetch = async (resource: string, params?: SearchParams) =>
   axios.get(url(resource, params)).then(unRest);
 
+export const deleteResource = async (resource: string) =>
+  axios.delete(url(resource)).then(unRest);
+
 export const post = async (
   resource: string,
   paramsAndPayload?: SearchParams & PayLoad

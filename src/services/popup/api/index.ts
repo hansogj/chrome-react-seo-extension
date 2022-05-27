@@ -20,6 +20,9 @@ export const post = async <T>(
   body?: SearchParams & PayLoad
 ) => messageHandler<T>({ type: MessageActions.post, resource, body });
 
+export const deleteResource = async <T>(resource: ResourceUrl) =>
+  messageHandler<T>({ type: MessageActions.deleteResource, resource });
+
 export const setUserToken = async (userToken: string) =>
   messageHandler({ type: MessageActions.setUserToken, body: userToken }).then(
     (e) => `${e}`
@@ -70,4 +73,10 @@ export const getReleasePageItem = async () =>
 export const reload = async () =>
   messageHandler<Optional<MasterRelease>>({
     type: MessageActions.WINDOW_RELOAD,
+  });
+
+export const getAllWantedVersionsOfItem = async (resource: string) =>
+  messageHandler<Optional<MasterRelease>>({
+    type: MessageActions.GET_ALL_WANTED_VERSIONS_OF_ITEM,
+    resource,
   });

@@ -17,12 +17,14 @@ import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
 export interface Props extends ListFoldersProps, ListFieldsProps {
   releasePageItem: ReleasePageItem;
   addToFolder: DispatchAction<number>;
+  disableSubmitBtn: boolean;
 }
 
 const AddToFolderComponent: FC<Props> = ({
   folders,
   fields,
   releasePageItem,
+  disableSubmitBtn,
   addToFolder,
   ...props
 }: Props) => (
@@ -45,7 +47,7 @@ const AddToFolderComponent: FC<Props> = ({
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
               <Submit
-                disabled={Maybe.isNothing(it.releaseId)}
+                disabled={disableSubmitBtn}
                 onClick={() =>
                   maybe(it)
                     .mapTo("releaseId")

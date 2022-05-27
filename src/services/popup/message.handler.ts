@@ -48,7 +48,10 @@ const messageHandler = <T>(
         ERROR.NO_TAB_TO_CAPTURE &&
         window.location.href.includes("localhost")
       ) {
-        return messageResolver({ ...action, ...override }, resolver);
+        return messageResolver(
+          { ...action, ...override } as ActionTypes,
+          resolver
+        );
       }
       throw e;
     }) as Promise<T>;

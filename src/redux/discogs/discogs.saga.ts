@@ -36,7 +36,7 @@ export function* fetchResource<T>(
       yield put(appActions.getUser());
     }
   } catch (error) {
-    yield put(appActions.error(error));
+    yield put(appActions.warn({ error: error as Error }));
   }
   return result;
 }
@@ -66,7 +66,6 @@ function* DiscogsSaga() {
   yield all([
     takeLatest(DiscogsActions.filterReleases, manipulateDom),
     takeLatest(DiscogsActions.filterSellers, manipulateDom),
-    // takeLatest(DiscogsActions.getCurrentMaster, getCurrentMaster),
     takeLatest(AppActions.getUserSuccess, getReleasePageItem),
   ]);
 }

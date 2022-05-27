@@ -7,6 +7,7 @@ import * as actions from "./app.actions";
 import * as appSelectors from "../selectors/app.selectors";
 import { ActionTypes } from "../types";
 import { get, set } from "../../services/chrome/local.storage";
+import { ActionButton } from "./types";
 
 function* getUser(_: any, count = 0): Generator<any> {
   try {
@@ -41,19 +42,25 @@ export function* getUserId(): Generator<number> {
   }
 }
 
-export function* notify(message: string) {
-  yield put(actions.success(message));
-  yield delay(5000);
-  yield put(actions.success());
+export function* notify(
+  message: string,
+  actionBtn?: ActionButton,
+  timeout = 5000
+) {
+  yield put(actions.notify({ message, actionBtn }));
+  yield delay(timeout);
+  yield put(actions.notifyReset());
+}
+
+export function* warn(message: string, timeout = 5000) {
+  yield put(actions.warn({ message }));
+  yield delay(timeout);
+  yield put(actions.notifyReset());
 }
 
 function* setUserToken({ userToken }: AppActionTypes): Generator<any> {
   yield call(api.setUserToken, userToken!);
   yield call(getUser, 0);
-}
-
-function* notifucationTest(): Generator<any> {
-  yield call(notify, "gay sveis");
 }
 
 function* setView({ view }: AppActionTypes): Generator<any> {
