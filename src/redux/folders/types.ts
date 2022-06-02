@@ -12,7 +12,8 @@ export interface FoldersActionData {
   folders: Optional<Array<Folder>>;
   fields: Optional<InventoryFields>;
   selectedFields: Optional<Record<string, string>>;
-  releaseId: Optional<Release["id"]>;
+
+  addingToFolder: false;
 }
 
 export enum FoldersActions {

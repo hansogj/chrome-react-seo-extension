@@ -34,7 +34,6 @@ export interface AppActionData {
   error: Optional<ErrorType>;
   user: Optional<User>;
   userToken: Optional<string>;
-
   notification: Notification;
   view: Optional<View>;
 }

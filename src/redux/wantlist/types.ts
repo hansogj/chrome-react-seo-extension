@@ -1,15 +1,16 @@
-import { MasterRelease, WantList } from "../../domain";
+import { Version, WantList } from "../../domain";
 import { ActionTypes } from "../types";
 
 export interface WantListState {
   readonly wantList: WantList;
   readonly isSyncing: boolean;
+  readonly addingToWantList: boolean;
 }
 
 export interface WantListActionData {
   wantList: Optional<WantList>;
   page: Optional<number>;
-  master: Optional<MasterRelease>;
+  format: Optional<Version["format"]>;
 }
 
 export enum WantListActions {
@@ -19,6 +20,8 @@ export enum WantListActions {
   removeAllVersionsFromWantList = "REMOVE_ALL_ITEMS_FROM_WANT_LIST",
   removeAllVersionsFromWantListSuccess = "REMOVE_ALL_ITEMS_FROM_WANT_LIST_SUCCESS",
   getWantListFailed = "GET_WANT_LIST_FAILED",
+  addToWantList = "ADD_TO_WANT_LIST",
+  addToWantListSuccess = "ADD_TO_WANT_LIST_SUCCESS",
 }
 
 export type WantListActionTypes = ActionTypes<

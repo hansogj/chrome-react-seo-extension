@@ -1,5 +1,5 @@
 import maybe from "maybe-for-sure";
-import { MasterRelease, ResourceUrl } from "../../../domain";
+import { Format, MasterRelease, ResourceUrl, Version } from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
 import { DiscogsActions } from "../../../redux/discogs";
 import { MessageActions } from "../../../services/chrome/types";
@@ -79,4 +79,14 @@ export const getAllWantedVersionsOfItem = async (resource: string) =>
   messageHandler<Optional<MasterRelease>>({
     type: MessageActions.GET_ALL_WANTED_VERSIONS_OF_ITEM,
     resource,
+  });
+
+export const getAllWantedVersionsByFormat = async (
+  resource: string,
+  format: Optional<Version["format"]>
+) =>
+  messageHandler<Optional<MasterRelease>>({
+    type: MessageActions.GET_ALL_WANTED_VERSIONS_BY_FORMAT,
+    resource,
+    body: format,
   });

@@ -1,38 +1,20 @@
 import { PaginatedVersions, Version } from "../../domain";
 import * as api from "./api";
-/* 
-const removeAllWantedVersionsOfItem = async (
+
+const getAllWantedVersionsByFormat = (
   versions_url: string,
-  // wantListResource: string,
-  format?: Version["format"]
+  format: Optional<Version["format"]>
 ) =>
-  getAllWantedVersionsOfItem(versions_url)
-    .then((allVersions) =>
-      format
-        ? allVersions.filter((version) =>
-            version.major_formats.includes(format)
-          )
-        : allVersions
-    )
-    .then((all) =>
-      all
-        // .filter((_, i) => i < 20)
-        .map(({ id, resource_url }: Version, i) => {
-          // const interval = i > 0 && i % 60 === 0 ? 60 * 1000 : 1;
-          const interval = 2000;
-          return new Promise((resolve, reject) => {
-            setTimeout(
-              () => {
-                console.log(resource_url);
-                return resolve(resource_url);
-              },
-              //              () => api.fetch(resource_url).then(resolve).catch(reject),
-              // api.deleteResource(`${wantListResource}/${id}`)
-              interval
-            );
-          });
-        })
-    ); */
+  getAllVersions(versions_url).then((allVersions) =>
+    format
+      ? allVersions.filter((version) =>
+          version.major_formats
+            .map((it) => it.toLowerCase())
+            .includes(format.toLocaleLowerCase())
+        )
+      : allVersions
+  );
+
 const getAllWantedVersionsOfItem = async (versions_url: string) =>
   getAllVersions(versions_url).then((all) =>
     all.filter((it) => Boolean(it.stats.user.in_wantlist))
@@ -58,7 +40,7 @@ const versionsService = () => {
   return {
     getAllVersions,
     getAllWantedVersionsOfItem,
-    // removeAllWantedVersionsOfItem,
+    getAllWantedVersionsByFormat,
   };
 };
 

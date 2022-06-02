@@ -19,9 +19,7 @@ import {
   getInventoryResource,
   ResourceSelectors,
 } from "../selectors/resource.selectors";
-import { DiscogsActions } from "./";
 import * as actions from "./discogs.actions";
-import { DiscogsActionTypes } from "./types";
 
 export function* fetchResource<T>(
   selector: ResourceSelectors,
@@ -40,17 +38,6 @@ export function* fetchResource<T>(
   }
   return result;
 }
-
-function* getDiscogsInventory(): Generator<any> {
-  yield fetchResource(getInventoryResource);
-  yield fetchResource(getFoldersResource);
-  yield fetchResource(getFieldsResource);
-}
-
-function* manipulateDom({ type }: DiscogsActionTypes): Generator<any> {
-  yield call(api.manipulateDom, type);
-}
-
 function* getReleasePageItem(): Generator<any> {
   try {
     const master = yield call(api.getReleasePageItem);
@@ -62,12 +49,14 @@ function* getReleasePageItem(): Generator<any> {
   }
 }
 
+function* getDiscogsInventory(): Generator<any> {
+  yield fetchResource(getInventoryResource);
+  yield fetchResource(getFoldersResource);
+  yield fetchResource(getFieldsResource);
+}
+
 function* DiscogsSaga() {
-  yield all([
-    takeLatest(DiscogsActions.filterReleases, manipulateDom),
-    takeLatest(DiscogsActions.filterSellers, manipulateDom),
-    takeLatest(AppActions.getUserSuccess, getReleasePageItem),
-  ]);
+  yield all([takeLatest(AppActions.getUserSuccess, getReleasePageItem)]);
 }
 
 export default DiscogsSaga;

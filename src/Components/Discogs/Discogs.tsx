@@ -24,8 +24,13 @@ import { disableSubmitBtn } from "./selectors";
 import ViewSelector, { Props as ViewSelectorProps } from "./ViewSelector";
 import WantListComponent, { Props as WantListProps } from "./WantList";
 
+import ReleasePageItem, {
+  Props as ReleasePageItemProps,
+} from "./ReleasePageItem";
+
 interface DiscProps
   extends AddToFolderProps,
+    ReleasePageItemProps,
     WantListProps,
     AddWantListProps,
     ViewSelectorProps {}
@@ -35,8 +40,7 @@ const DiscogsContainer: FC<DiscProps> = ({
   disableSubmitBtn,
   fields,
   wantList,
-  filterReleases,
-  filterSellers,
+  addToWantList,
   selectedFields,
   releasePageItem,
   activeView,
@@ -53,24 +57,28 @@ const DiscogsContainer: FC<DiscProps> = ({
         {...{ activeView, setView, hasReleasePageItem: !!releasePageItem }}
       />
       {activeView === "Watch" && (
-        <AddWantList {...{ filterReleases, filterSellers }} />
+        <ReleasePageItem releasePageItem={releasePageItem}>
+          <AddWantList {...{ addToWantList }} />
+        </ReleasePageItem>
       )}
 
       {activeView === "Want List" && wantList && (
         <WantListComponent {...{ wantList, syncWantList, isSyncing }} />
       )}
       {activeView === "Add Item" && (
-        <AddToFolder
-          {...{
-            folders,
-            fields,
-            disableSubmitBtn,
-            selectedFields,
-            setSelectedFields,
-            releasePageItem,
-            addToFolder,
-          }}
-        />
+        <ReleasePageItem releasePageItem={releasePageItem}>
+          <AddToFolder
+            {...{
+              folders,
+              fields,
+              disableSubmitBtn,
+              selectedFields,
+              setSelectedFields,
+              releasePageItem,
+              addToFolder,
+            }}
+          />
+        </ReleasePageItem>
       )}
     </ContentBody>
   );
@@ -91,8 +99,7 @@ export const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
   ({
-    filterReleases: bindActionCreators(discogsActions.filterReleases, dispatch),
-    filterSellers: bindActionCreators(discogsActions.filterSellers, dispatch),
+    addToWantList: bindActionCreators(wantListActions.addToWantList, dispatch),
     addToFolder: bindActionCreators(foldersActions.addToFolder, dispatch),
     syncWantList: bindActionCreators(wantListActions.syncWantList, dispatch),
     setView: bindActionCreators(appActions.setView, dispatch),

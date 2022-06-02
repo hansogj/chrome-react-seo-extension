@@ -31,9 +31,8 @@ export const setSelectedFieldsSuccess = (
   selectedFields,
 });
 
-export const addToFolder = (releaseId: Release["id"]): FoldersActionTypes => ({
+export const addToFolder = (): FoldersActionTypes => ({
   type: FoldersActions.addToFolder,
-  releaseId,
 });
 export const addToFolderSuccess = (): FoldersActionTypes => ({
   type: FoldersActions.addToFolderSuccess,

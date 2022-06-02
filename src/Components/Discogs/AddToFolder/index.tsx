@@ -1,22 +1,14 @@
-import maybe, { Maybe } from "maybe-for-sure";
+import maybe from "maybe-for-sure";
 import React, { FC } from "react";
 import { ReleasePageItem } from "../../../domain";
 import { DispatchAction } from "../../../redux/store";
-import {
-  base,
-  BrightCard,
-  Column,
-  ContentBody,
-  Row,
-  Submit,
-} from "../../styled";
-import ListReleasePageItem from "./ReleasePageItem";
+import { base, BrightCard, Column, Row, Submit } from "../../styled";
 import ListFields, { Props as ListFieldsProps } from "./ListFields";
 import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
 
 export interface Props extends ListFoldersProps, ListFieldsProps {
   releasePageItem: ReleasePageItem;
-  addToFolder: DispatchAction<number>;
+  addToFolder: DispatchAction<void>;
   disableSubmitBtn: boolean;
 }
 
@@ -27,16 +19,8 @@ const AddToFolderComponent: FC<Props> = ({
   disableSubmitBtn,
   addToFolder,
   ...props
-}: Props) => (
-  <ContentBody filled>
-    <BrightCard>
-      {maybe(releasePageItem)
-        .mapTo("master")
-        .map((releasePageItem) => (
-          <ListReleasePageItem {...{ releasePageItem }} />
-        ))
-        .valueOr(<></>)}
-    </BrightCard>
+}: Props) => {
+  return (
     <BrightCard style={{ marginTop: base }}>
       <Row padding={[1, 0]} width={42}>
         <Column width={21}>
@@ -46,14 +30,7 @@ const AddToFolderComponent: FC<Props> = ({
         {maybe(releasePageItem)
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
-              <Submit
-                disabled={disableSubmitBtn}
-                onClick={() =>
-                  maybe(it)
-                    .mapTo("releaseId")
-                    .map((id) => addToFolder(id))
-                }
-              >
+              <Submit disabled={disableSubmitBtn} onClick={() => addToFolder()}>
                 ADD (+)
               </Submit>
             </Column>
@@ -62,7 +39,7 @@ const AddToFolderComponent: FC<Props> = ({
       </Row>
       <ListFields {...{ fields, ...props }} />
     </BrightCard>
-  </ContentBody>
-);
+  );
+};
 
 export default AddToFolderComponent;

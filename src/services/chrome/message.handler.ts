@@ -1,3 +1,4 @@
+import { Format, Version } from "../../domain";
 import { SelectedFields } from "../../domain/Inventory";
 import { ActionTypes } from "../../redux";
 import { DiscogsActions } from "../../redux/discogs";
@@ -40,6 +41,12 @@ export const messageResolver = (
     );
   }
 
+  if (action.type === MessageActions.put) {
+    return resolver(
+      api.put(action.resource!, action.body as SearchParams & PayLoad)
+    );
+  }
+
   if (action.type === MessageActions.deleteResource) {
     return resolver(api.deleteResource(action.resource!));
   }
@@ -70,6 +77,15 @@ export const messageResolver = (
   if (action.type === MessageActions.GET_ALL_WANTED_VERSIONS_OF_ITEM) {
     return resolver(
       services.versions.getAllWantedVersionsOfItem(action.resource!)
+    );
+  }
+
+  if (action.type === MessageActions.GET_ALL_WANTED_VERSIONS_BY_FORMAT) {
+    return resolver(
+      services.versions.getAllWantedVersionsByFormat(
+        action.resource!,
+        action.body as Optional<Version["format"]>
+      )
     );
   }
 

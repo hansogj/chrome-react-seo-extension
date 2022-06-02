@@ -1,4 +1,4 @@
-import { MasterRelease, WantList } from "../../domain";
+import { MasterRelease, Version, WantList } from "../../domain";
 import { WantListActions, WantListActionTypes } from "./types";
 
 export const getWantList = (page: number): WantListActionTypes => ({
@@ -10,11 +10,8 @@ export const syncWantList = (): WantListActionTypes => ({
   type: WantListActions.syncWantList,
 });
 
-export const removeAllVersionsFromWantList = (
-  master: MasterRelease
-): WantListActionTypes => ({
+export const removeAllVersionsFromWantList = (): WantListActionTypes => ({
   type: WantListActions.removeAllVersionsFromWantList,
-  master,
 });
 
 export const removeAllVersionsFromWantListSuccess =
@@ -27,4 +24,15 @@ export const getWantListSuccess = (
 ): WantListActionTypes => ({
   type: WantListActions.getWantListSuccess,
   wantList,
+});
+
+export const addToWantList = (
+  format?: Version["format"]
+): WantListActionTypes => ({
+  type: WantListActions.addToWantList,
+  format,
+});
+
+export const addToWantListSuccess = (): WantListActionTypes => ({
+  type: WantListActions.addToWantListSuccess,
 });

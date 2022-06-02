@@ -1,4 +1,3 @@
-import { ReleasePageItem } from "../../domain";
 import { reducerForProducers, writeToDraft } from "../utils";
 import { DiscogsActions, DiscogsActionTypes, DiscogsState } from "./types";
 

@@ -28,6 +28,7 @@ export const getAddReleaseToFolderResource = (release_id: number) => {
       [folderResource, folders, "releases", release_id].join("/")
   );
 };
+
 export type ResourceSelectors =
   | typeof getFieldsResource
   | typeof getCollectionResource;

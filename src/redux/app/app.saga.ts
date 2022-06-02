@@ -1,12 +1,10 @@
 import { all, call, delay, put, select, takeLatest } from "redux-saga/effects";
 import { OauthIdentity, User } from "../../domain";
+import { get, set } from "../../services/chrome/local.storage";
 import * as api from "../../services/popup/api";
+import * as appSelectors from "../selectors/app.selectors";
 import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR, View } from "./";
 import * as actions from "./app.actions";
-
-import * as appSelectors from "../selectors/app.selectors";
-import { ActionTypes } from "../types";
-import { get, set } from "../../services/chrome/local.storage";
 import { ActionButton } from "./types";
 
 function* getUser(_: any, count = 0): Generator<any> {

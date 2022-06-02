@@ -1,33 +1,48 @@
-import { FC } from "react";
+import React, { FC } from "react";
+import { Version } from "../../../domain";
 import { DispatchAction as DiscogsDispatch } from "../../../redux/store";
-import { Button, Column, DreadButton, Row } from "../../styled";
+import {
+  base,
+  BrightCard,
+  Button,
+  Column,
+  DreadButton,
+  UglyButton,
+  Row,
+  Submit,
+} from "../../styled";
 
 export interface Props {
-  filterReleases: DiscogsDispatch<void>;
-  filterSellers: DiscogsDispatch<void>;
+  addToWantList: DiscogsDispatch<Optional<Version["format"]>>;
 }
-const AddWantListComponent: FC<Props> = ({
-  filterReleases,
-  filterSellers,
-}: Props) => (
-  <>
-    <Row>
+const AddWantListComponent: FC<Props> = ({ addToWantList }: Props) => (
+  <BrightCard style={{ marginTop: base }}>
+    <Row center>
+      <h2>Add to wantlist</h2>
+    </Row>
+    <Row center width={42}>
+      <Column>
+        <Submit onClick={() => addToWantList("Vinyl")}>Vinyl</Submit>
+      </Column>
+      <Column>
+        <Button onClick={() => addToWantList("Cd")}>Cd</Button>
+      </Column>
+      <Column>
+        <UglyButton onClick={() => addToWantList("Casette")}>
+          Casette
+        </UglyButton>
+      </Column>
       <Column>
         <DreadButton
-          {...{
-            onClick: () => filterSellers(),
-          }}
+          onClick={() =>
+            addToWantList(undefined as Optional<Version["format"]>)
+          }
         >
-          Filter seller
+          ALL
         </DreadButton>
       </Column>
-      <Column>
-        <Button {...{ onClick: () => filterReleases() }}>
-          Filter Releases
-        </Button>
-      </Column>
     </Row>
-  </>
+  </BrightCard>
 );
 
 export default AddWantListComponent;

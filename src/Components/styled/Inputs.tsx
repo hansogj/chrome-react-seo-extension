@@ -82,6 +82,11 @@ export const DreadButton = styled(Button)`
   color: ${colors.bright};
 `;
 
+export const UglyButton = styled(Button)`
+  background-color: ${colors.uglyYellow};
+  color: ${colors.dark};
+`;
+
 export const Select = styled.select<Size & Padded & Colors>`
   ${inputStyle}
   ${size}

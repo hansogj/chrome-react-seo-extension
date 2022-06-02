@@ -16,15 +16,18 @@ import {
   Instance,
   InventoryFields,
   MasterRelease,
+  ReleasePageItem,
 } from "../../domain";
 import * as api from "../../services/popup/api";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
 import { DiscogsActionTypes, sagas as discogsSaga } from "../discogs";
 import {
+  fromReleasePageMaster,
   getAddReleaseToFolderResource,
   getCollectionResource,
   getFieldsResource,
   getFoldersResource,
+  getReleasePageId,
   getSelectedFields as getSelectedFieldsSelector,
 } from "../selectors";
 import { actions as wantListActions, WantListActions } from "../wantlist";
@@ -73,27 +76,27 @@ function* getSelectedFields(): Generator<any> {
   );
 }
 
-function* addToFolder({ releaseId }: DiscogsActionTypes): Generator<any> {
-  let result: any = undefined as unknown as any;
+function* addToFolder(): Generator<any> {
+  const releaseId = (yield select(
+    getReleasePageId
+  )) as ReleasePageItem["releaseId"];
+
   try {
-    const resource = yield select(getAddReleaseToFolderResource(releaseId!));
+    const resource = yield select(getAddReleaseToFolderResource(releaseId));
     if (resource) {
-      const result = yield call(api.post, resource as string);
-      yield updateSelectedFieldsValues(result as Instance);
-      yield notifyNewInstance(result as Instance);
+      const result = (yield call(api.post, resource as string)) as Instance;
+      yield updateSelectedFieldsValues(result);
+      yield fork(notifyNewInstance, result);
+      yield raceForResponse();
     } else {
-      yield put(
-        appActions.warn({
-          message: "Failing to add new item: " + releaseId,
-        })
-      );
+      yield fork(appSagas.warn, "Failing to add new item: " + releaseId);
     }
   } catch (error) {
-    yield appActions.warn({
-      message: "Fail to fetch resource for release " + releaseId,
-    });
+    yield fork(
+      appSagas.warn,
+      "Fail to fetch resource for release " + releaseId
+    );
   }
-  return result;
 }
 
 function* updateSelectedFieldsValues(instance: Instance): Generator<any> {
@@ -126,9 +129,20 @@ function* getCollection(): Generator<any> {
   yield discogsSaga.fetchResource(getCollectionResource);
 }
 
-function* notifyNewInstance(this: any, instance: Instance): Generator<any> {
-  const master = yield api.fetch(instance.basic_information.master_url);
-  const { artists, title } = master as MasterRelease;
+function* notifyNewInstance(instance: Instance): Generator<any> {
+  const resource = maybe(instance)
+    .mapTo("basic_information")
+    .map(({ master_url, resource_url }) => master_url || resource_url)
+    .valueOr(undefined);
+
+  if (!resource) throw new Error("Now resource found on instance");
+
+  const title = (yield select(
+    fromReleasePageMaster("title")
+  )) as MasterRelease["title"];
+  const artists = (yield select(
+    fromReleasePageMaster("artists")
+  )) as MasterRelease["artists"];
 
   const artist = maybe(artists)
     .map((it) => it[0] as Artist)
@@ -139,18 +153,17 @@ function* notifyNewInstance(this: any, instance: Instance): Generator<any> {
     appSagas.notify,
     `${artist} ${title} added to your folder <br/> Do you also want to remove all of this items from your want list?`,
     {
-      action: wantListActions.removeAllVersionsFromWantList(
-        master as MasterRelease
-      ),
+      action: wantListActions.removeAllVersionsFromWantList(),
       text: "Yes please",
     }
   );
+}
 
+function* raceForResponse(): Generator<any> {
   const result = yield race({
     notify: take(AppActions.notifyReset),
     remove: take(WantListActions.removeAllVersionsFromWantList),
   });
-
   if ((result as any).notify) {
     yield api.reload();
   } else {
