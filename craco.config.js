@@ -6,6 +6,8 @@ module.exports = {
                 main: [env === 'development' &&
                     require.resolve('webpack/hot/dev-server'), paths.appIndexJs].filter(Boolean),
                 content: './src/services/chrome',
+                background: './src/background/index',
+
             },
             output: {
                 ...webpackConfig.output,

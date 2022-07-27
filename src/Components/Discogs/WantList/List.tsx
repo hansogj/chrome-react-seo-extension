@@ -1,7 +1,7 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Column, Row, Thumb } from "../../styled";
 import { ReleaseCol } from "./style";
-import { Item, SortMethod } from "./utils";
+import { Item } from "./utils";
 type Props = { entries: Item[] };
 
 const List: FC<Props> = ({ entries }: Props) => (

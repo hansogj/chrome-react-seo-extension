@@ -1,5 +1,5 @@
 import maybe from "maybe-for-sure";
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import record from "../../assets/round-record.png";
@@ -13,6 +13,7 @@ import {
   notAuthenticated,
 } from "../../redux/selectors/app.selectors";
 import { DispatchProps, StateProps } from "../../redux/selectors/utils";
+import { getText } from "../../services/texts";
 import DiscogsContainer from "../Discogs";
 import { Container, Content } from "../styled";
 import NotificationComponent from "./Notification";
@@ -42,11 +43,9 @@ const Loader: FC<LoaderProps> = ({ getUser }: LoaderProps) => {
 const App: FC<AppProps> = ({
   user,
   notification,
-
   setUserToken,
   isLoading,
   notAuthenticated,
-  logOut,
   getUser,
 }: AppProps) => {
   let ref = useRef(null);
@@ -81,7 +80,7 @@ const App: FC<AppProps> = ({
                 .nothingUnless(Boolean)
                 .map(() => (
                   <>
-                    <Profile {...{ user, logOut }} />
+                    <Profile {...{ user }} />
                     {notification && (
                       <NotificationComponent
                         {...{
@@ -99,7 +98,7 @@ const App: FC<AppProps> = ({
               <NotificationComponent
                 {...{
                   notification: {
-                    message: "Something went wrong when loading the app",
+                    message: getText("notification.general.error"),
                     isError: true,
                   },
                 }}
@@ -122,7 +121,6 @@ export const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<AppProps> =>
   ({
-    logOut: bindActionCreators(appActions.logOut, dispatch),
     getUser: bindActionCreators(appActions.getUser, dispatch),
 
     setUserToken: bindActionCreators(appActions.setUserToken, dispatch),

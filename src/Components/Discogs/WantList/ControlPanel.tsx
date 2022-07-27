@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { getText } from "../../../services/texts";
 import { Button, colors, Column, Row, Select } from "../../styled";
 import { pageSizes, SortMethod, sortMethods, SortMethods } from "./utils";
 export type Props = {
@@ -35,8 +36,8 @@ const ControlPanel: FC<Props> = ({
       >
         {sortMethods.map((sm) => (
           <option key={`sort-method-${sm}`} value={sm}>
-            {sm === sortMethod && "Sort by "}
-            {sm}
+            {sm === sortMethod &&
+              [getText("discogs.wantlinst.sort.by"), sm].join(" ")}
           </option>
         ))}
       </Select>
@@ -57,7 +58,7 @@ const ControlPanel: FC<Props> = ({
         {pageSizes.map((ps) => (
           <option key={`filter-page-size-${ps}`} value={ps}>
             {ps}
-            {ps === pageSize && " items / page "}
+            {ps === pageSize && getText("discogs.wantlinst.page.size")}
           </option>
         ))}
       </Select>

@@ -19,6 +19,7 @@ import {
   ReleasePageItem,
 } from "../../domain";
 import * as api from "../../services/popup/api";
+import { renderText } from "../../services/texts";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
 import { DiscogsActionTypes, sagas as discogsSaga } from "../discogs";
 import {
@@ -89,12 +90,15 @@ function* addToFolder(): Generator<any> {
       yield fork(notifyNewInstance, result);
       yield raceForResponse();
     } else {
-      yield fork(appSagas.warn, "Failing to add new item: " + releaseId);
+      yield fork(
+        appSagas.warn,
+        renderText("folder.add.item.failed", { releaseId })
+      );
     }
   } catch (error) {
     yield fork(
       appSagas.warn,
-      "Fail to fetch resource for release " + releaseId
+      renderText("folder.fetch.item.failed", { releaseId })
     );
   }
 }
@@ -151,7 +155,10 @@ function* notifyNewInstance(instance: Instance): Generator<any> {
 
   yield fork(
     appSagas.notify,
-    `${artist} ${title} added to your folder <br/> Do you also want to remove all of this items from your want list?`,
+    renderText("folder.remove.items.prompt", {
+      artist,
+      title,
+    }),
     {
       action: wantListActions.removeAllVersionsFromWantList(),
       text: "Yes please",

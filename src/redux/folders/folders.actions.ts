@@ -17,6 +17,8 @@ export const getInventoryFieldsSuccess = (fields: InventoryFields) => ({
   fields,
 });
 
+export const clearSelectedFields = () => setSelectedFields(undefined as any);
+
 export const setSelectedFields = (
   selectedFields: SelectedFields
 ): FoldersActionTypes => ({

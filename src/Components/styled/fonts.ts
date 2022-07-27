@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import { css } from "styled-components";
 import { base, colors, fontSizes } from "./variables";
 
 export const link = css`

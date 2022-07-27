@@ -27,11 +27,13 @@ import WantListComponent, { Props as WantListProps } from "./WantList";
 import ReleasePageItem, {
   Props as ReleasePageItemProps,
 } from "./ReleasePageItem";
+import Settings, { Props as SettingsProps } from "./Settings";
 
 interface DiscProps
   extends AddToFolderProps,
     ReleasePageItemProps,
     WantListProps,
+    SettingsProps,
     AddWantListProps,
     ViewSelectorProps {}
 
@@ -49,6 +51,8 @@ const DiscogsContainer: FC<DiscProps> = ({
   setSelectedFields,
   syncWantList,
   addToFolder,
+  clearStorage,
+  logOut,
 }: DiscProps) => {
   console.log(JSON.stringify({ disableSubmitBtn }));
   return (
@@ -61,9 +65,8 @@ const DiscogsContainer: FC<DiscProps> = ({
           <AddWantList {...{ addToWantList }} />
         </ReleasePageItem>
       )}
-
       {activeView === "Want List" && wantList && (
-        <WantListComponent {...{ wantList, syncWantList, isSyncing }} />
+        <WantListComponent {...{ wantList }} />
       )}
       {activeView === "Add Item" && (
         <ReleasePageItem releasePageItem={releasePageItem}>
@@ -79,6 +82,9 @@ const DiscogsContainer: FC<DiscProps> = ({
             }}
           />
         </ReleasePageItem>
+      )}
+      {activeView === "Settings" && (
+        <Settings {...{ syncWantList, logOut, clearStorage, isSyncing }} />
       )}
     </ContentBody>
   );
@@ -102,6 +108,11 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<DiscProps> =>
     addToWantList: bindActionCreators(wantListActions.addToWantList, dispatch),
     addToFolder: bindActionCreators(foldersActions.addToFolder, dispatch),
     syncWantList: bindActionCreators(wantListActions.syncWantList, dispatch),
+    clearStorage: bindActionCreators(
+      foldersActions.clearSelectedFields,
+      dispatch
+    ),
+    logOut: bindActionCreators(appActions.logOut, dispatch),
     setView: bindActionCreators(appActions.setView, dispatch),
     setSelectedFields: bindActionCreators(
       foldersActions.setSelectedFields,

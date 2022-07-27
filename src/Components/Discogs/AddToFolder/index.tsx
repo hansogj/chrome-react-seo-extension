@@ -2,6 +2,7 @@ import maybe from "maybe-for-sure";
 import React, { FC } from "react";
 import { ReleasePageItem } from "../../../domain";
 import { DispatchAction } from "../../../redux/store";
+import { getText } from "../../../services/texts";
 import { base, BrightCard, Column, Row, Submit } from "../../styled";
 import ListFields, { Props as ListFieldsProps } from "./ListFields";
 import ListFolders, { Props as ListFoldersProps } from "./ListFolders";
@@ -31,7 +32,7 @@ const AddToFolderComponent: FC<Props> = ({
           .map((it) => (
             <Column padding={[1, 0, 0, 0]}>
               <Submit disabled={disableSubmitBtn} onClick={() => addToFolder()}>
-                ADD (+)
+                {getText("discogs.add.to.folder.submit")}
               </Submit>
             </Column>
           ))

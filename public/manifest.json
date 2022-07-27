@@ -7,6 +7,9 @@
         "default_popup": "index.html",
         "default_title": "Open Discogs tools"
     },
+    "background": {
+        "service_worker": "./static/js/background.js"
+    },
     "content_scripts": [
         {
             "matches": [
@@ -19,7 +22,8 @@
         }
     ],
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "icons": {
         "16": "discogs.png",

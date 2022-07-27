@@ -16,6 +16,7 @@ import {
   WantList,
 } from "../../domain";
 import * as api from "../../services/popup/api";
+import { getText } from "../../services/texts";
 import { AppActions, sagas as appSagas } from "../app";
 import {
   fromReleasePageMaster,
@@ -57,7 +58,7 @@ function* addToWantList({ format }: WantListActionTypes): Generator<any> {
   if (versions_url) {
     yield addToWantListFromVersionsUrl(versions_url, format);
   } else {
-    yield appSagas.warn(`Failed in trying to add items to your want list`);
+    yield appSagas.warn(getText("wantlist.add.item.failed"));
   }
 }
 

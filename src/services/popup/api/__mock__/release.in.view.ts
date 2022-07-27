@@ -6,6 +6,7 @@ export const MOCKED_RELEASE_URL = [
   "https://www.discogs.com/master/298833-Benny-Golson-Groovin-With-Golson",
   "https://www.discogs.com/release/4382732-Magma-M%C3%ABkan%C3%AFk-Destrukt%C3%AFw-Kommand%C3%B6h",
   "https://www.discogs.com/user/murdrejg/collection",
+  "https://www.discogs.com/release/11100619-Band-Of-Dogs-Band-Of-Dogs",
 ];
 
 const itemNr = maybe(window.location.search)

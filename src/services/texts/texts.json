@@ -1,0 +1,23 @@
+{
+    "discogs.add.to.folder.submit": "Add (+)",
+    "discogs.add.to.wantlinst.title": "Add to wantlist",
+    "discogs.wantlist.header": "Want list filtered on {{size}} of {{length}} unique entities",
+    "discogs.wantlinst.sort.by": "Sort by",
+    "discogs.wantlinst.page.size": " items / page ",
+    "folder.remove.items.prompt": "`{{artist}} {{title}} added to your folder <br/> Do you also want to remove all of this items from your want list?",
+    "folder.add.item.failed": "Failing to add new item {{releaseId}}",
+    "folder.fetch.item.failed": "Fail to fetch resource for release {{releaseId}}",
+    "log.out": "Log out",
+    "notification.general.error": "Something went wrong when loading the app",
+    "settings.resync.btn": "Sync Wantlist",
+    "settings.resync.explained": "Loads all wantet items into storage and filters on unique items",
+    "settings.clear.storage": "Clear storage",
+    "settings.clear.storage.explained": "Clears the selcted folder, notes, custom-field etc used to speed-add our items into your favourite folder",
+    "token.info.title": "Missing access token",
+    "token.info.ingress": "In order to access the <strong>Discogs</strong>-api, you need to fill inn your personal api-token. This can be found on",
+    "token.info.link.url": "https://www.discogs.com/settings/developers",
+    "token.info.link.text": "www.discogs.com",
+    "token.input.placeholder": "token: ###",
+    "token.input.submit": "Submit",
+    "wantlist.add.item.failed": "Failed to add items to your want list"
+}

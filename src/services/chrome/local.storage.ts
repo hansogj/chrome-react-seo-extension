@@ -23,6 +23,10 @@ export const set = <T>(key: StorageKeys, val: T): T => {
   return val;
 };
 
+export const remove = (key: StorageKeys) => {
+  window?.localStorage?.removeItem(`${name}-${key}`);
+};
+
 export const get = <T>(key: StorageKeys, or?: T): any =>
   maybe(window?.localStorage?.getItem)
     .map(() => window?.localStorage?.getItem(`${name}-${key}`))

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Version } from "../../../domain";
 import { DispatchAction as DiscogsDispatch } from "../../../redux/store";
+import { getText } from "../../../services/texts";
 import {
   base,
   BrightCard,
@@ -18,7 +19,7 @@ export interface Props {
 const AddWantListComponent: FC<Props> = ({ addToWantList }: Props) => (
   <BrightCard style={{ marginTop: base }}>
     <Row center>
-      <h2>Add to wantlist</h2>
+      <h2>{getText("discogs.add.to.wantlinst.title")}</h2>
     </Row>
     <Row center width={42}>
       <Column>
