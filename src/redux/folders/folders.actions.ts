@@ -36,10 +36,7 @@ export const setSelectedFieldsSuccess = (
 export const addToFolder = (): FoldersActionTypes => ({
   type: FoldersActions.addToFolder,
 });
+
 export const addToFolderSuccess = (): FoldersActionTypes => ({
   type: FoldersActions.addToFolderSuccess,
-});
-
-export const goToMaster = (): FoldersActionTypes => ({
-  type: FoldersActions.goToMaster,
 });

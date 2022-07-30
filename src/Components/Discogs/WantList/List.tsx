@@ -1,14 +1,19 @@
 import { FC } from "react";
+
+import { DispatchAction } from "../../../redux/store";
 import { Column, Row, Thumb } from "../../styled";
 import { ReleaseCol } from "./style";
 import { Item } from "./utils";
-type Props = { entries: Item[] };
+export type Props = { entries: Item[]; goToUrl: DispatchAction<string> };
 
-const List: FC<Props> = ({ entries }: Props) => (
+const List: FC<Props> = ({ entries, goToUrl }: Props) => (
   <Row>
     {entries.map(([wantListId, { title, thumb, artists, year }]: Item) => (
       <ReleaseCol key={wantListId} width={12} height={8}>
-        <a {...{ href: `http://www.discogs.com/${wantListId}` }}>
+        <a
+          {...{ href: `http://www.discogs.com/${wantListId}` }}
+          onClick={() => goToUrl(`http://www.discogs.com/${wantListId}`)}
+        >
           <Row>
             <Column width={6} className="thumbContainer">
               <Thumb src={thumb} alt={title} />

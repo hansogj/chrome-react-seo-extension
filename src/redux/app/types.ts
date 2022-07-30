@@ -38,6 +38,7 @@ export interface AppActionData {
   notification: Notification;
   view: Optional<View>;
   highlightedLabels: Optional<HightlightedLabels>;
+  url: Optional<string>;
 }
 
 export enum AppActions {
@@ -54,7 +55,7 @@ export enum AppActions {
   logOut = "APP_LOG_OUT",
   setView = "APP_SET_VIEW",
   setViewSuccess = "APP_SET_VIEW_SUCCESS",
-
+  goToUrl = "APP_GO_TO_URL",
   setHighglightedLabels = "APP_SET_HIGHTLIGHTED_LABELS",
   setHighglightedLabelsSuccess = "APP_SET_HIGHTLIGHTED_LABELS_SUCCESS",
   getHighglightedLabelsSuccess = "APP_GET_HIGHTLIGHTED_LABELS_SUCCESS",

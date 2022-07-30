@@ -1,20 +1,27 @@
 import maybe from "maybe-for-sure";
 import { FC, useState } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
 import { WantList } from "../../../domain";
 import { RootState } from "../../../redux";
-import { StateProps } from "../../../redux/selectors";
+import {
+  DispatchProps,
+  getWantList,
+  StateProps,
+} from "../../../redux/selectors";
 import { renderText } from "../../../services/texts";
-import { getWantList } from "../../../redux/selectors";
 import { Column, ContentBody, Row } from "../../styled";
 import ControlPanel from "./ControlPanel";
-import List from "./List";
+import List, { Props as ListProps } from "./List";
 import { entriesFrom, filteredAndSorted, SortMethod } from "./utils";
-import { connect } from "react-redux";
-export interface Props {
+
+import { actions as appActions } from "../../../redux/app";
+
+export interface Props extends ListProps {
   wantList: WantList;
 }
 
-const WantListComponent: FC<Props> = ({ wantList }: Props) => {
+const WantListComponent: FC<Props> = ({ wantList, goToUrl }: Props) => {
   const [sortMethod, selectSortMethod] = useState<SortMethod>("Added (rev)");
   const [pageSize, setPageSize] = useState<number>(25);
   const [pageNr, setPage] = useState<number>(0);
@@ -49,7 +56,7 @@ const WantListComponent: FC<Props> = ({ wantList }: Props) => {
         }}
       />
       {maybe(filteredAndSorted(wantList, sortMethod, pageNr, pageSize))
-        .map((entries) => <List {...{ entries }} />)
+        .map((entries) => <List {...{ entries, goToUrl }} />)
         .valueOr(<></>)}
 
       {pageSize > 99 && (
@@ -77,9 +84,14 @@ export const mapStateToProps = (
   wantList: getWantList(state),
 });
 
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<Props> =>
+  ({
+    goToUrl: bindActionCreators(appActions.goToUrl, dispatch),
+  } as Props);
+
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(WantListComponent as FC<Partial<Props>>);
 
 // export default WantListComponent;

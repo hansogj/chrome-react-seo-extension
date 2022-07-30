@@ -76,6 +76,11 @@ export const setViewSuccess = (view: View): AppActionTypes => ({
   view,
 });
 
+export const goToUrl = (url: string): AppActionTypes => ({
+  type: AppActions.goToUrl,
+  url,
+});
+
 export const setHighglightedLabels = (
   highlightedLabels: HightlightedLabels
 ): AppActionTypes => ({

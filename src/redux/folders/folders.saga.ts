@@ -152,6 +152,7 @@ function* notifyNewInstance(instance: Instance): Generator<any> {
     .map((it) => it[0] as Artist)
     .map(({ name }) => name)
     .valueOr("");
+  const masterUrl = yield select(fromReleasePageMaster("uri"));
 
   yield fork(
     appSagas.notify,
@@ -160,21 +161,16 @@ function* notifyNewInstance(instance: Instance): Generator<any> {
       title,
     }),
     {
-      action: actions.goToMaster(),
+      action: appActions.goToUrl(masterUrl as string),
       text: "Yes please",
     }
   );
 }
 
-function* goToMaster(): Generator<any> {
-  const uri = yield select(fromReleasePageMaster("uri"));
-  api.manipulateDom(DiscogsActions.domGoTo, `${uri}`);
-}
-
 function* raceForResponse(): Generator<any> {
   const result = yield race({
     notify: take(AppActions.notifyReset),
-    remove: take(FoldersActions.goToMaster),
+    remove: take(AppActions.goToUrl),
   });
   if ((result as any).notify) {
     yield api.reload();
@@ -198,7 +194,6 @@ function* DiscogsSaga() {
     takeLatest(FoldersActions.getFoldersSuccess, getCollection),
     takeLatest(FoldersActions.setSelectedFields, setSelectedFields),
     takeLatest(FoldersActions.addToFolder, addToFolder),
-    takeLatest(FoldersActions.goToMaster, goToMaster),
   ]);
 }
 

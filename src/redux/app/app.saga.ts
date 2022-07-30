@@ -2,6 +2,7 @@ import { all, call, delay, put, select, takeLatest } from "redux-saga/effects";
 import { HightlightedLabels, OauthIdentity, User } from "../../domain";
 import { get, set } from "../../services/chrome/local.storage";
 import * as api from "../../services/popup/api";
+import { DiscogsActions } from "../discogs";
 import * as appSelectors from "../selectors/app.selectors";
 import { AppActions, AppActionTypes, DISCOGS_BASE_URL, ERROR, View } from "./";
 import * as actions from "./app.actions";
@@ -100,6 +101,10 @@ function* onUserSuccess(): Generator<any> {
   yield all([getView(), getHightlightedLabels()]);
 }
 
+function* goToUrl({ url }: AppActionTypes): Generator<any> {
+  yield api.manipulateDom(DiscogsActions.domGoTo, `${url}`);
+}
+
 function* AppSaga() {
   try {
     yield all([
@@ -110,6 +115,7 @@ function* AppSaga() {
       takeLatest(AppActions.setView, setView),
       takeLatest(AppActions.getUserSuccess, onUserSuccess),
       takeLatest(AppActions.setHighglightedLabels, setHighglightedLabels),
+      takeLatest(AppActions.goToUrl, goToUrl),
     ]);
   } catch (e) {
     console.error(e);
