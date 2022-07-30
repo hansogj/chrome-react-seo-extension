@@ -1,9 +1,10 @@
-import { Format, Version } from "../../domain";
+import { HightlightedLabels, Version } from "../../domain";
 import { SelectedFields } from "../../domain/Inventory";
 import { ActionTypes } from "../../redux";
 import { DiscogsActions } from "../../redux/discogs";
 import * as api from "./api";
 import domResolver from "./dom";
+import highlightedLabelsService from "./highlighted.labels.service";
 import { releasePage } from "./release.page";
 import fieldsService from "./selectedFields.service";
 import { MessageActions } from "./types";
@@ -14,6 +15,7 @@ const services = {
   wantList: wantListService(),
   fields: fieldsService(),
   versions: versionsService(),
+  highlightedLabels: highlightedLabelsService(),
 };
 
 const messagesFromReactAppListener = (
@@ -55,7 +57,9 @@ export const messageResolver = (
     return resolver(api.setUserToken(action.body as string));
 
   if (action.type === MessageActions.DOM)
-    return resolver(domResolver(action.body as DiscogsActions));
+    return resolver(
+      domResolver(action.body as DiscogsActions, action.resource!)
+    );
 
   if (action.type === MessageActions.GET_WANT_LIST)
     return resolver(services.wantList.get(action.userId as number));
@@ -91,6 +95,16 @@ export const messageResolver = (
 
   if (action.type === MessageActions.GET_RELEASE_PAGE_ITEM_ID)
     return resolver(releasePage(action.resource!));
+
+  if (action.type === MessageActions.GET_HIGHTLIGHTED_LABELS) {
+    return resolver(services.highlightedLabels.get());
+  }
+
+  if (action.type === MessageActions.SET_HIGHTLIGHTED_LABELS) {
+    return resolver(
+      services.highlightedLabels.set(action.body as HightlightedLabels)
+    );
+  }
 
   if (action.type === MessageActions.WINDOW_RELOAD) window.location.reload();
 };

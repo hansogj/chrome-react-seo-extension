@@ -99,3 +99,9 @@ export const Input = styled.input<Size>`
   ${inputStyle}
   ${size}
 `;
+
+export const TextArea = styled.textarea<Size>`
+  ${inputStyle}
+  ${size}
+  text-align: left;
+`;

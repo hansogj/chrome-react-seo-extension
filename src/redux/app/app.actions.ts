@@ -1,5 +1,5 @@
 import maybe from "maybe-for-sure";
-import { User } from "../../domain";
+import { HightlightedLabels, User } from "../../domain";
 import { AppActions, AppActionTypes, ERROR, Notification, View } from "./types";
 
 export const error = (error: ERROR) => ({
@@ -74,4 +74,25 @@ export const setView = (view: View): AppActionTypes => ({
 export const setViewSuccess = (view: View): AppActionTypes => ({
   type: AppActions.setViewSuccess,
   view,
+});
+
+export const setHighglightedLabels = (
+  highlightedLabels: HightlightedLabels
+): AppActionTypes => ({
+  type: AppActions.setHighglightedLabels,
+  highlightedLabels,
+});
+
+export const setHighglightedLabelsSuccess = (
+  highlightedLabels: HightlightedLabels
+): AppActionTypes => ({
+  type: AppActions.setHighglightedLabelsSuccess,
+  highlightedLabels,
+});
+
+export const getHighglightedLabelsSuccess = (
+  highlightedLabels: HightlightedLabels
+): AppActionTypes => ({
+  type: AppActions.getHighglightedLabelsSuccess,
+  highlightedLabels,
 });

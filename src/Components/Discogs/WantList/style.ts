@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { WantList } from "../../../domain";
 import {
+  AugmentetCol,
   base,
   borderRadius,
   colors,
@@ -14,11 +15,7 @@ export interface Props {
 }
 
 export const ReleaseCol = styled(Column)`
-  padding: ${base};
-  margin-top: calc(${base} / 2);
-  overflow: hidden;
-  border-radius: ${borderRadius.small};
-  background-color: ${colors.bright};
+  ${AugmentetCol}
 
   &:hover {
     visible: none;

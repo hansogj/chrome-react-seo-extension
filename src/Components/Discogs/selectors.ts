@@ -1,4 +1,4 @@
-import maybe, { Maybe } from "maybe-for-sure";
+import maybe from "maybe-for-sure";
 import { createSelector } from "reselect";
 import { getFoldersState, getReleasePageItem } from "../../redux/selectors";
 

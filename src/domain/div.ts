@@ -17,6 +17,13 @@ export interface Label {
   resource_url: string;
 }
 
+export type HightlightedLabels = {
+  poor: string[];
+  fair: string[];
+  good: string[];
+  veryGood: string[];
+};
+
 export interface Pagination {
   page: number;
   pages: number;

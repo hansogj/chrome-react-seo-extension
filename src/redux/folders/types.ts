@@ -1,4 +1,4 @@
-import { Folder, InventoryFields, Release } from "../../domain";
+import { Folder, InventoryFields } from "../../domain";
 import { ActionTypes } from "../types";
 
 export interface FoldersState {
@@ -23,6 +23,7 @@ export enum FoldersActions {
 
   addToFolder = "ADD_TO_FOLDER",
   addToFolderSuccess = "ADD_TO_FOLDER_SUCCESS",
+  goToMaster = "FOLDER_GO_TO_MASTER",
 
   getInventoryFieldsSuccess = "GET_INVENTORY_FIELDS_SUCCESS",
 

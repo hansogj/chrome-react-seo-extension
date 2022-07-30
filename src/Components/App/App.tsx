@@ -14,7 +14,7 @@ import {
 } from "../../redux/selectors/app.selectors";
 import { DispatchProps, StateProps } from "../../redux/selectors/utils";
 import { getText } from "../../services/texts";
-import DiscogsContainer from "../Discogs";
+import View from "../View";
 import { Container, Content } from "../styled";
 import NotificationComponent from "./Notification";
 import Profile, { Props as ProfileProps } from "./Profile";
@@ -89,7 +89,7 @@ const App: FC<AppProps> = ({
                         }}
                       />
                     )}
-                    <DiscogsContainer />
+                    <View />
                   </>
                 ))
             )

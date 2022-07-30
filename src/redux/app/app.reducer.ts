@@ -7,6 +7,7 @@ export const initialState: AppState = {
   error: undefined,
   isLoading: true,
   view: undefined,
+  highlightedLabels: undefined,
 };
 
 const discogsReducer = reducerForProducers<
@@ -26,6 +27,8 @@ const discogsReducer = reducerForProducers<
   APP_NOTIFY: writeToDraft("notification"),
   APP_NOTIFY_RESET: writeToDraft("notification"),
   APP_SET_VIEW_SUCCESS: writeToDraft("view"),
+  APP_SET_HIGHTLIGHTED_LABELS_SUCCESS: writeToDraft("highlightedLabels"),
+  APP_GET_HIGHTLIGHTED_LABELS_SUCCESS: writeToDraft("highlightedLabels"),
 });
 
 export default discogsReducer;

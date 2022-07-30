@@ -3,7 +3,13 @@
 import packageJson from "../../../package.json";
 import maybe from "maybe-for-sure";
 
-type StorageKeys = "token" | "want-list" | "cache" | "selected-fields" | "view";
+type StorageKeys =
+  | "token"
+  | "want-list"
+  | "cache"
+  | "selected-fields"
+  | "view"
+  | "highlighted-labels";
 
 export const uniqueKey = (key: StorageKeys, id: string | number) =>
   `${key}-${id}` as StorageKeys;

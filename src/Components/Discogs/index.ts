@@ -1,2 +1,4 @@
-import DiscogsActions from './Discogs'
-export default DiscogsActions
+import AddToFolder from "./AddToFolder";
+import AddWantList from "./AddWantList";
+import WantListComponent from "./WantList";
+export { AddToFolder, AddWantList, WantListComponent };

@@ -1,49 +1,44 @@
-import React, { FC } from "react";
-import { Version } from "../../../domain";
-import { DispatchAction as DiscogsDispatch } from "../../../redux/store";
-import { getText } from "../../../services/texts";
-import {
-  base,
-  BrightCard,
-  Button,
-  Column,
-  DreadButton,
-  UglyButton,
-  Row,
-  Submit,
-} from "../../styled";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
 
-export interface Props {
-  addToWantList: DiscogsDispatch<Optional<Version["format"]>>;
-}
-const AddWantListComponent: FC<Props> = ({ addToWantList }: Props) => (
-  <BrightCard style={{ marginTop: base }}>
-    <Row center>
-      <h2>{getText("discogs.add.to.wantlinst.title")}</h2>
-    </Row>
-    <Row center width={42}>
-      <Column>
-        <Submit onClick={() => addToWantList("Vinyl")}>Vinyl</Submit>
-      </Column>
-      <Column>
-        <Button onClick={() => addToWantList("Cd")}>Cd</Button>
-      </Column>
-      <Column>
-        <UglyButton onClick={() => addToWantList("Casette")}>
-          Casette
-        </UglyButton>
-      </Column>
-      <Column>
-        <DreadButton
-          onClick={() =>
-            addToWantList(undefined as Optional<Version["format"]>)
-          }
-        >
-          ALL
-        </DreadButton>
-      </Column>
-    </Row>
-  </BrightCard>
+import ReleasePageItem, {
+  Props as ReleasePageItemProps,
+} from "../ReleasePageItem";
+
+import { FC } from "react";
+import { RootState } from "../../../redux";
+import {
+  DispatchProps,
+  getReleasePageItem,
+  StateProps,
+} from "../../../redux/selectors";
+import { actions as wantListActions } from "../../../redux/wantlist";
+import AddWantListComponent, {
+  Props as AddWantListComponentProps,
+} from "./AddWantListComponent";
+
+export interface Props
+  extends ReleasePageItemProps,
+    AddWantListComponentProps {}
+
+const AddWantList = ({ releasePageItem, addToWantList }: Props) => (
+  <ReleasePageItem releasePageItem={releasePageItem}>
+    <AddWantListComponent {...{ addToWantList }} />
+  </ReleasePageItem>
 );
 
-export default AddWantListComponent;
+export const mapStateToProps = (
+  state: RootState
+): StateProps<Partial<Props>> => ({
+  releasePageItem: getReleasePageItem(state),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps<Props> =>
+  ({
+    addToWantList: bindActionCreators(wantListActions.addToWantList, dispatch),
+  } as Props);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddWantList as FC<Partial<Props>>);

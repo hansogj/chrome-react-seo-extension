@@ -1,4 +1,4 @@
-import { User } from "../../domain";
+import { HightlightedLabels, User } from "../../domain";
 import { ActionTypes } from "../types";
 import { ActionTypes as AnyActionTypes } from "../store";
 export const DISCOGS_BASE_URL = "https://api.discogs.com";
@@ -6,7 +6,7 @@ export const DISCOGS_BASE_URL = "https://api.discogs.com";
 export const Views = ["Add Item", "Watch", "Want List", "Settings"] as const;
 export type View = typeof Views[number];
 export type ActionButton = { action: AnyActionTypes; text: string };
-
+export const MustHaveReleaseItem: View[] = ["Add Item", "Watch"];
 export type ErrorType = ERROR | Error | string;
 
 export type Notification = {
@@ -22,6 +22,7 @@ export interface AppState {
   readonly notification: Optional<Notification>;
   readonly isLoading: boolean;
   readonly view: Optional<View>;
+  highlightedLabels: Optional<HightlightedLabels>;
 }
 
 export enum ERROR {
@@ -36,6 +37,7 @@ export interface AppActionData {
   userToken: Optional<string>;
   notification: Notification;
   view: Optional<View>;
+  highlightedLabels: Optional<HightlightedLabels>;
 }
 
 export enum AppActions {
@@ -52,6 +54,10 @@ export enum AppActions {
   logOut = "APP_LOG_OUT",
   setView = "APP_SET_VIEW",
   setViewSuccess = "APP_SET_VIEW_SUCCESS",
+
+  setHighglightedLabels = "APP_SET_HIGHTLIGHTED_LABELS",
+  setHighglightedLabelsSuccess = "APP_SET_HIGHTLIGHTED_LABELS_SUCCESS",
+  getHighglightedLabelsSuccess = "APP_GET_HIGHTLIGHTED_LABELS_SUCCESS",
 }
 
 export type AppActionTypes = ActionTypes<AppActions, AppActionData>;

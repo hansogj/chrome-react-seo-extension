@@ -13,6 +13,22 @@ export const colors = {
   kindOfBlue: "#123654",
   blueInTheGreen: "#064E40",
   uglyYellow: "#f3ba15",
+  highlightedLabels: {
+    red: {
+      soft: "#e28080",
+      strong: "#773636",
+    },
+
+    green: {
+      soft: "#81b179",
+      strong: "#0e4805",
+    },
+
+    white: {
+      soft: "#fffcfa",
+      strong: "#FFF",
+    },
+  },
 };
 
 export const fontSizes = {

@@ -1,5 +1,5 @@
 import { all, call, delay, put, select, takeLatest } from "redux-saga/effects";
-import { OauthIdentity, User } from "../../domain";
+import { HightlightedLabels, OauthIdentity, User } from "../../domain";
 import { get, set } from "../../services/chrome/local.storage";
 import * as api from "../../services/popup/api";
 import * as appSelectors from "../selectors/app.selectors";
@@ -67,8 +67,37 @@ function* setView({ view }: AppActionTypes): Generator<any> {
 }
 function* getView(): Generator<any> {
   const view = get("view", "");
-  console.log(view);
   yield put(actions.setViewSuccess(view as View));
+}
+
+function* setHighglightedLabels({
+  highlightedLabels: labels,
+}: AppActionTypes): Generator<any> {
+  try {
+    yield call(api.setHighglightedLabels, labels!);
+    yield put(
+      actions.setHighglightedLabelsSuccess(labels as HightlightedLabels)
+    );
+  } catch (e) {
+    debugger;
+  }
+}
+
+function* getHightlightedLabels(): Generator<any> {
+  try {
+    const labels = yield call(api.getHighglightedLabels);
+    if (labels) {
+      yield put(
+        actions.getHighglightedLabelsSuccess(labels as HightlightedLabels)
+      );
+    }
+  } catch (e) {
+    debugger;
+  }
+}
+
+function* onUserSuccess(): Generator<any> {
+  yield all([getView(), getHightlightedLabels()]);
 }
 
 function* AppSaga() {
@@ -79,7 +108,8 @@ function* AppSaga() {
       takeLatest(AppActions.setUserToken, setUserToken),
       takeLatest(AppActions.setUserTokenSuccess, getUser),
       takeLatest(AppActions.setView, setView),
-      takeLatest(AppActions.getUserSuccess, getView),
+      takeLatest(AppActions.getUserSuccess, onUserSuccess),
+      takeLatest(AppActions.setHighglightedLabels, setHighglightedLabels),
     ]);
   } catch (e) {
     console.error(e);

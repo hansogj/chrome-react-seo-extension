@@ -9,20 +9,11 @@ import {
   spawn,
   takeLatest,
 } from "redux-saga/effects";
-import {
-  MasterRelease,
-  ReleasePageItem,
-  Version,
-  WantList,
-} from "../../domain";
+import { Version, WantList } from "../../domain";
 import * as api from "../../services/popup/api";
 import { getText } from "../../services/texts";
 import { AppActions, sagas as appSagas } from "../app";
-import {
-  fromReleasePageMaster,
-  getReleasePageItem,
-  getReleasePageMaster,
-} from "../selectors";
+import { fromReleasePageMaster } from "../selectors";
 import { getWantListResource } from "../selectors/resource.selectors";
 import { WantListActions, WantListActionTypes } from "./types";
 import * as wantListActions from "./wantlist.actions";
@@ -130,73 +121,10 @@ function* addToWantListFromVersionsUrl(
   }
 }
 
-function* removeAllVersionsFromWantList(): Generator<any> {
-  const master = (yield select(
-    getReleasePageMaster
-  )) as ReleasePageItem["master"];
-  try {
-    if (master.versions_url) {
-      yield removeAllVersions(master);
-    } else yield removeSingleVersion(master);
-
-    yield put(wantListActions.removeAllVersionsFromWantListSuccess());
-
-    yield api.reload();
-  } catch (e) {
-    appSagas.warn("Failed when trying to remove item from want list");
-  }
-}
-
-function* removeSingleVersion(master: MasterRelease): Generator<any> {
-  const wantListResource = yield select(getWantListResource);
-  try {
-    yield call(api.deleteResource, `${wantListResource}/${master.id}`);
-    yield appSagas.notify(`${master!.title} has been removed from want list`);
-  } catch (error) {
-    yield appSagas.notify(`${master!.title} was never in your want list`);
-  }
-}
-
-function* removeAllVersions(master: MasterRelease): Generator<any> {
-  const allVersions = (yield call(
-    api.getAllWantedVersionsOfItem,
-    master!.versions_url
-  )) as Version[];
-
-  const noOfVersions = allVersions.length;
-  if (noOfVersions > MAX_REQUESTS_PR_MINUTE) {
-    yield;
-    appSagas.notify(
-      `Due to limitations in Discogs api, this action is going to take long time <br /> estimated ${noOfVersions} seconds. <br />
-         Perhaps you'd rather prefere to do this action as a bulk action from 
-        <a href="${master?.uri}" target="blank"> item's master page </a>
-        `,
-      undefined,
-      second * 15
-    );
-  }
-  const wantListResource = yield select(getWantListResource);
-  yield* allVersions.map(function* ({ id }, _, self) {
-    const interval = self.length > MAX_REQUESTS_PR_MINUTE ? second : 100;
-    yield delay(interval);
-    yield fork(api.deleteResource, `${wantListResource}/${id}`);
-  });
-  yield fork(
-    appSagas.notify,
-    noOfVersions > 0
-      ? `All items of ${master!.title} has been removed from want list`
-      : `There was no items of ${master!.title} to be removed`
-  );
-}
-
 function* DiscogsSaga() {
   yield all([
     takeLatest(AppActions.getUserSuccess, getWantList),
     takeLatest(WantListActions.syncWantList, syncWantList),
-    takeLatest(
-      WantListActions.removeAllVersionsFromWantList,
-      removeAllVersionsFromWantList
-    ),
     takeLatest(WantListActions.addToWantList, addToWantList),
   ]);
 }

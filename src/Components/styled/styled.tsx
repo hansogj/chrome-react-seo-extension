@@ -4,13 +4,12 @@ import { h, link } from "./fonts";
 import {
   base,
   borderRadius,
+  Center,
   Colors,
   colors,
   fontSizes,
   micro,
   Padded,
-  Kids,
-  Center,
   Size,
   spacings,
 } from "./variables";
@@ -88,6 +87,14 @@ export const Column = styled.div<Size & Padded & Center>`
   flex-direction: column;
   margin: 0;
   justify-content: space-between;
+`;
+
+export const AugmentetCol = css`
+  padding: ${base};
+  margin-top: calc(${base} / 2);
+  overflow: hidden;
+  border-radius: ${borderRadius.small};
+  background-color: ${colors.bright};
 `;
 
 export const Row = styled.div<Size & Padded & Center>`

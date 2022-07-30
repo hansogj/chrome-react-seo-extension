@@ -1,4 +1,4 @@
-import { Folder, InventoryFields, SelectedFields, Release } from "../../domain";
+import { Folder, InventoryFields, SelectedFields } from "../../domain";
 import { FoldersActions, FoldersActionTypes } from "./types";
 
 export const getFolders = (): FoldersActionTypes => ({
@@ -38,4 +38,8 @@ export const addToFolder = (): FoldersActionTypes => ({
 });
 export const addToFolderSuccess = (): FoldersActionTypes => ({
   type: FoldersActions.addToFolderSuccess,
+});
+
+export const goToMaster = (): FoldersActionTypes => ({
+  type: FoldersActions.goToMaster,
 });

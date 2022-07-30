@@ -1,6 +1,7 @@
 import maybe from "maybe-for-sure";
 import { createSelector } from "reselect";
-import { AppState, ERROR, View } from "../app";
+import { DEFAULT_HIGHLIGHTED_LABELS } from "../../constants";
+import { AppState, ERROR, MustHaveReleaseItem, View } from "../app";
 import { RootState } from "../root.reducers";
 import { selectFromRoot } from "../utils";
 import { getReleasePageItem } from "./discogs.selectors";
@@ -40,6 +41,14 @@ export const getActiveView = createSelector(
   (appState, releasePageItem): Optional<View> =>
     maybe(appState)
       .mapTo("view")
-      .map((it) => (!releasePageItem ? "Want List" : it))
+      .map((it) =>
+        MustHaveReleaseItem.includes(it!) && !releasePageItem ? "Want List" : it
+      )
       .valueOr(undefined)
+);
+
+export const getHightlightedLabels = createSelector(
+  getAppState,
+  ({ highlightedLabels }) =>
+    maybe(highlightedLabels).valueOr(DEFAULT_HIGHLIGHTED_LABELS)
 );

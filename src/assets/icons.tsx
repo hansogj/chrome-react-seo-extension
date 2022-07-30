@@ -1,6 +1,4 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { colors } from "../Components/styled";
+import styled from "styled-components";
 
 const Svg = styled.svg`
   height: 12px;

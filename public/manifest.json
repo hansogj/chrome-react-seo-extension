@@ -1,7 +1,7 @@
 {
     "name": "Discogs tools",
-    "description": "Discogs filters searches & add items to collection and want list",
-    "version": "1.0",
+    "description": "Discogs filters searches & add items to collection and want list and list wantlist",
+    "version": "2.0.0",
     "manifest_version": 3,
     "action": {
         "default_popup": "index.html",
@@ -23,7 +23,9 @@
     ],
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "storage",
+        "contextMenus"
     ],
     "icons": {
         "16": "discogs.png",

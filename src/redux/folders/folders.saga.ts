@@ -10,6 +10,7 @@ import {
   take,
   takeLatest,
 } from "redux-saga/effects";
+
 import {
   Artist,
   Folder,
@@ -21,7 +22,7 @@ import {
 import * as api from "../../services/popup/api";
 import { renderText } from "../../services/texts";
 import { actions as appActions, AppActions, sagas as appSagas } from "../app";
-import { DiscogsActionTypes, sagas as discogsSaga } from "../discogs";
+import { DiscogsActions, sagas as discogsSaga } from "../discogs";
 import {
   fromReleasePageMaster,
   getAddReleaseToFolderResource,
@@ -31,7 +32,6 @@ import {
   getReleasePageId,
   getSelectedFields as getSelectedFieldsSelector,
 } from "../selectors";
-import { actions as wantListActions, WantListActions } from "../wantlist";
 import * as actions from "./folders.actions";
 import { FoldersActions, FoldersActionTypes } from "./types";
 
@@ -155,21 +155,26 @@ function* notifyNewInstance(instance: Instance): Generator<any> {
 
   yield fork(
     appSagas.notify,
-    renderText("folder.remove.items.prompt", {
+    renderText("folder.add.item.success", {
       artist,
       title,
     }),
     {
-      action: wantListActions.removeAllVersionsFromWantList(),
+      action: actions.goToMaster(),
       text: "Yes please",
     }
   );
 }
 
+function* goToMaster(): Generator<any> {
+  const uri = yield select(fromReleasePageMaster("uri"));
+  api.manipulateDom(DiscogsActions.domGoTo, `${uri}`);
+}
+
 function* raceForResponse(): Generator<any> {
   const result = yield race({
     notify: take(AppActions.notifyReset),
-    remove: take(WantListActions.removeAllVersionsFromWantList),
+    remove: take(FoldersActions.goToMaster),
   });
   if ((result as any).notify) {
     yield api.reload();
@@ -193,6 +198,7 @@ function* DiscogsSaga() {
     takeLatest(FoldersActions.getFoldersSuccess, getCollection),
     takeLatest(FoldersActions.setSelectedFields, setSelectedFields),
     takeLatest(FoldersActions.addToFolder, addToFolder),
+    takeLatest(FoldersActions.goToMaster, goToMaster),
   ]);
 }
 

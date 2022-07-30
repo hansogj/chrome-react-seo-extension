@@ -1,5 +1,10 @@
 import maybe from "maybe-for-sure";
-import { Format, MasterRelease, ResourceUrl, Version } from "../../../domain";
+import {
+  HightlightedLabels,
+  MasterRelease,
+  ResourceUrl,
+  Version,
+} from "../../../domain";
 import { SelectedFields } from "../../../domain/Inventory";
 import { DiscogsActions } from "../../../redux/discogs";
 import { MessageActions } from "../../../services/chrome/types";
@@ -28,8 +33,11 @@ export const setUserToken = async (userToken: string) =>
     (e) => `${e}`
   );
 
-export const manipulateDom = async (body: DiscogsActions) =>
-  messageHandler({ type: MessageActions.DOM, body: body }).catch(
+export const manipulateDom = async (
+  body: DiscogsActions,
+  resource: ResourceUrl
+) =>
+  messageHandler({ type: MessageActions.DOM, body: body, resource }).catch(
     () =>
       new Error(
         "not able to do dom-manipulation in this view: " + JSON.stringify(body)
@@ -90,3 +98,14 @@ export const getAllWantedVersionsByFormat = async (
     resource,
     body: format,
   });
+
+export const setHighglightedLabels = async (labels: {}) =>
+  messageHandler<HightlightedLabels>({
+    type: MessageActions.SET_HIGHTLIGHTED_LABELS,
+    body: labels,
+  }).then((it) => maybe(it).valueOr(labels));
+
+export const getHighglightedLabels = async () =>
+  messageHandler<HightlightedLabels>({
+    type: MessageActions.GET_HIGHTLIGHTED_LABELS,
+  }).then((it) => maybe(it).valueOr({}));

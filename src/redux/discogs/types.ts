@@ -1,4 +1,4 @@
-import { Instance, Release, ReleasePageItem, Version } from "../../domain";
+import { Instance, ReleasePageItem } from "../../domain";
 import { ActionTypes } from "../types";
 
 export interface DiscogsState {
@@ -13,6 +13,9 @@ export interface DiscogsActionData {
 export enum DiscogsActions {
   getReleasePageItem = "GET_RELEASE_PAGE_ITEM",
   getReleasePageItemSuccess = "GET_RELEASE_PAGE_ITEM_SUCCESS",
+  domGoTo = "DOM_GO_TO",
+  domFilterSellers = "DOM_FILTER_SELLERS",
+  domFilterReleases = "DOM_FILTER_RELEASES",
 }
 
 export type DiscogsActionTypes = ActionTypes<DiscogsActions, DiscogsActionData>;

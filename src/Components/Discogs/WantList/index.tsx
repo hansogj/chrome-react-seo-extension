@@ -1,12 +1,15 @@
 import maybe from "maybe-for-sure";
 import { FC, useState } from "react";
 import { WantList } from "../../../domain";
+import { RootState } from "../../../redux";
+import { StateProps } from "../../../redux/selectors";
 import { renderText } from "../../../services/texts";
+import { getWantList } from "../../../redux/selectors";
 import { Column, ContentBody, Row } from "../../styled";
 import ControlPanel from "./ControlPanel";
 import List from "./List";
 import { entriesFrom, filteredAndSorted, SortMethod } from "./utils";
-
+import { connect } from "react-redux";
 export interface Props {
   wantList: WantList;
 }
@@ -20,11 +23,9 @@ const WantListComponent: FC<Props> = ({ wantList }: Props) => {
     .map((it) => it.length)
     .valueOr(0);
 
-  const turnPage = (dir: number) => {
-    console.log(pageNr + dir);
-    return setPage(pageNr + dir);
-  };
-  return (
+  const turnPage = (dir: number) => setPage(pageNr + dir);
+
+  return wantList ? (
     <ContentBody filled>
       <Row>
         <Column width={37}>
@@ -65,6 +66,20 @@ const WantListComponent: FC<Props> = ({ wantList }: Props) => {
         />
       )}
     </ContentBody>
+  ) : (
+    <></>
   );
 };
-export default WantListComponent;
+
+export const mapStateToProps = (
+  state: RootState
+): StateProps<Partial<Props>> => ({
+  wantList: getWantList(state),
+});
+
+export default connect(
+  mapStateToProps,
+  undefined
+)(WantListComponent as FC<Partial<Props>>);
+
+// export default WantListComponent;

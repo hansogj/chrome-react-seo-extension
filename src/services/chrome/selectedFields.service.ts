@@ -6,20 +6,6 @@ import {
   uniqueKey,
 } from "./local.storage";
 
-const _setStorage = (key: any, value: any) =>
-  chrome.storage.sync.set({ [key]: value }, function () {
-    console.log("Value is set to " + value);
-  });
-
-const _getStorage = (_key: any, _?: any) => {
-  new Promise((resolve, rejector) => {
-    debugger;
-    return chrome.storage.sync.get(_key, (value) =>
-      resolve(value as SelectedFields)
-    );
-  });
-};
-
 const key = "selected-fields";
 
 const fieldsService = () => {

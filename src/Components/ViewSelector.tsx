@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import { Collection, Eye, List, Settings } from "../../assets/icons";
-import { Button, colors, Column, Row } from "../styled";
-import { View, Views } from "../../redux/app";
-import { DispatchAction } from "../../redux/store";
+import { FC } from "react";
+import { Collection, Eye, List, Settings } from "../assets/icons";
+import { MustHaveReleaseItem, View, Views } from "../redux/app";
+import { DispatchAction } from "../redux/store";
+import { Button, colors, Column, Row } from "./styled";
 
 const IconMap: Record<View, (fill: string) => JSX.Element> = {
   Watch: (fill: string) => <Eye {...{ fill }} />,
@@ -19,9 +19,9 @@ export interface Props {
 
 const isDisabled = (view: View, hasReleasePageItem: boolean) =>
   !hasReleasePageItem &&
-  ["Add Item", "Watch"]
-    .map((it) => it.toLowerCase())
-    .includes(view.toLowerCase());
+  MustHaveReleaseItem.map((it) => it.toLowerCase()).includes(
+    view.toLowerCase()
+  );
 
 const ViewSelector: FC<Props> = ({
   setView,
